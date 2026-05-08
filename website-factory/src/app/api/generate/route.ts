@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateSiteContent, SiteInput } from "@/lib/claude";
 import { buildSiteHTML, TEMPLATES } from "@/lib/templates";
+import { fetchHeroVideo } from "@/lib/pexels";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,19 +21,35 @@ export async function POST(req: NextRequest) {
     const template =
       TEMPLATES.find((t) => t.id === templateId) || TEMPLATES[0];
 
-    const content = await generateSiteContent(input);
-    const html = buildSiteHTML(content, template, {
-      businessName: input.businessName,
-      phone: input.phone,
-      email: input.email,
-      location: input.location,
-    });
+    // Run content generation and video fetch in parallel
+    const [content, video] = await Promise.all([
+      generateSiteContent(input),
+      Promise.resolve(null), // video fetched after content since we need videoQuery
+    ]);
+
+    // Fetch video using Claude's suggested query
+    const heroVideo = await fetchHeroVideo(content.videoQuery);
+
+    const html = buildSiteHTML(
+      content,
+      template,
+      {
+        businessName: input.businessName,
+        phone: input.phone,
+        email: input.email,
+        location: input.location,
+      },
+      heroVideo?.url
+    );
+
+    void video; // suppress unused warning
 
     return NextResponse.json({
       success: true,
       content,
       html,
       template,
+      hasVideo: !!heroVideo,
       siteName: input.businessName
         .toLowerCase()
         .replace(/\s+/g, "-")
