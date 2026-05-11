@@ -1,0 +1,17 @@
+{
+  "budget": {
+    "spent_usd": 0.0,
+    "starting_usd": 200.0
+  },
+  "created_at": "2026-05-11T06:59:28.617918+00:00",
+  "cycle_count": 0,
+  "kpis": {
+    "customers": 0,
+    "leads": 0,
+    "mrr_usd": 0.0
+  },
+  "last_cycle": "2026-05-11T06:59:28.618180+00:00",
+  "notes": [],
+  "tasks": [],
+  "version": 1
+}
