@@ -29,6 +29,7 @@ const TEMPLATES = [
 interface GeneratedSite {
   html: string;
   siteName: string;
+  siteId?: string;
   hasVideo?: boolean;
   content: unknown;
 }
@@ -107,7 +108,8 @@ export default function GeneratePage() {
           <span className="text-indigo-400">site</span>factory
         </Link>
         <div className="flex items-center gap-4">
-          <Link href="/bulk" className="text-sm text-gray-400 hover:text-white transition-colors">Bulk Import</Link>
+          <Link href="/bulk" className="text-sm text-gray-400 hover:text-white transition-colors">Bulk</Link>
+          <Link href="/sites" className="text-sm text-gray-400 hover:text-white transition-colors">Library</Link>
           <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition-colors">Dashboard</Link>
         </div>
       </nav>
@@ -326,26 +328,46 @@ export default function GeneratePage() {
             </div>
 
             {result && (
-              <div className="flex gap-3">
-                <button
-                  onClick={downloadSite}
-                  className="flex-1 bg-green-500 hover:bg-green-400 text-white font-bold py-3 rounded-xl transition-colors"
-                >
-                  Download HTML
-                </button>
-                <button
-                  onClick={openPreview}
-                  className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition-colors border border-white/20"
-                >
-                  Open Full Screen
-                </button>
-                <button
-                  onClick={handleGenerate}
-                  className="px-4 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition-colors border border-white/20"
-                  title="Regenerate"
-                >
-                  ↻
-                </button>
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  {result.siteId && (
+                    <a
+                      href={`/editor/${result.siteId}`}
+                      className="flex-1 text-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-3 rounded-xl transition-colors"
+                    >
+                      🎨 Edit in GrapesJS
+                    </a>
+                  )}
+                  <button
+                    onClick={downloadSite}
+                    className="flex-1 bg-green-500/20 hover:bg-green-500/30 text-green-300 font-bold py-3 rounded-xl transition-colors border border-green-500/30"
+                  >
+                    Download HTML
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={openPreview}
+                    className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition-colors border border-white/20"
+                  >
+                    Open Full Screen
+                  </button>
+                  {result.siteId && (
+                    <a
+                      href="/sites"
+                      className="flex-1 text-center bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition-colors border border-white/20"
+                    >
+                      View Library
+                    </a>
+                  )}
+                  <button
+                    onClick={handleGenerate}
+                    className="px-4 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition-colors border border-white/20"
+                    title="Regenerate"
+                  >
+                    ↻
+                  </button>
+                </div>
               </div>
             )}
 

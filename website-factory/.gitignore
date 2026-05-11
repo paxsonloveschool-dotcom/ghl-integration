@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env
+
+# local site library data (user-generated, not source code)
+/data/
 .env.local
 .env*.local
 
