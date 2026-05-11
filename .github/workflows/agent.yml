@@ -1,0 +1,72 @@
+name: agent
+
+on:
+  schedule:
+    # Every hour on the hour. Adjust to taste; GitHub may delay heavily on
+    # free runners during peak times.
+    - cron: "0 * * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        type: choice
+        default: scheduled
+        options: [scheduled, forever]
+      interval:
+        description: "Forever-mode interval seconds"
+        type: string
+        default: "900"
+
+permissions:
+  contents: write  # needed to commit state back to the repo
+
+concurrency:
+  # Prevent overlapping cycles; one at a time.
+  group: agent
+  cancel-in-progress: false
+
+jobs:
+  cycle:
+    runs-on: ubuntu-latest
+    # GitHub Actions max job runtime is 6h on free tier. Set a soft cap.
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need write access + full history so commit-back works.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GHL_API_TOKEN: ${{ secrets.GHL_API_TOKEN }}
+          GHL_LOCATION_ID: ${{ secrets.GHL_LOCATION_ID }}
+          AGENT_MODE: ${{ inputs.mode || 'scheduled' }}
+          AGENT_INTERVAL_SECONDS: ${{ inputs.interval || '900' }}
+        run: python -m agent.main --mode "$AGENT_MODE" --interval "$AGENT_INTERVAL_SECONDS"
+
+      - name: Commit state changes
+        if: always()
+        run: |
+          git config user.name "ron-agent[bot]"
+          git config user.email "ron-agent@users.noreply.github.com"
+          if [ -n "$(git status --porcelain state/)" ]; then
+            git add state/
+            git commit -m "agent: cycle $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            # Retry push a few times in case of concurrent commits
+            for i in 1 2 3; do
+              git pull --rebase origin "${GITHUB_REF_NAME}" && git push && break
+              echo "push attempt $i failed, retrying"
+              sleep 5
+            done
+          else
+            echo "no state changes to commit"
+          fi
