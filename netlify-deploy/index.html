@@ -11,21 +11,21 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#f8fafc;min-height:
 nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);z-index:100}
 .logo{font-size:1.2rem;font-weight:900;letter-spacing:-0.02em}.logo span{color:#818cf8}
 .nav-badge{font-size:0.75rem;background:#818cf8;color:white;padding:4px 10px;border-radius:100px;font-weight:700}
-.main{max-width:1200px;margin:0 auto;padding:2rem}
+.main{max-width:1280px;margin:0 auto;padding:2rem}
 .hero{text-align:center;padding:3rem 0 2rem}
 .hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1;margin-bottom:1rem}
 .hero h1 span{color:#818cf8}
 .hero p{color:rgba(248,250,252,0.6);font-size:1.1rem;max-width:500px;margin:0 auto}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-.panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.5rem}
-.panel h2{font-size:1rem;font-weight:700;margin-bottom:1.25rem;color:#e2e8f0}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.5rem;margin-bottom:1rem}
+.panel h2{font-size:0.95rem;font-weight:700;margin-bottom:1.25rem;color:#e2e8f0;display:flex;align-items:center;gap:0.5rem}
 .field{margin-bottom:1rem}
 .field label{display:block;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(248,250,252,0.5);margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#f8fafc;font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:#818cf8}
+.field input,.field textarea{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#f8fafc;font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.field input:focus,.field textarea:focus{border-color:#818cf8}
+.field input[list]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23818cf8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 .field textarea{resize:vertical;min-height:80px}
-select option{background:#1e1e2e;color:#f8fafc}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
 .templates{display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;margin-bottom:1rem}
 .tpl{border:2px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;cursor:pointer;transition:all 0.2s}
@@ -46,7 +46,7 @@ select option{background:#1e1e2e;color:#f8fafc}
 .btn-green:hover{background:rgba(16,185,129,0.3)}
 .btn-white{background:rgba(255,255,255,0.08);color:white;border:1.5px solid rgba(255,255,255,0.15)}
 .btn-white:hover{background:rgba(255,255,255,0.15)}
-.preview-box{background:#111;border-radius:16px;overflow:hidden;height:600px;display:flex;align-items:center;justify-content:center;position:relative}
+.preview-box{background:#111;border-radius:16px;overflow:hidden;height:640px;display:flex;align-items:center;justify-content:center;position:relative}
 .preview-empty{text-align:center;color:rgba(248,250,252,0.2)}
 .preview-empty .icon{font-size:3.5rem;margin-bottom:0.75rem}
 .preview-empty p{font-size:0.9rem}
@@ -55,13 +55,37 @@ iframe{width:100%;height:100%;border:none}
 .spinner{width:44px;height:44px;border:3px solid rgba(129,140,248,0.2);border-top-color:#818cf8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
 .status{text-align:center;color:rgba(248,250,252,0.5);font-size:0.85rem}
-.status strong{color:#818cf8}
 .error-box{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:10px;padding:0.75rem 1rem;font-size:0.85rem;margin-top:0.75rem}
 .success-actions{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.75rem}
 .api-setup{background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:12px;padding:1rem;margin-bottom:1.25rem}
 .api-setup p{font-size:0.8rem;color:rgba(248,250,252,0.6);margin-bottom:0.5rem}
 .api-setup a{color:#818cf8;text-decoration:none;font-size:0.8rem}
 .tag{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:2px 8px;border-radius:100px;background:rgba(129,140,248,0.2);color:#818cf8}
+
+/* FILE UPLOAD */
+.upload-zone{border:2px dashed rgba(255,255,255,0.15);border-radius:14px;padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.upload-zone:hover,.upload-zone.drag-over{border-color:#818cf8;background:rgba(129,140,248,0.06)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone .upload-icon{font-size:2rem;margin-bottom:0.5rem}
+.upload-zone p{font-size:0.85rem;color:rgba(248,250,252,0.5);margin-bottom:0.25rem}
+.upload-zone small{font-size:0.72rem;color:rgba(248,250,252,0.3)}
+.file-list{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.75rem}
+.file-item{display:flex;align-items:center;gap:0.75rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.6rem 0.85rem}
+.file-thumb{width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.file-thumb img{width:100%;height:100%;border-radius:6px;object-fit:cover}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:0.8rem;font-weight:600;truncate:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-size{font-size:0.7rem;color:rgba(248,250,252,0.4)}
+.file-type-badge{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:100px;text-transform:uppercase}
+.badge-image{background:rgba(129,140,248,0.2);color:#a5b4fc}
+.badge-pdf{background:rgba(239,68,68,0.2);color:#fca5a5}
+.badge-video{background:rgba(16,185,129,0.2);color:#6ee7b7}
+.badge-doc{background:rgba(251,191,36,0.2);color:#fde68a}
+.file-remove{background:none;border:none;color:rgba(248,250,252,0.3);cursor:pointer;font-size:1.1rem;padding:0 0.25rem;transition:color 0.2s;margin-left:auto;flex-shrink:0}
+.file-remove:hover{color:#f87171}
+.file-progress{height:2px;background:rgba(129,140,248,0.2);border-radius:2px;margin-top:4px;overflow:hidden}
+.file-progress-bar{height:100%;background:#818cf8;border-radius:2px;transition:width 0.3s}
+.upload-summary{font-size:0.75rem;color:rgba(248,250,252,0.4);margin-top:0.5rem;text-align:center}
 </style>
 </head>
 <body>
@@ -74,96 +98,70 @@ iframe{width:100%;height:100%;border:none}
 <div class="main">
   <div class="hero">
     <h1>Generate <span>pro websites</span><br>in 30 seconds</h1>
-    <p>Claude writes all the copy. Real photos auto-pulled. Download clean HTML — deploy anywhere.</p>
+    <p>Upload your brand assets. Claude reads everything and builds a site that actually looks like you.</p>
   </div>
 
   <div class="grid">
-    <!-- LEFT: FORM -->
+    <!-- LEFT COLUMN -->
     <div>
+
+      <!-- API KEY -->
       <div class="panel">
         <div class="api-setup">
-          <p>🔑 Your Claude API key is required. Get one free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+          <p>🔑 Claude API key required — <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key</p>
           <div class="field" style="margin:0">
             <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
           </div>
         </div>
 
-        <h2>Design Template</h2>
+        <!-- TEMPLATE PICKER -->
+        <h2>🎨 Design Template</h2>
         <div class="templates" id="templates">
           <div class="tpl active" data-id="midnight" onclick="selectTemplate(this)">
-            <div class="tpl-preview" style="background:#0a0a0f">
-              <div class="tpl-bar" style="background:#6366f1"></div>
-              <div class="tpl-lines">
-                <div class="tpl-line" style="width:80%;background:rgba(99,102,241,0.5)"></div>
-                <div class="tpl-line" style="width:100%"></div>
-                <div class="tpl-line" style="width:60%"></div>
-              </div>
-            </div>
+            <div class="tpl-preview" style="background:#0a0a0f"><div class="tpl-bar" style="background:#6366f1"></div><div class="tpl-lines"><div class="tpl-line" style="width:80%;background:rgba(99,102,241,0.5)"></div><div class="tpl-line"></div><div class="tpl-line" style="width:60%"></div></div></div>
             <div class="tpl-name" style="background:#0a0a0f;color:#818cf8">Midnight</div>
           </div>
           <div class="tpl" data-id="pearl" onclick="selectTemplate(this)">
-            <div class="tpl-preview" style="background:#f9fafb">
-              <div class="tpl-bar" style="background:#0f172a"></div>
-              <div class="tpl-lines">
-                <div class="tpl-line" style="width:80%;background:rgba(15,23,42,0.4)"></div>
-                <div class="tpl-line" style="width:100%;background:rgba(15,23,42,0.15)"></div>
-                <div class="tpl-line" style="width:60%;background:rgba(15,23,42,0.15)"></div>
-              </div>
-            </div>
+            <div class="tpl-preview" style="background:#f9fafb"><div class="tpl-bar" style="background:#0f172a"></div><div class="tpl-lines"><div class="tpl-line" style="width:80%;background:rgba(15,23,42,0.4)"></div><div class="tpl-line" style="background:rgba(15,23,42,0.15)"></div><div class="tpl-line" style="width:60%;background:rgba(15,23,42,0.15)"></div></div></div>
             <div class="tpl-name" style="background:#f9fafb;color:#0f172a">Pearl</div>
           </div>
           <div class="tpl" data-id="ember" onclick="selectTemplate(this)">
-            <div class="tpl-preview" style="background:#0a0700">
-              <div class="tpl-bar" style="background:#f97316"></div>
-              <div class="tpl-lines">
-                <div class="tpl-line" style="width:80%;background:rgba(249,115,22,0.5)"></div>
-                <div class="tpl-line" style="width:100%"></div>
-                <div class="tpl-line" style="width:60%"></div>
-              </div>
-            </div>
+            <div class="tpl-preview" style="background:#0a0700"><div class="tpl-bar" style="background:#f97316"></div><div class="tpl-lines"><div class="tpl-line" style="width:80%;background:rgba(249,115,22,0.5)"></div><div class="tpl-line"></div><div class="tpl-line" style="width:60%"></div></div></div>
             <div class="tpl-name" style="background:#0a0700;color:#f97316">Ember</div>
           </div>
           <div class="tpl" data-id="sage" onclick="selectTemplate(this)">
-            <div class="tpl-preview" style="background:#f0faf4">
-              <div class="tpl-bar" style="background:#059669"></div>
-              <div class="tpl-lines">
-                <div class="tpl-line" style="width:80%;background:rgba(5,150,105,0.4)"></div>
-                <div class="tpl-line" style="width:100%;background:rgba(5,150,105,0.15)"></div>
-                <div class="tpl-line" style="width:60%;background:rgba(5,150,105,0.15)"></div>
-              </div>
-            </div>
+            <div class="tpl-preview" style="background:#f0faf4"><div class="tpl-bar" style="background:#059669"></div><div class="tpl-lines"><div class="tpl-line" style="width:80%;background:rgba(5,150,105,0.4)"></div><div class="tpl-line" style="background:rgba(5,150,105,0.15)"></div><div class="tpl-line" style="width:60%;background:rgba(5,150,105,0.15)"></div></div></div>
             <div class="tpl-name" style="background:#f0faf4;color:#059669">Sage</div>
           </div>
           <div class="tpl" data-id="cobalt" onclick="selectTemplate(this)">
-            <div class="tpl-preview" style="background:#030712">
-              <div class="tpl-bar" style="background:#2563eb"></div>
-              <div class="tpl-lines">
-                <div class="tpl-line" style="width:80%;background:rgba(37,99,235,0.5)"></div>
-                <div class="tpl-line" style="width:100%"></div>
-                <div class="tpl-line" style="width:60%"></div>
-              </div>
-            </div>
+            <div class="tpl-preview" style="background:#030712"><div class="tpl-bar" style="background:#2563eb"></div><div class="tpl-lines"><div class="tpl-line" style="width:80%;background:rgba(37,99,235,0.5)"></div><div class="tpl-line"></div><div class="tpl-line" style="width:60%"></div></div></div>
             <div class="tpl-name" style="background:#030712;color:#2563eb">Cobalt</div>
           </div>
         </div>
+      </div>
 
-        <h2>Business Info</h2>
+      <!-- BUSINESS INFO -->
+      <div class="panel">
+        <h2>🏢 Business Info</h2>
         <div class="field">
           <label>Business Name *</label>
           <input type="text" id="businessName" placeholder="e.g. Austin Family Dental">
         </div>
         <div class="field">
-          <label>Industry *</label>
-          <select id="industry">
-            <option value="">Select industry...</option>
-            <option>Restaurant</option><option>Dental Practice</option><option>Law Firm</option>
-            <option>Real Estate</option><option>Auto Repair</option><option>Hair Salon / Barbershop</option>
-            <option>HVAC & Plumbing</option><option>Landscaping</option><option>Gym / Fitness</option>
-            <option>Medical Clinic</option><option>Accounting / CPA</option><option>Photography</option>
-            <option>Wedding Planning</option><option>Roofing & Construction</option><option>Pet Services</option>
-            <option>Cleaning Service</option><option>Marketing Agency</option><option>Software / SaaS</option>
-            <option>eCommerce</option><option>Consulting</option><option>Other</option>
-          </select>
+          <label>Industry * — type anything or pick from the list</label>
+          <input type="text" id="industry" list="industry-list" placeholder="e.g. Dental Practice, CrossFit Gym, Food Truck...">
+          <datalist id="industry-list">
+            <option value="Restaurant"><option value="Dental Practice"><option value="Law Firm">
+            <option value="Real Estate"><option value="Auto Repair"><option value="Hair Salon / Barbershop">
+            <option value="HVAC & Plumbing"><option value="Landscaping"><option value="Gym / Fitness">
+            <option value="Medical Clinic"><option value="Accounting / CPA"><option value="Photography">
+            <option value="Wedding Planning"><option value="Roofing & Construction"><option value="Pet Services">
+            <option value="Cleaning Service"><option value="Marketing Agency"><option value="Software / SaaS">
+            <option value="eCommerce"><option value="Consulting"><option value="Chiropractic">
+            <option value="Veterinary"><option value="Florist"><option value="Food Truck">
+            <option value="CrossFit Gym"><option value="Yoga Studio"><option value="Tattoo Studio">
+            <option value="Car Dealership"><option value="Insurance Agency"><option value="Mortgage Broker">
+          </datalist>
         </div>
         <div class="row">
           <div class="field">
@@ -181,32 +179,50 @@ iframe{width:100%;height:100%;border:none}
         </div>
         <div class="field">
           <label>Services (comma separated)</label>
-          <input type="text" id="services" placeholder="Cleanings, Invisalign, Implants">
+          <input type="text" id="services" placeholder="Cleanings, Invisalign, Implants, Emergency Care">
         </div>
         <div class="field">
-          <label>Description (optional)</label>
-          <textarea id="description" placeholder="What makes this business special?"></textarea>
+          <label>Description / Notes for Claude</label>
+          <textarea id="description" placeholder="What makes this business special? Founding story, unique selling points, anything Claude should know..."></textarea>
         </div>
-
-        <div class="field">
-          <label>Brand Tone</label>
-          <div class="tones" id="tones">
-            <div class="tone active" onclick="selectTone(this)">Professional</div>
-            <div class="tone" onclick="selectTone(this)">Friendly</div>
-            <div class="tone" onclick="selectTone(this)">Bold</div>
-            <div class="tone" onclick="selectTone(this)">Luxury</div>
-            <div class="tone" onclick="selectTone(this)">Playful</div>
-          </div>
-        </div>
-
-        <div id="errorBox"></div>
-        <button class="btn btn-primary" id="generateBtn" onclick="generate()">Generate Website →</button>
       </div>
+
+      <!-- FILE UPLOADS -->
+      <div class="panel">
+        <h2>📁 Brand Assets & Content
+          <span style="font-size:0.7rem;font-weight:500;color:rgba(248,250,252,0.4);margin-left:auto">Claude will read these to inform the site</span>
+        </h2>
+
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx,video/*" onchange="handleFiles(this.files)">
+          <div class="upload-icon">📎</div>
+          <p>Drop files here or click to browse</p>
+          <small>Images · PDFs · Brand guidelines · Word docs · Videos (name used as context)</small>
+        </div>
+
+        <div id="fileList" class="file-list"></div>
+        <div id="uploadSummary" class="upload-summary" style="display:none"></div>
+      </div>
+
+      <!-- TONE -->
+      <div class="panel">
+        <h2>🎯 Brand Tone</h2>
+        <div class="tones" id="tones">
+          <div class="tone active" onclick="selectTone(this)">Professional</div>
+          <div class="tone" onclick="selectTone(this)">Friendly</div>
+          <div class="tone" onclick="selectTone(this)">Bold</div>
+          <div class="tone" onclick="selectTone(this)">Luxury</div>
+          <div class="tone" onclick="selectTone(this)">Playful</div>
+        </div>
+      </div>
+
+      <div id="errorBox"></div>
+      <button class="btn btn-primary" id="generateBtn" onclick="generate()">Generate Website →</button>
     </div>
 
-    <!-- RIGHT: PREVIEW -->
+    <!-- RIGHT COLUMN: PREVIEW -->
     <div>
-      <div class="panel" style="padding:0;overflow:hidden;height:600px;display:flex;flex-direction:column">
+      <div class="panel" style="padding:0;overflow:hidden;height:640px;display:flex;flex-direction:column">
         <div style="padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
           <span style="font-size:0.8rem;font-weight:700;color:rgba(248,250,252,0.5)">PREVIEW</span>
           <span id="previewBadge" style="display:none" class="tag">✓ Generated</span>
@@ -225,6 +241,24 @@ iframe{width:100%;height:100%;border:none}
         <button class="btn btn-green" onclick="downloadSite()">Download HTML File</button>
         <button class="btn btn-white" onclick="generate()">↻ Regenerate</button>
       </div>
+
+      <!-- WHAT YOU GET -->
+      <div id="featureList" class="panel" style="margin-top:1rem">
+        <h2>✨ What every site includes</h2>
+        <div style="display:flex;flex-direction:column;gap:0.5rem">
+          ${[
+            ['📸','Full-screen hero image (100vh, real Unsplash photos)'],
+            ['🎬','Scroll-triggered animations on every section'],
+            ['📊','Animated stat counters (0 → 500+)'],
+            ['💬','3 believable testimonials with star ratings'],
+            ['🔧','Services grid with hover effects'],
+            ['📋','3-step process section'],
+            ['📱','Mobile responsive + hamburger menu'],
+            ['📧','Contact form with validation'],
+            ['💾','Single HTML file — deploys anywhere'],
+          ].map(([icon,text])=>`<div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>${icon}</span><span>${text}</span></div>`).join('')}
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -233,333 +267,273 @@ iframe{width:100%;height:100%;border:none}
 let selectedTemplate = 'midnight';
 let selectedTone = 'professional';
 let generatedHTML = '';
+let uploadedFiles = [];
 
-const TEMPLATES = {
-  midnight: { primaryColor:'#6366f1', accentColor:'#a5b4fc', bgColor:'#0a0a0f', textColor:'#f8fafc', surfaceColor:'#13131f', borderColor:'rgba(255,255,255,0.08)', fontHeading:'Playfair Display', isLight:false },
-  pearl:    { primaryColor:'#0f172a', accentColor:'#3b82f6', bgColor:'#ffffff', textColor:'#0f172a', surfaceColor:'#f8fafc', borderColor:'rgba(0,0,0,0.08)', fontHeading:'Fraunces', isLight:true },
-  ember:    { primaryColor:'#f97316', accentColor:'#fbbf24', bgColor:'#0a0700', textColor:'#fef3c7', surfaceColor:'#130e00', borderColor:'rgba(249,115,22,0.2)', fontHeading:'Syne', isLight:false },
-  sage:     { primaryColor:'#059669', accentColor:'#34d399', bgColor:'#fafffe', textColor:'#064e3b', surfaceColor:'#f0faf4', borderColor:'rgba(5,150,105,0.15)', fontHeading:'Cormorant Garamond', isLight:true },
-  cobalt:   { primaryColor:'#2563eb', accentColor:'#60a5fa', bgColor:'#030712', textColor:'#f1f5f9', surfaceColor:'#0f172a', borderColor:'rgba(37,99,235,0.2)', fontHeading:'Space Grotesk', isLight:false },
-};
-
+// ── TEMPLATE / TONE SELECTORS ──
 function selectTemplate(el) {
   document.querySelectorAll('.tpl').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   selectedTemplate = el.dataset.id;
 }
-
 function selectTone(el) {
   document.querySelectorAll('.tone').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   selectedTone = el.textContent.toLowerCase();
 }
 
-function showError(msg) {
-  document.getElementById('errorBox').innerHTML = `<div class="error-box">${msg}</div>`;
+// ── FILE HANDLING ──
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
 }
 
-function clearError() {
-  document.getElementById('errorBox').innerHTML = '';
+function getFileType(file) {
+  if (file.type.startsWith('image/')) return 'image';
+  if (file.type === 'application/pdf') return 'pdf';
+  if (file.type.startsWith('video/')) return 'video';
+  if (file.type.includes('word') || file.name.endsWith('.docx') || file.name.endsWith('.doc')) return 'doc';
+  return 'other';
 }
 
+function getBadge(type) {
+  const map = { image:'badge-image', pdf:'badge-pdf', video:'badge-video', doc:'badge-doc', other:'badge-doc' };
+  const labels = { image:'Image', pdf:'PDF', video:'Video', doc:'Doc', other:'File' };
+  return `<span class="file-type-badge ${map[type]}">${labels[type]}</span>`;
+}
+
+async function compressImage(file) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const MAX = 1200;
+      const ratio = Math.min(MAX / img.width, MAX / img.height, 1);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(blob => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.readAsDataURL(blob);
+      }, 'image/jpeg', 0.82);
+    };
+    img.src = url;
+  });
+}
+
+function readAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleFiles(fileList) {
+  const maxTotalMB = 4;
+  for (const file of Array.from(fileList)) {
+    if (uploadedFiles.find(f => f.name === file.name)) continue;
+    if (file.size > 20 * 1024 * 1024) { alert(`${file.name} is too large (max 20MB)`); continue; }
+
+    const type = getFileType(file);
+    const entry = { name: file.name, size: file.size, type, file, base64: null, thumbUrl: null, processing: true };
+    uploadedFiles.push(entry);
+    renderFileList();
+
+    // Read file
+    try {
+      if (type === 'image') {
+        entry.base64 = await compressImage(file);
+        entry.thumbUrl = URL.createObjectURL(file);
+        entry.mediaType = 'image/jpeg';
+      } else if (type === 'pdf') {
+        entry.base64 = await readAsBase64(file);
+        entry.mediaType = 'application/pdf';
+      } else if (type === 'doc') {
+        // Can't decode docx in browser easily — pass as note
+        entry.base64 = null;
+        entry.note = `Brand document uploaded: "${file.name}"`;
+      } else if (type === 'video') {
+        // Claude can't read video binary — use as context note
+        entry.base64 = null;
+        entry.note = `Video asset provided: "${file.name}" (${formatBytes(file.size)})`;
+      }
+    } catch (e) {
+      entry.error = true;
+    }
+
+    entry.processing = false;
+    renderFileList();
+  }
+  updateSummary();
+}
+
+function removeFile(name) {
+  uploadedFiles = uploadedFiles.filter(f => f.name !== name);
+  renderFileList();
+  updateSummary();
+}
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  if (!uploadedFiles.length) { list.innerHTML = ''; return; }
+  list.innerHTML = uploadedFiles.map(f => `
+    <div class="file-item">
+      <div class="file-thumb">
+        ${f.thumbUrl ? `<img src="${f.thumbUrl}" alt="">` : f.type === 'pdf' ? '📄' : f.type === 'video' ? '🎬' : f.type === 'doc' ? '📝' : '📎'}
+      </div>
+      <div class="file-info">
+        <div class="file-name">${f.name}</div>
+        <div class="file-size">${formatBytes(f.size)} ${f.error ? '— ⚠️ read error' : f.processing ? '— processing...' : ''}</div>
+        ${f.processing ? '<div class="file-progress"><div class="file-progress-bar" style="width:60%"></div></div>' : ''}
+      </div>
+      ${getBadge(f.type)}
+      <button class="file-remove" onclick="removeFile('${f.name}')" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+function updateSummary() {
+  const el = document.getElementById('uploadSummary');
+  if (!uploadedFiles.length) { el.style.display = 'none'; return; }
+  const images = uploadedFiles.filter(f => f.type === 'image').length;
+  const pdfs = uploadedFiles.filter(f => f.type === 'pdf').length;
+  const videos = uploadedFiles.filter(f => f.type === 'video').length;
+  const docs = uploadedFiles.filter(f => f.type === 'doc').length;
+  const parts = [];
+  if (images) parts.push(`${images} image${images>1?'s':''}`);
+  if (pdfs) parts.push(`${pdfs} PDF${pdfs>1?'s':''}`);
+  if (docs) parts.push(`${docs} doc${docs>1?'s':''}`);
+  if (videos) parts.push(`${videos} video${videos>1?'s':''}`);
+  el.textContent = `✓ ${parts.join(' · ')} ready — Claude will use ${images+pdfs+docs > 0 ? 'these' : 'the filenames'} to inform the site`;
+  el.style.display = 'block';
+}
+
+// ── ERRORS ──
+function showError(msg) { document.getElementById('errorBox').innerHTML = `<div class="error-box">${msg}</div>`; }
+function clearError() { document.getElementById('errorBox').innerHTML = ''; }
+
+// ── UNSPLASH ──
 function getUnsplashUrl(query, w=1920, h=1080) {
   return `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(query)}`;
 }
+function buildStars(n) { return '★'.repeat(n)+'☆'.repeat(5-n); }
 
-function buildStars(n) { return '★'.repeat(n) + '☆'.repeat(5-n); }
+// ── TEMPLATE BUILDER ──
+const TEMPLATES = {
+  midnight:{ primaryColor:'#6366f1',accentColor:'#a5b4fc',bgColor:'#0a0a0f',textColor:'#f8fafc',surfaceColor:'#13131f',borderColor:'rgba(255,255,255,0.08)',fontHeading:'Playfair Display',isLight:false },
+  pearl:   { primaryColor:'#0f172a',accentColor:'#3b82f6',bgColor:'#ffffff',textColor:'#0f172a',surfaceColor:'#f8fafc',borderColor:'rgba(0,0,0,0.08)',fontHeading:'Fraunces',isLight:true },
+  ember:   { primaryColor:'#f97316',accentColor:'#fbbf24',bgColor:'#0a0700',textColor:'#fef3c7',surfaceColor:'#130e00',borderColor:'rgba(249,115,22,0.2)',fontHeading:'Syne',isLight:false },
+  sage:    { primaryColor:'#059669',accentColor:'#34d399',bgColor:'#fafffe',textColor:'#064e3b',surfaceColor:'#f0faf4',borderColor:'rgba(5,150,105,0.15)',fontHeading:'Cormorant Garamond',isLight:true },
+  cobalt:  { primaryColor:'#2563eb',accentColor:'#60a5fa',bgColor:'#030712',textColor:'#f1f5f9',surfaceColor:'#0f172a',borderColor:'rgba(37,99,235,0.2)',fontHeading:'Space Grotesk',isLight:false },
+};
 
 function buildHTML(content, tpl, input) {
   const t = TEMPLATES[tpl];
-  const p = t.primaryColor, acc = t.accentColor, bg = t.bgColor, txt = t.textColor;
-  const surf = t.surfaceColor, bord = t.borderColor, isLight = t.isLight;
-  const heroImg = getUnsplashUrl(content.unsplashQuery);
-  const aboutImg = getUnsplashUrl(content.unsplashQuery + ' team', 800, 600);
+  const p=t.primaryColor,acc=t.accentColor,bg=t.bgColor,txt=t.textColor,surf=t.surfaceColor,bord=t.borderColor,isLight=t.isLight;
+  const heroImg = getUnsplashUrl(content.unsplashQuery||input.industry);
+  const aboutImg = getUnsplashUrl((content.unsplashQuery||input.industry)+' team',800,600);
   const heroTxt = isLight ? txt : '#ffffff';
   const heroSub = isLight ? 'rgba(15,23,42,0.7)' : 'rgba(255,255,255,0.8)';
   const overlay = isLight
     ? 'linear-gradient(to right,rgba(255,255,255,0.92) 40%,rgba(255,255,255,0.5) 70%,rgba(255,255,255,0.1) 100%)'
     : 'linear-gradient(to right,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.6) 50%,rgba(0,0,0,0.2) 100%)';
+  const fontMap={'Playfair Display':'Playfair+Display:wght@400;700;900','Fraunces':'Fraunces:wght@400;600;700;900','Syne':'Syne:wght@400;600;700;800','Cormorant Garamond':'Cormorant+Garamond:wght@400;500;600;700','Space Grotesk':'Space+Grotesk:wght@400;500;600;700'};
+  const gFont = fontMap[t.fontHeading]||'Inter:wght@400;700;900';
+  const services=(content.services||[]).map((s,i)=>`<div class="service-card reveal" style="transition-delay:${i*.1}s"><div class="service-icon">${s.icon}</div><h3>${s.title}</h3><p>${s.description}</p></div>`).join('');
+  const testimonials=(content.testimonials||[]).map((t,i)=>`<div class="testimonial-card reveal" style="transition-delay:${i*.12}s"><div class="stars">${buildStars(t.rating||5)}</div><p class="quote">${t.quote}</p><div class="author-info"><div class="author-avatar">${t.author.charAt(0)}</div><div><strong>${t.author}</strong><span>${t.role}</span></div></div></div>`).join('');
+  const stats=(content.about?.stats||[]).map(s=>`<div class="stat reveal"><div class="stat-value" data-target="${s.numericValue||parseInt(s.value)||0}" data-suffix="${s.suffix||'+'}">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join('');
+  const process=(content.process||[]).map((s,i)=>`<div class="process-step reveal" style="transition-delay:${i*.15}s"><div class="step-number">${s.step}</div><div><h3>${s.title}</h3><p>${s.description}</p></div></div>`).join('');
 
-  const fontMap = {
-    'Playfair Display':'Playfair+Display:wght@400;700;900',
-    'Fraunces':'Fraunces:wght@400;600;700;900',
-    'Syne':'Syne:wght@400;600;700;800',
-    'Cormorant Garamond':'Cormorant+Garamond:wght@400;500;600;700',
-    'Space Grotesk':'Space+Grotesk:wght@400;500;600;700',
-  };
-  const gFont = fontMap[t.fontHeading] || 'Inter:wght@400;700;900';
-
-  const services = (content.services||[]).map((s,i)=>`
-    <div class="service-card reveal" style="transition-delay:${i*0.1}s">
-      <div class="service-icon">${s.icon}</div>
-      <h3>${s.title}</h3><p>${s.description}</p>
-    </div>`).join('');
-
-  const testimonials = (content.testimonials||[]).map((t,i)=>`
-    <div class="testimonial-card reveal" style="transition-delay:${i*0.12}s">
-      <div class="stars">${buildStars(t.rating||5)}</div>
-      <p class="quote">${t.quote}</p>
-      <div class="author-info">
-        <div class="author-avatar">${t.author.charAt(0)}</div>
-        <div><strong>${t.author}</strong><span>${t.role}</span></div>
-      </div>
-    </div>`).join('');
-
-  const stats = (content.about?.stats||[]).map(s=>`
-    <div class="stat reveal">
-      <div class="stat-value" data-target="${s.numericValue||parseInt(s.value)||0}" data-suffix="${s.suffix||'+'}">${s.value}</div>
-      <div class="stat-label">${s.label}</div>
-    </div>`).join('');
-
-  const process = (content.process||[]).map((s,i)=>`
-    <div class="process-step reveal" style="transition-delay:${i*0.15}s">
-      <div class="step-number">${s.step}</div>
-      <div><h3>${s.title}</h3><p>${s.description}</p></div>
-    </div>`).join('');
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${content.meta?.title||input.businessName}</title>
-<meta name="description" content="${content.meta?.description||''}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=${gFont}&display=swap" rel="stylesheet">
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${content.meta?.title||input.businessName}</title><meta name="description" content="${content.meta?.description||''}"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=${gFont}&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--p:${p};--acc:${acc};--bg:${bg};--txt:${txt};--surf:${surf};--bord:${bord};--r:16px;--tr:cubic-bezier(0.16,1,0.3,1)}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-height:1.65;overflow-x:hidden}
-.reveal{opacity:0;transform:translateY(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}
-.reveal.in-view{opacity:1;transform:none}
-.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}
-.reveal-left.in-view{opacity:1;transform:none}
-.reveal-right{opacity:0;transform:translateX(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}
-.reveal-right.in-view{opacity:1;transform:none}
+html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-height:1.65;overflow-x:hidden}
+.reveal{opacity:0;transform:translateY(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}.reveal.in-view{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}.reveal-left.in-view{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}.reveal-right.in-view{opacity:1;transform:none}
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center;padding:0 5%;transition:background .4s,box-shadow .4s}
 nav.scrolled{background:${isLight?'rgba(255,255,255,0.95)':'rgba(10,10,15,0.92)'};backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--bord)}
 .nav-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
 .nav-logo{font-family:'${t.fontHeading}',serif;font-size:1.3rem;font-weight:700;color:white;text-decoration:none;transition:color .3s}
 nav.scrolled .nav-logo{color:var(--txt)}
-.nav-links{display:flex;gap:2rem;list-style:none}
-.nav-links a{text-decoration:none;color:rgba(255,255,255,0.85);font-weight:500;font-size:.9rem;transition:color .2s}
-nav.scrolled .nav-links a{color:var(--txt)}
-.nav-links a:hover,.nav-cta:hover{opacity:.85}
-.nav-cta{background:var(--p);color:white;padding:10px 22px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.875rem;transition:opacity .2s,transform .2s}
-.nav-cta:hover{transform:translateY(-1px)}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
-.hamburger span{width:24px;height:2px;background:white;display:block;border-radius:2px;transition:all .3s}
+.nav-links{display:flex;gap:2rem;list-style:none}.nav-links a{text-decoration:none;color:rgba(255,255,255,0.85);font-weight:500;font-size:.9rem;transition:color .2s}
+nav.scrolled .nav-links a{color:var(--txt)}.nav-links a:hover{color:var(--p)}
+.nav-cta{background:var(--p);color:white;padding:10px 22px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.875rem;transition:opacity .2s,transform .2s}.nav-cta:hover{transform:translateY(-1px);opacity:.9}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}.hamburger span{width:24px;height:2px;background:white;display:block;border-radius:2px}
 nav.scrolled .hamburger span{background:var(--txt)}
 .hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;overflow:hidden}
 .hero-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;will-change:transform}
 .hero-overlay{position:absolute;inset:0;background:${overlay}}
 .hero-content{position:relative;z-index:1;max-width:1200px;width:100%;margin:0 auto;padding:0 5%;padding-top:72px}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s var(--tr) .2s forwards}
-.hero-eyebrow::before{content:'';width:32px;height:2px;background:var(--acc);display:block}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s var(--tr) .2s forwards}.hero-eyebrow::before{content:'';width:32px;height:2px;background:var(--acc);display:block}
 .hero h1{font-family:'${t.fontHeading}',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1.05;color:${heroTxt};margin-bottom:1.75rem;max-width:760px;opacity:0;animation:fadeUp .9s var(--tr) .35s forwards}
 .hero p{font-size:clamp(1rem,2vw,1.2rem);color:${heroSub};max-width:560px;line-height:1.75;margin-bottom:2.75rem;opacity:0;animation:fadeUp .9s var(--tr) .5s forwards}
 .hero-buttons{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp .9s var(--tr) .65s forwards}
-.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--p);color:white;padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 8px 30px color-mix(in srgb,var(--p) 45%,transparent)}
-.btn-p:hover{transform:translateY(-3px)}
-.btn-g{display:inline-flex;align-items:center;gap:8px;background:transparent;color:${heroTxt};padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:600;font-size:1rem;border:1.5px solid ${isLight?'rgba(15,23,42,0.3)':'rgba(255,255,255,0.4)'};transition:border-color .25s,background .25s}
-.btn-g:hover{border-color:${heroTxt};background:${isLight?'rgba(15,23,42,0.06)':'rgba(255,255,255,0.12)'}}
-.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s var(--tr) 1.2s forwards}
-.scroll-hint span{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5)}
-.scroll-line{width:1px;height:48px;background:rgba(255,255,255,.3);position:relative;overflow:hidden}
-.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--acc);animation:scrollLine 1.8s ease-in-out infinite}
-section{padding:120px 5%}
-.container{max-width:1200px;margin:0 auto}
-.section-label{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:1rem}
-.section-label::before{content:'';width:28px;height:2px;background:var(--p);display:block}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--p);color:white;padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 8px 30px color-mix(in srgb,var(--p) 45%,transparent)}.btn-p:hover{transform:translateY(-3px)}
+.btn-g{display:inline-flex;align-items:center;gap:8px;background:transparent;color:${heroTxt};padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:600;font-size:1rem;border:1.5px solid ${isLight?'rgba(15,23,42,0.3)':'rgba(255,255,255,0.4)'};transition:border-color .25s,background .25s}.btn-g:hover{border-color:${heroTxt}}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s var(--tr) 1.2s forwards}.scroll-hint span{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.scroll-line{width:1px;height:48px;background:rgba(255,255,255,.3);position:relative;overflow:hidden}.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--acc);animation:scrollLine 1.8s ease-in-out infinite}
+section{padding:120px 5%}.container{max-width:1200px;margin:0 auto}
+.section-label{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:1rem}.section-label::before{content:'';width:28px;height:2px;background:var(--p);display:block}
 .section-title{font-family:'${t.fontHeading}',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.12;margin-bottom:1.25rem}
-.section-subtitle{font-size:1.1rem;color:${isLight?'rgba(15,23,42,0.6)':'rgba(248,250,252,0.6)'};max-width:580px;line-height:1.75}
-.section-header{margin-bottom:4.5rem}
-.about{background:var(--surf)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
-.about-image{border-radius:24px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 24px 64px rgba(0,0,0,.2)}
-.about-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--tr)}
-.about-image:hover img{transform:scale(1.03)}
-.about-body{font-size:1.05rem;color:${isLight?'rgba(15,23,42,0.72)':'rgba(248,250,252,0.72)'};line-height:1.8;margin-bottom:2.5rem}
-.about-body p{margin-bottom:1.25rem}
-.stats-row{display:flex;gap:2.5rem;flex-wrap:wrap}
-.stat-value{font-family:'${t.fontHeading}',serif;font-size:3rem;font-weight:900;color:var(--p);line-height:1}
-.stat-label{font-size:.875rem;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'};margin-top:6px;font-weight:500}
+.section-subtitle{font-size:1.1rem;color:${isLight?'rgba(15,23,42,0.6)':'rgba(248,250,252,0.6)'};max-width:580px;line-height:1.75}.section-header{margin-bottom:4.5rem}
+.about{background:var(--surf)}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.about-image{border-radius:24px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 24px 64px rgba(0,0,0,.2)}.about-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--tr)}.about-image:hover img{transform:scale(1.03)}
+.about-body{font-size:1.05rem;color:${isLight?'rgba(15,23,42,0.72)':'rgba(248,250,252,0.72)'};line-height:1.8;margin-bottom:2.5rem}.about-body p{margin-bottom:1.25rem}
+.stats-row{display:flex;gap:2.5rem;flex-wrap:wrap}.stat-value{font-family:'${t.fontHeading}',serif;font-size:3rem;font-weight:900;color:var(--p);line-height:1}.stat-label{font-size:.875rem;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'};margin-top:6px;font-weight:500}
 .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
-.service-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s,border-color .3s}
-.service-card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 24px 64px rgba(0,0,0,.2);border-color:var(--p)}
-.service-icon{font-size:2.75rem;margin-bottom:1.5rem;display:inline-block;transition:transform .3s var(--tr)}
-.service-card:hover .service-icon{transform:scale(1.15) rotate(5deg)}
-.service-card h3{font-family:'${t.fontHeading}',serif;font-size:1.25rem;font-weight:700;margin-bottom:.875rem}
-.service-card p{color:${isLight?'rgba(15,23,42,0.62)':'rgba(248,250,252,0.62)'};line-height:1.7;font-size:.95rem}
-.process-section{background:var(--surf)}
-.process-step{display:grid;grid-template-columns:80px 1fr;gap:2rem;padding:2.5rem 0;border-bottom:1px solid var(--bord);align-items:start}
-.process-step:last-child{border-bottom:none}
-.step-number{font-family:'${t.fontHeading}',serif;font-size:3.5rem;font-weight:900;color:var(--p);opacity:.25;line-height:1}
-.step-content h3{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;font-family:'${t.fontHeading}',serif}
-.step-content p{color:${isLight?'rgba(15,23,42,0.62)':'rgba(248,250,252,0.62)'}}
+.service-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s,border-color .3s}.service-card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 24px 64px rgba(0,0,0,.2);border-color:var(--p)}
+.service-icon{font-size:2.75rem;margin-bottom:1.5rem;display:inline-block;transition:transform .3s var(--tr)}.service-card:hover .service-icon{transform:scale(1.15) rotate(5deg)}
+.service-card h3{font-family:'${t.fontHeading}',serif;font-size:1.25rem;font-weight:700;margin-bottom:.875rem}.service-card p{color:${isLight?'rgba(15,23,42,0.62)':'rgba(248,250,252,0.62)'};line-height:1.7;font-size:.95rem}
+.process-section{background:var(--surf)}.process-step{display:grid;grid-template-columns:80px 1fr;gap:2rem;padding:2.5rem 0;border-bottom:1px solid var(--bord);align-items:start}.process-step:last-child{border-bottom:none}
+.step-number{font-family:'${t.fontHeading}',serif;font-size:3.5rem;font-weight:900;color:var(--p);opacity:.25;line-height:1}.step-content h3{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;font-family:'${t.fontHeading}',serif}.step-content p{color:${isLight?'rgba(15,23,42,0.62)':'rgba(248,250,252,0.62)'}}
 .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
-.testimonial-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s}
-.testimonial-card:hover{transform:translateY(-4px);box-shadow:0 24px 64px rgba(0,0,0,.2)}
-.stars{color:#f59e0b;font-size:1rem;letter-spacing:2px;margin-bottom:1.25rem}
-.quote{font-size:1rem;line-height:1.8;margin-bottom:1.75rem;font-style:italic;position:relative}
-.quote::before{content:'"';font-family:'${t.fontHeading}',serif;font-size:5rem;line-height:0;color:var(--p);opacity:.3;position:absolute;top:1.5rem;left:-.5rem;font-style:normal}
-.author-info{display:flex;align-items:center;gap:12px}
-.author-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:1rem;flex-shrink:0}
-.author-info strong{display:block;font-size:.9rem;font-weight:700}
-.author-info span{font-size:.8rem;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'}}
-.cta-band{position:relative;overflow:hidden;padding:120px 5%;background:var(--p);text-align:center}
-.cta-band::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 30% 50%,color-mix(in srgb,var(--acc) 30%,transparent),transparent 60%)}
-.cta-band .section-title{color:white;position:relative;z-index:1;margin:0 auto 1.25rem;max-width:700px}
-.cta-band .section-subtitle{color:rgba(255,255,255,.8);position:relative;z-index:1;margin:0 auto 2.75rem}
-.cta-band .btn-w{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:white;color:var(--p);padding:18px 40px;border-radius:10px;text-decoration:none;font-weight:800;font-size:1.05rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 12px 40px rgba(0,0,0,.25)}
-.cta-band .btn-w:hover{transform:translateY(-3px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
-.contact-section{background:var(--surf)}
-.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:6rem;align-items:start}
-.contact-items{display:flex;flex-direction:column;gap:1.75rem;margin-top:2rem}
-.contact-item{display:flex;align-items:flex-start;gap:1rem}
+.testimonial-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s}.testimonial-card:hover{transform:translateY(-4px);box-shadow:0 24px 64px rgba(0,0,0,.2)}
+.stars{color:#f59e0b;font-size:1rem;letter-spacing:2px;margin-bottom:1.25rem}.quote{font-size:1rem;line-height:1.8;margin-bottom:1.75rem;font-style:italic;position:relative}.quote::before{content:'"';font-family:'${t.fontHeading}',serif;font-size:5rem;line-height:0;color:var(--p);opacity:.3;position:absolute;top:1.5rem;left:-.5rem;font-style:normal}
+.author-info{display:flex;align-items:center;gap:12px}.author-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:1rem;flex-shrink:0}
+.author-info strong{display:block;font-size:.9rem;font-weight:700}.author-info span{font-size:.8rem;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'}}
+.cta-band{position:relative;overflow:hidden;padding:120px 5%;background:var(--p);text-align:center}.cta-band::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 30% 50%,color-mix(in srgb,var(--acc) 30%,transparent),transparent 60%)}
+.cta-band .section-title{color:white;position:relative;z-index:1;margin:0 auto 1.25rem;max-width:700px}.cta-band .section-subtitle{color:rgba(255,255,255,.8);position:relative;z-index:1;margin:0 auto 2.75rem}
+.cta-band .btn-w{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:white;color:var(--p);padding:18px 40px;border-radius:10px;text-decoration:none;font-weight:800;font-size:1.05rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 12px 40px rgba(0,0,0,.25)}.cta-band .btn-w:hover{transform:translateY(-3px)}
+.contact-section{background:var(--surf)}.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:6rem;align-items:start}
+.contact-items{display:flex;flex-direction:column;gap:1.75rem;margin-top:2rem}.contact-item{display:flex;align-items:flex-start;gap:1rem}
 .contact-icon{width:48px;height:48px;border-radius:12px;background:color-mix(in srgb,var(--p) 15%,transparent);border:1px solid color-mix(in srgb,var(--p) 30%,transparent);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
-.contact-item strong{display:block;font-size:.875rem;font-weight:700;margin-bottom:3px}
-.contact-item span{font-size:.95rem;color:${isLight?'rgba(15,23,42,0.65)':'rgba(248,250,252,0.65)'}}
-.contact-form{display:flex;flex-direction:column;gap:1.25rem}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.contact-item strong{display:block;font-size:.875rem;font-weight:700;margin-bottom:3px}.contact-item span{font-size:.95rem;color:${isLight?'rgba(15,23,42,0.65)':'rgba(248,250,252,0.65)'}}
+.contact-form{display:flex;flex-direction:column;gap:1.25rem}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .field label{display:block;font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'};margin-bottom:8px}
-.field input,.field textarea{width:100%;padding:14px 18px;background:var(--bg);border:1.5px solid var(--bord);border-radius:10px;color:var(--txt);font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}
-.field input:focus,.field textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px color-mix(in srgb,var(--p) 15%,transparent)}
-.field textarea{min-height:130px;resize:vertical}
-.form-submit{background:var(--p);color:white;border:none;padding:16px 32px;border-radius:10px;font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 6px 20px color-mix(in srgb,var(--p) 40%,transparent)}
-.form-submit:hover{transform:translateY(-2px)}
+.field input,.field textarea{width:100%;padding:14px 18px;background:var(--bg);border:1.5px solid var(--bord);border-radius:10px;color:var(--txt);font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}.field input:focus,.field textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px color-mix(in srgb,var(--p) 15%,transparent)}.field textarea{min-height:130px;resize:vertical}
+.form-submit{background:var(--p);color:white;border:none;padding:16px 32px;border-radius:10px;font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 6px 20px color-mix(in srgb,var(--p) 40%,transparent)}.form-submit:hover{transform:translateY(-2px)}
 footer{background:${isLight?'#0f172a':'#000'};color:rgba(255,255,255,.5);padding:4rem 5% 3rem}
-.footer-inner{max-width:1200px;margin:0 auto}
-.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;margin-bottom:3rem;flex-wrap:wrap}
-.footer-logo{font-family:'${t.fontHeading}',serif;font-size:1.5rem;font-weight:900;color:white;margin-bottom:.5rem}
-.footer-tagline{font-size:.9rem;color:rgba(255,255,255,.4)}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
-.footer-links a{color:rgba(255,255,255,.45);text-decoration:none;font-size:.875rem;transition:color .2s}
-.footer-links a:hover{color:white}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
-.mobile-menu{display:none;position:fixed;inset:0;z-index:999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:2rem}
-.mobile-menu.open{display:flex}
-.mobile-menu a{font-size:1.5rem;font-weight:700;color:var(--txt);text-decoration:none}
-.mobile-close{position:absolute;top:1.5rem;right:2rem;font-size:2rem;cursor:pointer;background:none;border:none;color:var(--txt)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
-@keyframes scrollLine{0%{top:-100%}100%{top:200%}}
+.footer-inner{max-width:1200px;margin:0 auto}.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;margin-bottom:3rem;flex-wrap:wrap}
+.footer-logo{font-family:'${t.fontHeading}',serif;font-size:1.5rem;font-weight:900;color:white;margin-bottom:.5rem}.footer-tagline{font-size:.9rem;color:rgba(255,255,255,.4)}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}.footer-links a{color:rgba(255,255,255,.45);text-decoration:none;font-size:.875rem;transition:color .2s}.footer-links a:hover{color:white}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}.footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
+.mobile-menu{display:none;position:fixed;inset:0;z-index:999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:2rem}.mobile-menu.open{display:flex}.mobile-menu a{font-size:1.5rem;font-weight:700;color:var(--txt);text-decoration:none}.mobile-close{position:absolute;top:1.5rem;right:2rem;font-size:2rem;cursor:pointer;background:none;border:none;color:var(--txt)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}@keyframes scrollLine{0%{top:-100%}100%{top:200%}}
 @media(max-width:900px){.about-grid,.contact-grid{grid-template-columns:1fr;gap:3.5rem}.form-row{grid-template-columns:1fr}}
 @media(max-width:768px){.nav-links,.nav-cta{display:none}.hamburger{display:flex}section{padding:80px 5%}.hero h1{font-size:2.4rem}}
-</style>
-</head>
-<body>
-<div class="mobile-menu" id="mm">
-  <button class="mobile-close" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">✕</button>
-  <a href="#about" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">About</a>
-  <a href="#services" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Services</a>
-  <a href="#testimonials" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Reviews</a>
-  <a href="#contact" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Contact</a>
-</div>
-<nav id="nav">
-  <div class="nav-inner">
-    <a href="#" class="nav-logo">${input.businessName}</a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#testimonials">Reviews</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <a href="#contact" class="nav-cta">${content.hero?.cta||'Get Started'}</a>
-    <button class="hamburger" onclick="document.getElementById('mm').classList.add('open');document.body.style.overflow='hidden'" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-<section class="hero">
-  <img class="hero-media" src="${heroImg}" alt="${input.businessName}" fetchpriority="high">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    ${content.hero?.eyebrow?`<div class="hero-eyebrow">${content.hero.eyebrow}</div>`:''}
-    <h1>${content.hero?.headline||input.businessName}</h1>
-    <p>${content.hero?.subheadline||''}</p>
-    <div class="hero-buttons">
-      <a href="#contact" class="btn-p">${content.hero?.cta||'Get Started'} →</a>
-      ${content.hero?.ctaSecondary?`<a href="#about" class="btn-g">${content.hero.ctaSecondary}</a>`:''}
-    </div>
-  </div>
-  <div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div>
-</section>
-<section class="about" id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div class="reveal-left">
-        <div class="about-image"><img src="${aboutImg}" alt="${input.businessName}" loading="lazy"></div>
-      </div>
-      <div class="reveal-right">
-        <div class="section-label">Our Story</div>
-        <h2 class="section-title">${content.about?.heading||'About Us'}</h2>
-        <div class="about-body">${(content.about?.body||'').split('\n\n').map(p=>`<p>${p}</p>`).join('')}</div>
-        ${stats?`<div class="stats-row">${stats}</div>`:''}
-      </div>
-    </div>
-  </div>
-</section>
-<section id="services">
-  <div class="container">
-    <div class="section-header reveal"><div class="section-label">What We Do</div><h2 class="section-title">Our Services</h2></div>
-    <div class="services-grid">${services}</div>
-  </div>
-</section>
+</style></head><body>
+<div class="mobile-menu" id="mm"><button class="mobile-close" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">✕</button><a href="#about" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">About</a><a href="#services" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Services</a><a href="#testimonials" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Reviews</a><a href="#contact" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Contact</a></div>
+<nav id="nav"><div class="nav-inner"><a href="#" class="nav-logo">${input.businessName}</a><ul class="nav-links"><li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#testimonials">Reviews</a></li><li><a href="#contact">Contact</a></li></ul><a href="#contact" class="nav-cta">${content.hero?.cta||'Get Started'}</a><button class="hamburger" onclick="document.getElementById('mm').classList.add('open');document.body.style.overflow='hidden'" aria-label="Menu"><span></span><span></span><span></span></button></div></nav>
+<section class="hero"><img class="hero-media" src="${heroImg}" alt="${input.businessName}" fetchpriority="high"><div class="hero-overlay"></div><div class="hero-content">${content.hero?.eyebrow?`<div class="hero-eyebrow">${content.hero.eyebrow}</div>`:''}<h1>${content.hero?.headline||input.businessName}</h1><p>${content.hero?.subheadline||''}</p><div class="hero-buttons"><a href="#contact" class="btn-p">${content.hero?.cta||'Get Started'} →</a>${content.hero?.ctaSecondary?`<a href="#about" class="btn-g">${content.hero.ctaSecondary}</a>`:''}</div></div><div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div></section>
+<section class="about" id="about"><div class="container"><div class="about-grid"><div class="reveal-left"><div class="about-image"><img src="${aboutImg}" alt="${input.businessName}" loading="lazy"></div></div><div class="reveal-right"><div class="section-label">Our Story</div><h2 class="section-title">${content.about?.heading||'About Us'}</h2><div class="about-body">${(content.about?.body||'').split('\n\n').map(p=>`<p>${p}</p>`).join('')}</div>${stats?`<div class="stats-row">${stats}</div>`:''}</div></div></div></section>
+<section id="services"><div class="container"><div class="section-header reveal"><div class="section-label">What We Do</div><h2 class="section-title">Our Services</h2></div><div class="services-grid">${services}</div></div></section>
 ${process?`<section class="process-section"><div class="container"><div class="section-header reveal"><div class="section-label">How It Works</div><h2 class="section-title">Our Process</h2></div><div>${process}</div></div></section>`:''}
-<section id="testimonials">
-  <div class="container">
-    <div class="section-header reveal"><div class="section-label">Client Reviews</div><h2 class="section-title">What People Say</h2></div>
-    <div class="testimonials-grid">${testimonials}</div>
-  </div>
-</section>
-<div class="cta-band">
-  <h2 class="section-title reveal">${content.cta?.heading||'Ready to Get Started?'}</h2>
-  <p class="section-subtitle reveal">${content.cta?.body||''}</p>
-  <a href="#contact" class="btn-w reveal">${content.cta?.button||'Contact Us'} →</a>
-</div>
-<section class="contact-section" id="contact">
-  <div class="container">
-    <div class="contact-grid">
-      <div class="reveal-left">
-        <div class="section-label">Reach Out</div>
-        <h2 class="section-title">Let's Talk</h2>
-        <p class="section-subtitle">${content.footer?.tagline||''}</p>
-        <div class="contact-items">
-          ${input.phone?`<div class="contact-item"><div class="contact-icon">📞</div><div><strong>Phone</strong><span>${input.phone}</span></div></div>`:''}
-          ${input.email?`<div class="contact-item"><div class="contact-icon">✉️</div><div><strong>Email</strong><span>${input.email}</span></div></div>`:''}
-          ${input.location?`<div class="contact-item"><div class="contact-icon">📍</div><div><strong>Location</strong><span>${input.location}</span></div></div>`:''}
-        </div>
-      </div>
-      <div class="reveal-right">
-        <form class="contact-form" onsubmit="handleForm(event)">
-          <div class="form-row">
-            <div class="field"><label>First Name</label><input type="text" placeholder="John" required></div>
-            <div class="field"><label>Last Name</label><input type="text" placeholder="Doe" required></div>
-          </div>
-          <div class="field"><label>Email</label><input type="email" placeholder="john@example.com" required></div>
-          <div class="field"><label>Phone</label><input type="tel" placeholder="(555) 000-0000"></div>
-          <div class="field"><label>Message</label><textarea placeholder="Tell us how we can help..."></textarea></div>
-          <button type="submit" class="form-submit">${content.cta?.button||'Send Message'} →</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
-<footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div><div class="footer-logo">${input.businessName}</div><div class="footer-tagline">${content.footer?.tagline||''}</div></div>
-      <div class="footer-links">
-        <a href="#about">About</a><a href="#services">Services</a><a href="#testimonials">Reviews</a><a href="#contact">Contact</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-copy">© ${new Date().getFullYear()} ${input.businessName}. All rights reserved.</div>
-      ${input.location?`<div class="footer-copy">Serving ${input.location}</div>`:''}
-    </div>
-  </div>
-</footer>
+<section id="testimonials"><div class="container"><div class="section-header reveal"><div class="section-label">Client Reviews</div><h2 class="section-title">What People Say</h2></div><div class="testimonials-grid">${testimonials}</div></div></section>
+<div class="cta-band"><h2 class="section-title reveal">${content.cta?.heading||'Ready to Get Started?'}</h2><p class="section-subtitle reveal">${content.cta?.body||''}</p><a href="#contact" class="btn-w reveal">${content.cta?.button||'Contact Us'} →</a></div>
+<section class="contact-section" id="contact"><div class="container"><div class="contact-grid"><div class="reveal-left"><div class="section-label">Reach Out</div><h2 class="section-title">Let's Talk</h2><p class="section-subtitle">${content.footer?.tagline||''}</p><div class="contact-items">${input.phone?`<div class="contact-item"><div class="contact-icon">📞</div><div><strong>Phone</strong><span>${input.phone}</span></div></div>`:''} ${input.email?`<div class="contact-item"><div class="contact-icon">✉️</div><div><strong>Email</strong><span>${input.email}</span></div></div>`:''} ${input.location?`<div class="contact-item"><div class="contact-icon">📍</div><div><strong>Location</strong><span>${input.location}</span></div></div>`:''}</div></div><div class="reveal-right"><form class="contact-form" onsubmit="handleForm(event)"><div class="form-row"><div class="field"><label>First Name</label><input type="text" placeholder="John" required></div><div class="field"><label>Last Name</label><input type="text" placeholder="Doe" required></div></div><div class="field"><label>Email</label><input type="email" placeholder="john@example.com" required></div><div class="field"><label>Phone</label><input type="tel" placeholder="(555) 000-0000"></div><div class="field"><label>Message</label><textarea placeholder="Tell us how we can help..."></textarea></div><button type="submit" class="form-submit">${content.cta?.button||'Send Message'} →</button></form></div></div></div></section>
+<footer><div class="footer-inner"><div class="footer-top"><div><div class="footer-logo">${input.businessName}</div><div class="footer-tagline">${content.footer?.tagline||''}</div></div><div class="footer-links"><a href="#about">About</a><a href="#services">Services</a><a href="#testimonials">Reviews</a><a href="#contact">Contact</a></div></div><div class="footer-bottom"><div class="footer-copy">© ${new Date().getFullYear()} ${input.businessName}. All rights reserved.</div>${input.location?`<div class="footer-copy">Serving ${input.location}</div>`:''}</div></div></footer>
 <script>
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60),{passive:true});
@@ -570,33 +544,32 @@ document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obs.
 const cobs=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,target=parseInt(el.dataset.target),suffix=el.dataset.suffix||'',start=performance.now();function u(now){const p=Math.min((now-start)/1800,1),ease=1-Math.pow(1-p,4);el.textContent=Math.floor(ease*target)+suffix;if(p<1)requestAnimationFrame(u);}requestAnimationFrame(u);cobs.unobserve(el);});},{threshold:.5});
 document.querySelectorAll('.stat-value[data-target]').forEach(c=>cobs.observe(c));
 function handleForm(e){e.preventDefault();const btn=e.target.querySelector('.form-submit'),orig=btn.textContent;btn.textContent='Sent ✓';btn.style.background='#10b981';setTimeout(()=>{btn.textContent=orig;btn.style.background='';e.target.reset();},4000);}
-</script>
-</body>
-</html>`;
+<\/script></body></html>`;
 }
 
+// ── GENERATE ──
 async function generate() {
   const apiKey = document.getElementById('apiKey').value.trim();
   const businessName = document.getElementById('businessName').value.trim();
-  const industry = document.getElementById('industry').value;
+  const industry = document.getElementById('industry').value.trim();
 
   clearError();
   if (!apiKey) return showError('Please enter your Claude API key.');
   if (!businessName) return showError('Business name is required.');
-  if (!industry) return showError('Please select an industry.');
+  if (!industry) return showError('Please enter an industry.');
 
   const btn = document.getElementById('generateBtn');
   btn.disabled = true;
   btn.textContent = '⟳ Generating...';
   document.getElementById('actionButtons').style.display = 'none';
   document.getElementById('previewBadge').style.display = 'none';
+  document.getElementById('featureList').style.display = 'none';
 
   const previewArea = document.getElementById('previewArea');
-  previewArea.innerHTML = `<div style="text-align:center"><div class="spinner"></div><p class="status">Claude is writing your site...</p><p class="status" style="margin-top:0.5rem;font-size:0.75rem">Usually 15–20 seconds</p></div>`;
+  previewArea.innerHTML = `<div style="text-align:center"><div class="spinner"></div><p class="status">Claude is reading your assets and writing your site...</p><p class="status" style="margin-top:0.5rem;font-size:0.75rem">Usually 15–25 seconds</p></div>`;
 
   const input = {
-    businessName,
-    industry,
+    businessName, industry,
     location: document.getElementById('location').value.trim(),
     phone: document.getElementById('phone').value.trim(),
     email: document.getElementById('email').value.trim(),
@@ -605,56 +578,74 @@ async function generate() {
     tone: selectedTone,
   };
 
-  const prompt = `You are a world-class copywriter. Generate website content for this business. Be specific — NOT generic AI copy.
+  // Build message content — text prompt + any images/PDFs
+  const textPrompt = `You are a world-class copywriter and brand strategist. Generate website content for this business. Be highly specific — NOT generic AI copy. Use any brand assets provided to inform the tone, colors, and messaging.
 
 Business:
 - Name: ${input.businessName}
 - Industry: ${input.industry}
 - Location: ${input.location||'Not specified'}
+- Phone: ${input.phone||'Not specified'}
+- Email: ${input.email||'Not specified'}
 - Services: ${input.services.join(', ')||'Not specified'}
 - Description: ${input.description||'Not provided'}
 - Tone: ${input.tone}
+${uploadedFiles.filter(f=>f.note).map(f=>`- Asset: ${f.note}`).join('\n')}
+
+${uploadedFiles.filter(f=>f.base64&&f.type==='image').length ? 'Brand images are attached — use them to understand the visual style, color palette, and brand personality.' : ''}
+${uploadedFiles.filter(f=>f.base64&&f.type==='pdf').length ? 'Brand PDF documents are attached — extract key messaging, values, and guidelines from them.' : ''}
 
 Return ONLY valid JSON (no markdown, no explanation):
 {
   "meta": {"title":"","description":"","keywords":[]},
-  "hero": {"eyebrow":"3-5 word trust signal","headline":"Bold specific headline","subheadline":"1-2 sentences of value","cta":"Action verb 2-4 words","ctaSecondary":"Softer 2-4 words"},
+  "hero": {"eyebrow":"3-5 word trust signal specific to this business","headline":"Bold specific headline — not generic","subheadline":"1-2 sentences of specific value","cta":"Action verb 2-4 words","ctaSecondary":"Softer 2-4 words"},
   "about": {
     "heading":"Creative heading not 'About Us'",
-    "body":"3 short paragraphs separated by \\n\\n. Human, not AI.",
+    "body":"3 short paragraphs separated by \\n\\n. Human voice, not AI.",
     "stats":[{"value":"10+","numericValue":10,"suffix":"+","label":"Years in Business"},{"value":"500+","numericValue":500,"suffix":"+","label":"Happy Clients"},{"value":"98%","numericValue":98,"suffix":"%","label":"5-Star Reviews"}]
   },
-  "services":[{"title":"","description":"2-3 sentences benefit-first","icon":"emoji"}],
-  "process":[{"step":"01","title":"","description":""},{"step":"02","title":"","description":""},{"step":"03","title":"","description":""}],
-  "testimonials":[{"quote":"Specific 2-3 sentence testimonial","author":"Full Name","role":"Their role","rating":5},{"quote":"","author":"","role":"","rating":5},{"quote":"","author":"","role":"","rating":5}],
-  "cta":{"heading":"Compelling CTA heading","body":"1-2 sentences removing objections","button":"Action text"},
-  "footer":{"tagline":"Under 8 words"},
-  "unsplashQuery":"3-4 specific words for image search"
+  "services":[{"title":"Specific service name","description":"2-3 sentences benefit-first","icon":"single emoji"}],
+  "process":[{"step":"01","title":"Step name","description":"One sentence"},{"step":"02","title":"Step name","description":"One sentence"},{"step":"03","title":"Step name","description":"One sentence"}],
+  "testimonials":[{"quote":"Specific 2-3 sentence testimonial with real detail","author":"Full Name","role":"Their role","rating":5},{"quote":"","author":"","role":"","rating":5},{"quote":"","author":"","role":"","rating":5}],
+  "cta":{"heading":"Compelling CTA headline","body":"1-2 sentences removing last objection","button":"Action text"},
+  "footer":{"tagline":"Under 8 words — memorable and specific"},
+  "unsplashQuery":"3-4 specific words for hero image (e.g. 'modern dental office interior')"
 }`;
+
+  // Build multimodal content array
+  const contentBlocks = [{ type: 'text', text: textPrompt }];
+
+  for (const f of uploadedFiles) {
+    if (!f.base64) continue;
+    if (f.type === 'image') {
+      contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType||'image/jpeg', data: f.base64 } });
+    } else if (f.type === 'pdf') {
+      contentBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 } });
+    }
+  }
 
   try {
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ apiKey, prompt }),
+      body: JSON.stringify({ apiKey, messages: [{ role: 'user', content: contentBlocks }] }),
     });
 
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.error?.message || err.error || `API error ${res.status}`);
+      throw new Error(err.error?.message || err.error || `Error ${res.status}`);
     }
 
     const data = await res.json();
-    const text = data.content[0].text;
+    const text = data.content?.[0]?.text || '';
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON found in response');
+    if (!jsonMatch) throw new Error('No JSON in response — try again');
     const content = JSON.parse(jsonMatch[0]);
 
     generatedHTML = buildHTML(content, selectedTemplate, input);
 
     const iframe = document.createElement('iframe');
     iframe.style.cssText = 'width:100%;height:100%;border:none';
-    iframe.title = 'Site Preview';
     iframe.sandbox = 'allow-same-origin allow-scripts';
     previewArea.innerHTML = '';
     previewArea.appendChild(iframe);
@@ -668,6 +659,7 @@ Return ONLY valid JSON (no markdown, no explanation):
   } catch (err) {
     previewArea.innerHTML = `<div class="preview-empty"><div class="icon">⚠️</div><p>Generation failed</p><small>${err.message}</small></div>`;
     showError(err.message);
+    document.getElementById('featureList').style.display = 'block';
   } finally {
     btn.disabled = false;
     btn.textContent = 'Generate Website →';
@@ -687,7 +679,7 @@ function downloadSite() {
   const blob = new Blob([generatedHTML], {type:'text/html'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `${name||'website'}.html`; a.click();
+  a.href=url; a.download=`${name||'website'}.html`; a.click();
   URL.revokeObjectURL(url);
 }
 </script>

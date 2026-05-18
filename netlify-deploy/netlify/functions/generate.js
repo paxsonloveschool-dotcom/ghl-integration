@@ -4,10 +4,10 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { prompt, apiKey } = JSON.parse(event.body);
+    const { apiKey, messages } = JSON.parse(event.body);
 
-    if (!apiKey || !prompt) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'Missing apiKey or prompt' }) };
+    if (!apiKey || !messages) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing apiKey or messages' }) };
     }
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -20,7 +20,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 2500,
-        messages: [{ role: 'user', content: prompt }],
+        messages,
       }),
     });
 
