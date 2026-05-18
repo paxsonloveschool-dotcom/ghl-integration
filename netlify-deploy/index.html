@@ -20,6 +20,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem
 @media(max-width:960px){.grid{grid-template-columns:1fr}}
 .panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.5rem;margin-bottom:1rem}
 .panel h2{font-size:0.95rem;font-weight:700;margin-bottom:1.25rem;color:#e2e8f0;display:flex;align-items:center;gap:0.5rem}
+.panel-subtitle{font-size:0.75rem;color:rgba(248,250,252,0.4);font-weight:400;margin-bottom:1rem;margin-top:-0.75rem}
 .field{margin-bottom:1rem}
 .field label{display:block;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(248,250,252,0.5);margin-bottom:6px}
 .field input,.field textarea{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#f8fafc;font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s}
@@ -57,11 +58,13 @@ iframe{width:100%;height:100%;border:none}
 .status{text-align:center;color:rgba(248,250,252,0.5);font-size:0.85rem}
 .error-box{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:10px;padding:0.75rem 1rem;font-size:0.85rem;margin-top:0.75rem}
 .success-actions{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.75rem}
-.api-setup{background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:12px;padding:1rem;margin-bottom:1.25rem}
+.api-setup{background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:12px;padding:1rem;margin-bottom:0.75rem}
 .api-setup p{font-size:0.8rem;color:rgba(248,250,252,0.6);margin-bottom:0.5rem}
 .api-setup a{color:#818cf8;text-decoration:none;font-size:0.8rem}
+.pexels-setup{background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.2);border-radius:12px;padding:1rem;margin-bottom:1.25rem}
+.pexels-setup p{font-size:0.8rem;color:rgba(248,250,252,0.6);margin-bottom:0.5rem}
+.pexels-setup a{color:#34d399;text-decoration:none;font-size:0.8rem}
 .tag{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:2px 8px;border-radius:100px;background:rgba(129,140,248,0.2);color:#818cf8}
-
 /* FILE UPLOAD */
 .upload-zone{border:2px dashed rgba(255,255,255,0.15);border-radius:14px;padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
 .upload-zone:hover,.upload-zone.drag-over{border-color:#818cf8;background:rgba(129,140,248,0.06)}
@@ -74,7 +77,7 @@ iframe{width:100%;height:100%;border:none}
 .file-thumb{width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
 .file-thumb img{width:100%;height:100%;border-radius:6px;object-fit:cover}
 .file-info{flex:1;min-width:0}
-.file-name{font-size:0.8rem;font-weight:600;truncate:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-name{font-size:0.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .file-size{font-size:0.7rem;color:rgba(248,250,252,0.4)}
 .file-type-badge{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:100px;text-transform:uppercase}
 .badge-image{background:rgba(129,140,248,0.2);color:#a5b4fc}
@@ -105,12 +108,18 @@ iframe{width:100%;height:100%;border:none}
     <!-- LEFT COLUMN -->
     <div>
 
-      <!-- API KEY -->
+      <!-- API KEYS -->
       <div class="panel">
         <div class="api-setup">
           <p>🔑 Claude API key required — <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key</p>
           <div class="field" style="margin:0">
             <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
+          </div>
+        </div>
+        <div class="pexels-setup">
+          <p>🎬 Pexels API key (optional) — <a href="https://www.pexels.com/api/" target="_blank">pexels.com/api</a> — enables video backgrounds</p>
+          <div class="field" style="margin:0">
+            <input type="password" id="pexelsKey" placeholder="Get free key at pexels.com/api — enables video backgrounds" autocomplete="off">
           </div>
         </div>
 
@@ -178,6 +187,14 @@ iframe{width:100%;height:100%;border:none}
           <input type="email" id="email" placeholder="hello@business.com">
         </div>
         <div class="field">
+          <label>Website URL</label>
+          <input type="url" id="website" placeholder="https://yourbusiness.com — shown in top bar">
+        </div>
+        <div class="field">
+          <label>Street Address</label>
+          <input type="text" id="address" placeholder="123 Main St, Austin TX 78701 — for Google Maps embed">
+        </div>
+        <div class="field">
           <label>Services (comma separated)</label>
           <input type="text" id="services" placeholder="Cleanings, Invisalign, Implants, Emergency Care">
         </div>
@@ -187,19 +204,53 @@ iframe{width:100%;height:100%;border:none}
         </div>
       </div>
 
+      <!-- SOCIAL MEDIA -->
+      <div class="panel">
+        <h2>📱 Social Media Links</h2>
+        <p class="panel-subtitle">Optional — appears in site top bar</p>
+        <div class="row">
+          <div class="field">
+            <label>Facebook</label>
+            <input type="url" id="smFacebook" placeholder="https://facebook.com/yourpage">
+          </div>
+          <div class="field">
+            <label>Instagram</label>
+            <input type="url" id="smInstagram" placeholder="https://instagram.com/yourhandle">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Twitter / X</label>
+            <input type="url" id="smTwitter" placeholder="https://twitter.com/yourhandle">
+          </div>
+          <div class="field">
+            <label>LinkedIn</label>
+            <input type="url" id="smLinkedIn" placeholder="https://linkedin.com/company/yourco">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>YouTube</label>
+            <input type="url" id="smYouTube" placeholder="https://youtube.com/yourchannel">
+          </div>
+          <div class="field">
+            <label>TikTok</label>
+            <input type="url" id="smTikTok" placeholder="https://tiktok.com/@yourhandle">
+          </div>
+        </div>
+      </div>
+
       <!-- FILE UPLOADS -->
       <div class="panel">
-        <h2>📁 Brand Assets & Content
+        <h2>📁 Brand Assets &amp; Content
           <span style="font-size:0.7rem;font-weight:500;color:rgba(248,250,252,0.4);margin-left:auto">Claude will read these to inform the site</span>
         </h2>
-
         <div class="upload-zone" id="uploadZone">
           <input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx,video/*" onchange="handleFiles(this.files)">
           <div class="upload-icon">📎</div>
           <p>Drop files here or click to browse</p>
           <small>Images · PDFs · Brand guidelines · Word docs · Videos (name used as context)</small>
         </div>
-
         <div id="fileList" class="file-list"></div>
         <div id="uploadSummary" class="upload-summary" style="display:none"></div>
       </div>
@@ -231,7 +282,7 @@ iframe{width:100%;height:100%;border:none}
           <div class="preview-empty">
             <div class="icon">🌐</div>
             <p>Your site will appear here</p>
-            <small>Full-screen hero · Scroll animations · Real photos</small>
+            <small>Full-screen hero · 8 pages · Video backgrounds</small>
           </div>
         </div>
       </div>
@@ -246,17 +297,16 @@ iframe{width:100%;height:100%;border:none}
       <div id="featureList" class="panel" style="margin-top:1rem">
         <h2>✨ What every site includes</h2>
         <div style="display:flex;flex-direction:column;gap:0.5rem">
-          ${[
-            ['📸','Full-screen hero image (100vh, real Unsplash photos)'],
-            ['🎬','Scroll-triggered animations on every section'],
-            ['📊','Animated stat counters (0 → 500+)'],
-            ['💬','3 believable testimonials with star ratings'],
-            ['🔧','Services grid with hover effects'],
-            ['📋','3-step process section'],
-            ['📱','Mobile responsive + hamburger menu'],
-            ['📧','Contact form with validation'],
-            ['💾','Single HTML file — deploys anywhere'],
-          ].map(([icon,text])=>`<div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>${icon}</span><span>${text}</span></div>`).join('')}
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>🎬</span><span>Industry-matched video background (Pexels API)</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>🌐</span><span>8 full pages: Home · Services · Portfolio · About · Blog · FAQ · Careers · Contact</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>☝️</span><span>Top bar with location, social links &amp; website</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>🗺️</span><span>Google Maps location embed on home page</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>🏷️</span><span>Brand logo mark on every section heading</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>✨</span><span>Cinematic scroll animations + parallax + floating particles</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>📊</span><span>Animated stat counters (0 → 500+)</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>💬</span><span>3 believable testimonials with star ratings</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>📱</span><span>Fully responsive + mobile hamburger menu</span></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:rgba(248,250,252,0.6)"><span>💾</span><span>Single HTML file — deploys anywhere</span></div>
         </div>
       </div>
     </div>
@@ -269,30 +319,27 @@ let selectedTone = 'professional';
 let generatedHTML = '';
 let uploadedFiles = [];
 
-// ── TEMPLATE / TONE SELECTORS ──
 function selectTemplate(el) {
-  document.querySelectorAll('.tpl').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tpl').forEach(function(t){ t.classList.remove('active'); });
   el.classList.add('active');
   selectedTemplate = el.dataset.id;
 }
 function selectTone(el) {
-  document.querySelectorAll('.tone').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tone').forEach(function(t){ t.classList.remove('active'); });
   el.classList.add('active');
   selectedTone = el.textContent.toLowerCase();
 }
 
-// ── FILE HANDLING ──
 const uploadZone = document.getElementById('uploadZone');
-uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
-uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+uploadZone.addEventListener('dragover', function(e){ e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', function(){ uploadZone.classList.remove('drag-over'); });
+uploadZone.addEventListener('drop', function(e){ e.preventDefault(); uploadZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
 
 function formatBytes(b) {
   if (b < 1024) return b + ' B';
   if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
   return (b/1048576).toFixed(1) + ' MB';
 }
-
 function getFileType(file) {
   if (file.type.startsWith('image/')) return 'image';
   if (file.type === 'application/pdf') return 'pdf';
@@ -300,18 +347,16 @@ function getFileType(file) {
   if (file.type.includes('word') || file.name.endsWith('.docx') || file.name.endsWith('.doc')) return 'doc';
   return 'other';
 }
-
 function getBadge(type) {
   const map = { image:'badge-image', pdf:'badge-pdf', video:'badge-video', doc:'badge-doc', other:'badge-doc' };
   const labels = { image:'Image', pdf:'PDF', video:'Video', doc:'Doc', other:'File' };
-  return `<span class="file-type-badge ${map[type]}">${labels[type]}</span>`;
+  return '<span class="file-type-badge ' + map[type] + '">' + labels[type] + '</span>';
 }
-
 async function compressImage(file) {
-  return new Promise(resolve => {
+  return new Promise(function(resolve){
     const img = new Image();
     const url = URL.createObjectURL(file);
-    img.onload = () => {
+    img.onload = function(){
       const MAX = 1200;
       const ratio = Math.min(MAX / img.width, MAX / img.height, 1);
       const canvas = document.createElement('canvas');
@@ -319,37 +364,31 @@ async function compressImage(file) {
       canvas.height = Math.round(img.height * ratio);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
-      canvas.toBlob(blob => {
+      canvas.toBlob(function(blob){
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onload = function(){ resolve(reader.result.split(',')[1]); };
         reader.readAsDataURL(blob);
       }, 'image/jpeg', 0.82);
     };
     img.src = url;
   });
 }
-
 function readAsBase64(file) {
-  return new Promise((resolve, reject) => {
+  return new Promise(function(resolve, reject){
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onload = function(){ resolve(reader.result.split(',')[1]); };
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
 }
-
 async function handleFiles(fileList) {
-  const maxTotalMB = 4;
   for (const file of Array.from(fileList)) {
-    if (uploadedFiles.find(f => f.name === file.name)) continue;
-    if (file.size > 20 * 1024 * 1024) { alert(`${file.name} is too large (max 20MB)`); continue; }
-
+    if (uploadedFiles.find(function(f){ return f.name === file.name; })) continue;
+    if (file.size > 20 * 1024 * 1024) { alert(file.name + ' is too large (max 20MB)'); continue; }
     const type = getFileType(file);
-    const entry = { name: file.name, size: file.size, type, file, base64: null, thumbUrl: null, processing: true };
+    const entry = { name: file.name, size: file.size, type: type, file: file, base64: null, thumbUrl: null, processing: true };
     uploadedFiles.push(entry);
     renderFileList();
-
-    // Read file
     try {
       if (type === 'image') {
         entry.base64 = await compressImage(file);
@@ -359,76 +398,76 @@ async function handleFiles(fileList) {
         entry.base64 = await readAsBase64(file);
         entry.mediaType = 'application/pdf';
       } else if (type === 'doc') {
-        // Can't decode docx in browser easily — pass as note
         entry.base64 = null;
-        entry.note = `Brand document uploaded: "${file.name}"`;
+        entry.note = 'Brand document uploaded: "' + file.name + '"';
       } else if (type === 'video') {
-        // Claude can't read video binary — use as context note
         entry.base64 = null;
-        entry.note = `Video asset provided: "${file.name}" (${formatBytes(file.size)})`;
+        entry.note = 'Video asset provided: "' + file.name + '" (' + formatBytes(file.size) + ')';
       }
-    } catch (e) {
-      entry.error = true;
-    }
-
+    } catch(e) { entry.error = true; }
     entry.processing = false;
     renderFileList();
   }
   updateSummary();
 }
-
 function removeFile(name) {
-  uploadedFiles = uploadedFiles.filter(f => f.name !== name);
+  uploadedFiles = uploadedFiles.filter(function(f){ return f.name !== name; });
   renderFileList();
   updateSummary();
 }
-
 function renderFileList() {
   const list = document.getElementById('fileList');
   if (!uploadedFiles.length) { list.innerHTML = ''; return; }
-  list.innerHTML = uploadedFiles.map(f => `
-    <div class="file-item">
-      <div class="file-thumb">
-        ${f.thumbUrl ? `<img src="${f.thumbUrl}" alt="">` : f.type === 'pdf' ? '📄' : f.type === 'video' ? '🎬' : f.type === 'doc' ? '📝' : '📎'}
-      </div>
-      <div class="file-info">
-        <div class="file-name">${f.name}</div>
-        <div class="file-size">${formatBytes(f.size)} ${f.error ? '— ⚠️ read error' : f.processing ? '— processing...' : ''}</div>
-        ${f.processing ? '<div class="file-progress"><div class="file-progress-bar" style="width:60%"></div></div>' : ''}
-      </div>
-      ${getBadge(f.type)}
-      <button class="file-remove" onclick="removeFile('${f.name}')" title="Remove">✕</button>
-    </div>
-  `).join('');
+  list.innerHTML = uploadedFiles.map(function(f){
+    return '<div class="file-item">' +
+      '<div class="file-thumb">' + (f.thumbUrl ? '<img src="' + f.thumbUrl + '" alt="">' : f.type === 'pdf' ? '📄' : f.type === 'video' ? '🎬' : f.type === 'doc' ? '📝' : '📎') + '</div>' +
+      '<div class="file-info"><div class="file-name">' + f.name + '</div><div class="file-size">' + formatBytes(f.size) + (f.error ? ' — ⚠️ read error' : f.processing ? ' — processing...' : '') + '</div>' +
+      (f.processing ? '<div class="file-progress"><div class="file-progress-bar" style="width:60%"></div></div>' : '') +
+      '</div>' + getBadge(f.type) +
+      '<button class="file-remove" onclick="removeFile(\'' + f.name.replace(/'/g, "\\'") + '\')" title="Remove">✕</button></div>';
+  }).join('');
 }
-
 function updateSummary() {
   const el = document.getElementById('uploadSummary');
   if (!uploadedFiles.length) { el.style.display = 'none'; return; }
-  const images = uploadedFiles.filter(f => f.type === 'image').length;
-  const pdfs = uploadedFiles.filter(f => f.type === 'pdf').length;
-  const videos = uploadedFiles.filter(f => f.type === 'video').length;
-  const docs = uploadedFiles.filter(f => f.type === 'doc').length;
+  const images = uploadedFiles.filter(function(f){ return f.type === 'image'; }).length;
+  const pdfs = uploadedFiles.filter(function(f){ return f.type === 'pdf'; }).length;
+  const videos = uploadedFiles.filter(function(f){ return f.type === 'video'; }).length;
+  const docs = uploadedFiles.filter(function(f){ return f.type === 'doc'; }).length;
   const parts = [];
-  if (images) parts.push(`${images} image${images>1?'s':''}`);
-  if (pdfs) parts.push(`${pdfs} PDF${pdfs>1?'s':''}`);
-  if (docs) parts.push(`${docs} doc${docs>1?'s':''}`);
-  if (videos) parts.push(`${videos} video${videos>1?'s':''}`);
-  el.textContent = `✓ ${parts.join(' · ')} ready — Claude will use ${images+pdfs+docs > 0 ? 'these' : 'the filenames'} to inform the site`;
+  if (images) parts.push(images + ' image' + (images > 1 ? 's' : ''));
+  if (pdfs) parts.push(pdfs + ' PDF' + (pdfs > 1 ? 's' : ''));
+  if (docs) parts.push(docs + ' doc' + (docs > 1 ? 's' : ''));
+  if (videos) parts.push(videos + ' video' + (videos > 1 ? 's' : ''));
+  el.textContent = '✓ ' + parts.join(' · ') + ' ready — Claude will use ' + (images + pdfs + docs > 0 ? 'these' : 'the filenames') + ' to inform the site';
   el.style.display = 'block';
 }
 
-// ── ERRORS ──
-function showError(msg) { document.getElementById('errorBox').innerHTML = `<div class="error-box">${msg}</div>`; }
+function showError(msg) { document.getElementById('errorBox').innerHTML = '<div class="error-box">' + msg + '</div>'; }
 function clearError() { document.getElementById('errorBox').innerHTML = ''; }
 
-// ── UNSPLASH ──
-function getUnsplashUrl(query, w=1920, h=1080) {
-  return `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(query)}`;
+function getUnsplashUrl(query, w, h) {
+  w = w || 1920; h = h || 1080;
+  return 'https://source.unsplash.com/' + w + 'x' + h + '/?' + encodeURIComponent(query);
 }
-function buildStars(n) { return '★'.repeat(n)+'☆'.repeat(5-n); }
+function buildStars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
 
-// ── TEMPLATE BUILDER ──
+async function fetchPexelsVideo(query, apiKey) {
+  if (!apiKey) return null;
+  try {
+    const r = await fetch('https://api.pexels.com/videos/search?query=' + encodeURIComponent(query) + '&per_page=5&orientation=landscape&size=medium', { headers: { Authorization: apiKey } });
+    if (!r.ok) return null;
+    const d = await r.json();
+    const v = d.videos && d.videos[0];
+    if (!v) return null;
+    const file = v.video_files.find(function(f){ return f.quality === 'hd' && f.width >= 1280; })
+              || v.video_files.find(function(f){ return f.quality === 'hd'; })
+              || v.video_files.find(function(f){ return f.file_type === 'video/mp4'; })
+              || v.video_files[0];
+    return file ? file.link : null;
+  } catch(e) { return null; }
+}
+
 const TEMPLATES = {
   midnight:{ primaryColor:'#6366f1',accentColor:'#a5b4fc',bgColor:'#0a0a0f',textColor:'#f8fafc',surfaceColor:'#13131f',borderColor:'rgba(255,255,255,0.08)',fontHeading:'Playfair Display',isLight:false },
   pearl:   { primaryColor:'#0f172a',accentColor:'#3b82f6',bgColor:'#ffffff',textColor:'#0f172a',surfaceColor:'#f8fafc',borderColor:'rgba(0,0,0,0.08)',fontHeading:'Fraunces',isLight:true },
@@ -437,113 +476,743 @@ const TEMPLATES = {
   cobalt:  { primaryColor:'#2563eb',accentColor:'#60a5fa',bgColor:'#030712',textColor:'#f1f5f9',surfaceColor:'#0f172a',borderColor:'rgba(37,99,235,0.2)',fontHeading:'Space Grotesk',isLight:false },
 };
 
-function buildHTML(content, tpl, input) {
+function buildHTML(content, tpl, input, videoUrl) {
   const t = TEMPLATES[tpl];
-  const p=t.primaryColor,acc=t.accentColor,bg=t.bgColor,txt=t.textColor,surf=t.surfaceColor,bord=t.borderColor,isLight=t.isLight;
-  const heroImg = getUnsplashUrl(content.unsplashQuery||input.industry);
-  const aboutImg = getUnsplashUrl((content.unsplashQuery||input.industry)+' team',800,600);
+  const p = t.primaryColor, acc = t.accentColor, bg = t.bgColor, txt = t.textColor, surf = t.surfaceColor, bord = t.borderColor, isLight = t.isLight;
+  const heroImg = getUnsplashUrl(content.unsplashQuery || input.industry);
+  const aboutImg = getUnsplashUrl((content.unsplashQuery || input.industry) + ' team', 800, 600);
   const heroTxt = isLight ? txt : '#ffffff';
   const heroSub = isLight ? 'rgba(15,23,42,0.7)' : 'rgba(255,255,255,0.8)';
   const overlay = isLight
     ? 'linear-gradient(to right,rgba(255,255,255,0.92) 40%,rgba(255,255,255,0.5) 70%,rgba(255,255,255,0.1) 100%)'
     : 'linear-gradient(to right,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.6) 50%,rgba(0,0,0,0.2) 100%)';
-  const fontMap={'Playfair Display':'Playfair+Display:wght@400;700;900','Fraunces':'Fraunces:wght@400;600;700;900','Syne':'Syne:wght@400;600;700;800','Cormorant Garamond':'Cormorant+Garamond:wght@400;500;600;700','Space Grotesk':'Space+Grotesk:wght@400;500;600;700'};
-  const gFont = fontMap[t.fontHeading]||'Inter:wght@400;700;900';
-  const services=(content.services||[]).map((s,i)=>`<div class="service-card reveal" style="transition-delay:${i*.1}s"><div class="service-icon">${s.icon}</div><h3>${s.title}</h3><p>${s.description}</p></div>`).join('');
-  const testimonials=(content.testimonials||[]).map((t,i)=>`<div class="testimonial-card reveal" style="transition-delay:${i*.12}s"><div class="stars">${buildStars(t.rating||5)}</div><p class="quote">${t.quote}</p><div class="author-info"><div class="author-avatar">${t.author.charAt(0)}</div><div><strong>${t.author}</strong><span>${t.role}</span></div></div></div>`).join('');
-  const stats=(content.about?.stats||[]).map(s=>`<div class="stat reveal"><div class="stat-value" data-target="${s.numericValue||parseInt(s.value)||0}" data-suffix="${s.suffix||'+'}">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join('');
-  const process=(content.process||[]).map((s,i)=>`<div class="process-step reveal" style="transition-delay:${i*.15}s"><div class="step-number">${s.step}</div><div><h3>${s.title}</h3><p>${s.description}</p></div></div>`).join('');
+  const fontMap = {
+    'Playfair Display':'Playfair+Display:wght@400;700;900',
+    'Fraunces':'Fraunces:wght@400;600;700;900',
+    'Syne':'Syne:wght@400;600;700;800',
+    'Cormorant Garamond':'Cormorant+Garamond:wght@400;500;600;700',
+    'Space Grotesk':'Space+Grotesk:wght@400;500;600;700'
+  };
+  const gFont = fontMap[t.fontHeading] || 'Inter:wght@400;700;900';
+  const initials = input.businessName.split(' ').map(function(w){ return w[0]; }).slice(0, 2).join('').toUpperCase();
 
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${content.meta?.title||input.businessName}</title><meta name="description" content="${content.meta?.description||''}"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=${gFont}&display=swap" rel="stylesheet">
+  // Build socials HTML for topbar
+  const socialDefs = [
+    { key: 'facebook', letter: 'F', label: 'Facebook' },
+    { key: 'instagram', letter: 'IG', label: 'Instagram' },
+    { key: 'twitter', letter: 'X', label: 'Twitter/X' },
+    { key: 'linkedin', letter: 'in', label: 'LinkedIn' },
+    { key: 'youtube', letter: '▶', label: 'YouTube' },
+    { key: 'tiktok', letter: '♪', label: 'TikTok' },
+  ];
+  const socials = input.socials || {};
+  const socialLinks = socialDefs.filter(function(s){ return socials[s.key]; }).map(function(s){
+    return '<a href="' + socials[s.key] + '" target="_blank" class="tb-social" title="' + s.label + '">' + s.letter + '</a>';
+  }).join('');
+
+  const cityText = input.location ? ('📍 ' + input.location) : '';
+  const websiteLink = input.website ? ('<a href="' + input.website + '" target="_blank" class="tb-website">Visit Website ↗</a>') : '';
+
+  // Particles HTML
+  const particles = Array.from({length:15}, function(_, i){
+    const size = (Math.random() * 6 + 3).toFixed(1);
+    const top = (Math.random() * 90).toFixed(1);
+    const left = (Math.random() * 100).toFixed(1);
+    const dur = (Math.random() * 8 + 6).toFixed(1);
+    const delay = (Math.random() * 5).toFixed(1);
+    const dx = ((Math.random() - 0.5) * 60).toFixed(1);
+    return '<div class="particle" style="width:' + size + 'px;height:' + size + 'px;top:' + top + '%;left:' + left + '%;--dur:' + dur + 's;--delay:' + delay + 's;--dx:' + dx + 'px"></div>';
+  }).join('');
+
+  // Hero media
+  const heroMedia = videoUrl
+    ? '<video class="hero-media" autoplay muted loop playsinline><source src="' + videoUrl + '" type="video/mp4"></video>'
+    : '<img class="hero-media" src="' + heroImg + '" alt="' + input.businessName + '" fetchpriority="high">';
+
+  // Services (home preview — first 3)
+  const homeServices = (content.services || []).slice(0, 3).map(function(s, i){
+    return '<div class="service-card reveal" style="transition-delay:' + (i * 0.1) + 's">' +
+      '<div class="service-icon">' + s.icon + '</div>' +
+      '<h3>' + s.title + '</h3>' +
+      '<p>' + s.description + '</p>' +
+      '</div>';
+  }).join('');
+
+  // All services (services page)
+  const allServices = (content.services || []).map(function(s, i){
+    const features = (s.features || []).map(function(f){ return '<li>' + f + '</li>'; }).join('');
+    return '<div class="service-card-full reveal" style="transition-delay:' + (i * 0.08) + 's">' +
+      '<div class="scf-icon">' + s.icon + '</div>' +
+      '<h3>' + s.title + '</h3>' +
+      '<p>' + s.description + '</p>' +
+      (features ? '<ul class="service-features">' + features + '</ul>' : '') +
+      '<a href="#" onclick="nav2(\'contact\');return false;" class="btn-consult">Book Consultation →</a>' +
+      '</div>';
+  }).join('');
+
+  // Testimonials
+  const testimonials = (content.testimonials || []).map(function(tm, i){
+    return '<div class="testimonial-card reveal" style="transition-delay:' + (i * 0.12) + 's">' +
+      '<div class="stars">' + buildStars(tm.rating || 5) + '</div>' +
+      '<p class="quote">' + tm.quote + '</p>' +
+      '<div class="author-info"><div class="author-avatar">' + tm.author.charAt(0) + '</div>' +
+      '<div><strong>' + tm.author + '</strong><span>' + tm.role + '</span></div></div>' +
+      '</div>';
+  }).join('');
+
+  // Stats
+  const stats = (content.about && content.about.stats || []).map(function(s){
+    return '<div class="stat reveal"><div class="stat-value" data-target="' + (s.numericValue || parseInt(s.value) || 0) + '" data-suffix="' + (s.suffix || '+') + '">' + s.value + '</div><div class="stat-label">' + s.label + '</div></div>';
+  }).join('');
+
+  // Process
+  const process = (content.process || []).map(function(s, i){
+    return '<div class="process-step reveal" style="transition-delay:' + (i * 0.15) + 's">' +
+      '<div class="step-number">' + s.step + '</div>' +
+      '<div><h3>' + s.title + '</h3><p>' + s.description + '</p></div>' +
+      '</div>';
+  }).join('');
+
+  // Portfolio
+  const portfolio = (content.portfolio || []).map(function(item, i){
+    const gradAngle = 120 + i * 25;
+    return '<div class="portfolio-card reveal" style="transition-delay:' + (i * 0.08) + 's;background:linear-gradient(' + gradAngle + 'deg,' + p + '22,' + acc + '33)">' +
+      '<div class="portfolio-overlay">' +
+      '<div class="portfolio-cat">' + (item.category || '') + '</div>' +
+      '<h3>' + (item.title || '') + '</h3>' +
+      '<p>' + (item.description || '') + '</p>' +
+      (item.result ? '<div class="portfolio-result">📈 ' + item.result + '</div>' : '') +
+      '</div></div>';
+  }).join('');
+
+  // Team
+  const team = (content.team || []).map(function(member, i){
+    return '<div class="team-card reveal" style="transition-delay:' + (i * 0.1) + 's">' +
+      '<div class="team-avatar">' + (member.initial || member.name.charAt(0)) + '</div>' +
+      '<h3>' + member.name + '</h3>' +
+      '<div class="team-role">' + member.role + '</div>' +
+      '<p>' + member.bio + '</p>' +
+      '</div>';
+  }).join('');
+
+  // Values
+  const values = (content.aboutPage && content.aboutPage.values || []).map(function(v, i){
+    return '<div class="value-card reveal" style="transition-delay:' + (i * 0.1) + 's">' +
+      '<div class="value-num">0' + (i + 1) + '</div>' +
+      '<h3>' + v.title + '</h3>' +
+      '<p>' + v.description + '</p>' +
+      '</div>';
+  }).join('');
+
+  // Blog
+  const blog = (content.blog || []).map(function(post, i){
+    const gradAngle = 135 + i * 30;
+    return '<div class="blog-card reveal" style="transition-delay:' + (i * 0.1) + 's">' +
+      '<div class="blog-top" style="background:linear-gradient(' + gradAngle + 'deg,' + p + ',' + acc + ')">' +
+      '<span class="blog-cat">' + (post.category || '') + '</span>' +
+      '</div>' +
+      '<div class="blog-body">' +
+      '<h3>' + (post.title || '') + '</h3>' +
+      '<p>' + (post.summary || '') + '</p>' +
+      '<div class="blog-meta">' + (post.date || '') + ' · ' + (post.readTime || '') + '</div>' +
+      '</div></div>';
+  }).join('');
+
+  // FAQ
+  const faq = (content.faq || []).map(function(item, i){
+    return '<div class="faq-item" id="faq' + i + '">' +
+      '<button class="faq-q" onclick="toggleFaq(' + i + ')">' +
+      '<span>' + item.q + '</span><span class="faq-icon">+</span>' +
+      '</button>' +
+      '<div class="faq-a" id="faqa' + i + '">' +
+      '<div class="faq-a-inner">' + item.a + '</div>' +
+      '</div></div>';
+  }).join('');
+
+  // Careers
+  const perks = (content.careers && content.careers.perks || []).map(function(perk){
+    return '<div class="perk-card reveal">✓ ' + perk + '</div>';
+  }).join('');
+  const openings = (content.careers && content.careers.openings || []).map(function(job, i){
+    return '<div class="job-card reveal" style="transition-delay:' + (i * 0.1) + 's">' +
+      '<h3>' + job.title + '</h3>' +
+      '<div class="job-tags"><span class="job-tag">' + (job.type || 'Full-time') + '</span><span class="job-tag">' + (job.location || input.location || '') + '</span></div>' +
+      '<p>' + job.description + '</p>' +
+      '<a href="#" onclick="nav2(\'contact\');return false;" class="btn-apply">Apply Now →</a>' +
+      '</div>';
+  }).join('');
+
+  // Google Maps
+  const mapQuery = encodeURIComponent(input.address || input.location || input.businessName);
+  const mapsEmbed = '<iframe src="https://maps.google.com/maps?q=' + mapQuery + '&output=embed&z=15" width="100%" height="400" style="border:0;border-radius:16px;display:block" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+
+  // Inner page hero builder
+  function pageHero(title, subtitle, height) {
+    height = height || '42vh';
+    return '<div class="inner-hero" style="height:' + height + '">' +
+      '<div class="inner-hero-overlay"></div>' +
+      '<div class="inner-hero-content">' +
+      '<h1 class="inner-hero-title">' + title + ' <span class="lm">' + initials + '</span></h1>' +
+      (subtitle ? '<p class="inner-hero-sub">' + subtitle + '</p>' : '') +
+      '</div></div>';
+  }
+
+  const muteText = isLight ? 'rgba(15,23,42,0.62)' : 'rgba(248,250,252,0.62)';
+  const year = new Date().getFullYear();
+
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${content.meta && content.meta.title || input.businessName}</title><meta name="description" content="${content.meta && content.meta.description || ''}"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=${gFont}&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--p:${p};--acc:${acc};--bg:${bg};--txt:${txt};--surf:${surf};--bord:${bord};--r:16px;--tr:cubic-bezier(0.16,1,0.3,1)}
-html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-height:1.65;overflow-x:hidden}
-.reveal{opacity:0;transform:translateY(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}.reveal.in-view{opacity:1;transform:none}
-.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}.reveal-left.in-view{opacity:1;transform:none}
-.reveal-right{opacity:0;transform:translateX(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}.reveal-right.in-view{opacity:1;transform:none}
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center;padding:0 5%;transition:background .4s,box-shadow .4s}
-nav.scrolled{background:${isLight?'rgba(255,255,255,0.95)':'rgba(10,10,15,0.92)'};backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--bord)}
-.nav-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-family:'${t.fontHeading}',serif;font-size:1.3rem;font-weight:700;color:white;text-decoration:none;transition:color .3s}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-height:1.65;overflow-x:hidden}
+.reveal{opacity:0;transform:translateY(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}
+.reveal.in-view{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}
+.reveal-left.in-view{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(50px);transition:opacity .85s var(--tr),transform .85s var(--tr)}
+.reveal-right.in-view{opacity:1;transform:none}
+.lm{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:color-mix(in srgb,var(--p) 15%,transparent);border:1px solid color-mix(in srgb,var(--p) 35%,transparent);color:var(--p);font-size:0.72rem;font-weight:900;margin-left:10px;vertical-align:middle;flex-shrink:0}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:1001;height:38px;background:rgba(5,5,8,0.97);display:flex;align-items:center;justify-content:space-between;padding:0 5%;gap:1rem}
+.tb-left{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tb-social{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);font-size:0.6rem;font-weight:700;text-decoration:none;transition:background .2s}
+.tb-social:hover{background:var(--p)}
+.tb-right{display:flex;align-items:center;gap:1rem;flex-shrink:0}
+.tb-city{font-size:0.72rem;color:rgba(255,255,255,0.5)}
+.tb-website{font-size:0.72rem;color:rgba(255,255,255,0.5);text-decoration:none;transition:color .2s}
+.tb-website:hover{color:var(--acc)}
+nav{position:fixed;top:38px;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center;padding:0 5%;transition:background .4s,box-shadow .4s}
+nav.scrolled{background:${isLight ? 'rgba(255,255,255,0.95)' : 'rgba(10,10,15,0.92)'};backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--bord)}
+.nav-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{font-family:'${t.fontHeading}',serif;font-size:1.3rem;font-weight:700;color:white;text-decoration:none;transition:color .3s;white-space:nowrap}
 nav.scrolled .nav-logo{color:var(--txt)}
-.nav-links{display:flex;gap:2rem;list-style:none}.nav-links a{text-decoration:none;color:rgba(255,255,255,0.85);font-weight:500;font-size:.9rem;transition:color .2s}
-nav.scrolled .nav-links a{color:var(--txt)}.nav-links a:hover{color:var(--p)}
-.nav-cta{background:var(--p);color:white;padding:10px 22px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.875rem;transition:opacity .2s,transform .2s}.nav-cta:hover{transform:translateY(-1px);opacity:.9}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}.hamburger span{width:24px;height:2px;background:white;display:block;border-radius:2px}
+.nav-links{display:flex;gap:1.25rem;list-style:none;flex-wrap:nowrap}
+.nav-links a,.nav-link-item{text-decoration:none;color:rgba(255,255,255,0.85);font-weight:500;font-size:0.82rem;transition:color .2s;cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
+nav.scrolled .nav-links a,nav.scrolled .nav-link-item{color:var(--txt)}
+.nav-links a:hover,.nav-link-item:hover,.nav-active{color:var(--p) !important}
+.nav-active{font-weight:700 !important}
+.nav-cta{background:var(--p);color:white;padding:9px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.82rem;transition:opacity .2s,transform .2s;white-space:nowrap}
+.nav-cta:hover{transform:translateY(-1px);opacity:.9}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;flex-shrink:0}
+.hamburger span{width:24px;height:2px;background:white;display:block;border-radius:2px}
 nav.scrolled .hamburger span{background:var(--txt)}
+.page{display:none}.page.active{display:block}
+.page-home{padding-top:0}
+section{padding:100px 5%}
+.container{max-width:1200px;margin:0 auto}
+/* HERO */
 .hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;overflow:hidden}
 .hero-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;will-change:transform}
 .hero-overlay{position:absolute;inset:0;background:${overlay}}
-.hero-content{position:relative;z-index:1;max-width:1200px;width:100%;margin:0 auto;padding:0 5%;padding-top:72px}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s var(--tr) .2s forwards}.hero-eyebrow::before{content:'';width:32px;height:2px;background:var(--acc);display:block}
+.hero-content{position:relative;z-index:2;max-width:1200px;width:100%;margin:0 auto;padding:0 5%;padding-top:110px}
+.particle{position:absolute;border-radius:50%;background:${acc};opacity:0.35;animation:floatP var(--dur) var(--delay) ease-in-out alternate infinite;z-index:1}
+@keyframes floatP{from{transform:translateY(0) translateX(0)}to{transform:translateY(-60px) translateX(var(--dx))}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s var(--tr) .2s forwards}
+.hero-eyebrow::before{content:'';width:32px;height:2px;background:var(--acc);display:block}
 .hero h1{font-family:'${t.fontHeading}',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1.05;color:${heroTxt};margin-bottom:1.75rem;max-width:760px;opacity:0;animation:fadeUp .9s var(--tr) .35s forwards}
 .hero p{font-size:clamp(1rem,2vw,1.2rem);color:${heroSub};max-width:560px;line-height:1.75;margin-bottom:2.75rem;opacity:0;animation:fadeUp .9s var(--tr) .5s forwards}
 .hero-buttons{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp .9s var(--tr) .65s forwards}
-.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--p);color:white;padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 8px 30px color-mix(in srgb,var(--p) 45%,transparent)}.btn-p:hover{transform:translateY(-3px)}
-.btn-g{display:inline-flex;align-items:center;gap:8px;background:transparent;color:${heroTxt};padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:600;font-size:1rem;border:1.5px solid ${isLight?'rgba(15,23,42,0.3)':'rgba(255,255,255,0.4)'};transition:border-color .25s,background .25s}.btn-g:hover{border-color:${heroTxt}}
-.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s var(--tr) 1.2s forwards}.scroll-hint span{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5)}
-.scroll-line{width:1px;height:48px;background:rgba(255,255,255,.3);position:relative;overflow:hidden}.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--acc);animation:scrollLine 1.8s ease-in-out infinite}
-section{padding:120px 5%}.container{max-width:1200px;margin:0 auto}
-.section-label{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:1rem}.section-label::before{content:'';width:28px;height:2px;background:var(--p);display:block}
-.section-title{font-family:'${t.fontHeading}',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.12;margin-bottom:1.25rem}
-.section-subtitle{font-size:1.1rem;color:${isLight?'rgba(15,23,42,0.6)':'rgba(248,250,252,0.6)'};max-width:580px;line-height:1.75}.section-header{margin-bottom:4.5rem}
-.about{background:var(--surf)}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
-.about-image{border-radius:24px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 24px 64px rgba(0,0,0,.2)}.about-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--tr)}.about-image:hover img{transform:scale(1.03)}
-.about-body{font-size:1.05rem;color:${isLight?'rgba(15,23,42,0.72)':'rgba(248,250,252,0.72)'};line-height:1.8;margin-bottom:2.5rem}.about-body p{margin-bottom:1.25rem}
-.stats-row{display:flex;gap:2.5rem;flex-wrap:wrap}.stat-value{font-family:'${t.fontHeading}',serif;font-size:3rem;font-weight:900;color:var(--p);line-height:1}.stat-label{font-size:.875rem;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'};margin-top:6px;font-weight:500}
-.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
-.service-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s,border-color .3s}.service-card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 24px 64px rgba(0,0,0,.2);border-color:var(--p)}
-.service-icon{font-size:2.75rem;margin-bottom:1.5rem;display:inline-block;transition:transform .3s var(--tr)}.service-card:hover .service-icon{transform:scale(1.15) rotate(5deg)}
-.service-card h3{font-family:'${t.fontHeading}',serif;font-size:1.25rem;font-weight:700;margin-bottom:.875rem}.service-card p{color:${isLight?'rgba(15,23,42,0.62)':'rgba(248,250,252,0.62)'};line-height:1.7;font-size:.95rem}
-.process-section{background:var(--surf)}.process-step{display:grid;grid-template-columns:80px 1fr;gap:2rem;padding:2.5rem 0;border-bottom:1px solid var(--bord);align-items:start}.process-step:last-child{border-bottom:none}
-.step-number{font-family:'${t.fontHeading}',serif;font-size:3.5rem;font-weight:900;color:var(--p);opacity:.25;line-height:1}.step-content h3{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;font-family:'${t.fontHeading}',serif}.step-content p{color:${isLight?'rgba(15,23,42,0.62)':'rgba(248,250,252,0.62)'}}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--p);color:white;padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 8px 30px color-mix(in srgb,var(--p) 45%,transparent)}
+.btn-p:hover{transform:translateY(-3px)}
+.btn-g{display:inline-flex;align-items:center;gap:8px;background:transparent;color:${heroTxt};padding:16px 34px;border-radius:10px;text-decoration:none;font-weight:600;font-size:1rem;border:1.5px solid ${isLight ? 'rgba(15,23,42,0.3)' : 'rgba(255,255,255,0.4)'};transition:border-color .25s,background .25s}
+.btn-g:hover{border-color:${heroTxt}}
+/* SECTION COMMON */
+.section-label{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:1rem}
+.section-label::before{content:'';width:28px;height:2px;background:var(--p);display:block}
+.section-title{font-family:'${t.fontHeading}',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.12;margin-bottom:1.25rem;display:flex;align-items:center;flex-wrap:wrap;gap:0.25rem}
+.section-subtitle{font-size:1.1rem;color:${muteText};max-width:580px;line-height:1.75}
+.section-header{margin-bottom:4rem}
+/* ABOUT */
+.about{background:var(--surf)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-image{border-radius:24px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 24px 64px rgba(0,0,0,.2)}
+.about-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--tr)}
+.about-image:hover img{transform:scale(1.03)}
+.about-body{font-size:1.05rem;color:${muteText};line-height:1.8;margin-bottom:2.5rem}
+.about-body p{margin-bottom:1.25rem}
+.stats-row{display:flex;gap:2.5rem;flex-wrap:wrap}
+.stat-value{font-family:'${t.fontHeading}',serif;font-size:3rem;font-weight:900;color:var(--p);line-height:1}
+.stat-label{font-size:.875rem;color:${muteText};margin-top:6px;font-weight:500}
+/* SERVICES */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+.service-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s,border-color .3s}
+.service-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 24px 64px rgba(0,0,0,.2);border-color:var(--p)}
+.service-icon{font-size:2.75rem;margin-bottom:1.5rem;display:inline-block;transition:transform .3s var(--tr)}
+.service-card:hover .service-icon{transform:scale(1.15) rotate(5deg)}
+.service-card h3{font-family:'${t.fontHeading}',serif;font-size:1.25rem;font-weight:700;margin-bottom:.875rem}
+.service-card p{color:${muteText};line-height:1.7;font-size:.95rem}
+.services-full-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.75rem}
+.service-card-full{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s}
+.service-card-full:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.scf-icon{font-size:2.5rem;margin-bottom:1.25rem}
+.service-card-full h3{font-family:'${t.fontHeading}',serif;font-size:1.2rem;font-weight:700;margin-bottom:.75rem}
+.service-card-full p{color:${muteText};font-size:.9rem;line-height:1.7;margin-bottom:1rem}
+.service-features{list-style:none;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:.4rem}
+.service-features li{font-size:.875rem;color:${muteText};padding-left:1.25rem;position:relative}
+.service-features li::before{content:'✓';position:absolute;left:0;color:var(--p);font-weight:700}
+.btn-consult{display:inline-flex;align-items:center;background:color-mix(in srgb,var(--p) 15%,transparent);color:var(--p);padding:10px 20px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:700;transition:background .2s}
+.btn-consult:hover{background:color-mix(in srgb,var(--p) 25%,transparent)}
+/* PROCESS */
+.process-section{background:var(--surf)}
+.process-step{display:grid;grid-template-columns:80px 1fr;gap:2rem;padding:2.5rem 0;border-bottom:1px solid var(--bord);align-items:start}
+.process-step:last-child{border-bottom:none}
+.step-number{font-family:'${t.fontHeading}',serif;font-size:3.5rem;font-weight:900;color:var(--p);opacity:.25;line-height:1}
+.process-step h3{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;font-family:'${t.fontHeading}',serif}
+.process-step p{color:${muteText}}
+/* TESTIMONIALS */
 .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
-.testimonial-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s}.testimonial-card:hover{transform:translateY(-4px);box-shadow:0 24px 64px rgba(0,0,0,.2)}
-.stars{color:#f59e0b;font-size:1rem;letter-spacing:2px;margin-bottom:1.25rem}.quote{font-size:1rem;line-height:1.8;margin-bottom:1.75rem;font-style:italic;position:relative}.quote::before{content:'"';font-family:'${t.fontHeading}',serif;font-size:5rem;line-height:0;color:var(--p);opacity:.3;position:absolute;top:1.5rem;left:-.5rem;font-style:normal}
-.author-info{display:flex;align-items:center;gap:12px}.author-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:1rem;flex-shrink:0}
-.author-info strong{display:block;font-size:.9rem;font-weight:700}.author-info span{font-size:.8rem;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'}}
-.cta-band{position:relative;overflow:hidden;padding:120px 5%;background:var(--p);text-align:center}.cta-band::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 30% 50%,color-mix(in srgb,var(--acc) 30%,transparent),transparent 60%)}
-.cta-band .section-title{color:white;position:relative;z-index:1;margin:0 auto 1.25rem;max-width:700px}.cta-band .section-subtitle{color:rgba(255,255,255,.8);position:relative;z-index:1;margin:0 auto 2.75rem}
-.cta-band .btn-w{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:white;color:var(--p);padding:18px 40px;border-radius:10px;text-decoration:none;font-weight:800;font-size:1.05rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 12px 40px rgba(0,0,0,.25)}.cta-band .btn-w:hover{transform:translateY(-3px)}
-.contact-section{background:var(--surf)}.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:6rem;align-items:start}
-.contact-items{display:flex;flex-direction:column;gap:1.75rem;margin-top:2rem}.contact-item{display:flex;align-items:flex-start;gap:1rem}
+.testimonial-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2.25rem;transition:transform .3s var(--tr),box-shadow .3s}
+.testimonial-card:hover{transform:translateY(-4px);box-shadow:0 24px 64px rgba(0,0,0,.2)}
+.stars{color:#f59e0b;font-size:1rem;letter-spacing:2px;margin-bottom:1.25rem}
+.quote{font-size:1rem;line-height:1.8;margin-bottom:1.75rem;font-style:italic;position:relative;padding-left:1rem}
+.quote::before{content:'"';font-family:'${t.fontHeading}',serif;font-size:5rem;line-height:0;color:var(--p);opacity:.3;position:absolute;top:1.5rem;left:-.5rem;font-style:normal}
+.author-info{display:flex;align-items:center;gap:12px}
+.author-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:1rem;flex-shrink:0}
+.author-info strong{display:block;font-size:.9rem;font-weight:700}
+.author-info span{font-size:.8rem;color:${muteText}}
+/* CTA BAND */
+.cta-band{position:relative;overflow:hidden;padding:100px 5%;background:var(--p);text-align:center}
+.cta-band::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 30% 50%,color-mix(in srgb,var(--acc) 30%,transparent),transparent 60%)}
+.cta-band .section-title{color:white;position:relative;z-index:1;margin:0 auto 1.25rem;max-width:700px;justify-content:center}
+.cta-band .section-subtitle{color:rgba(255,255,255,.8);position:relative;z-index:1;margin:0 auto 2.75rem;max-width:580px}
+.cta-band .btn-w{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:white;color:var(--p);padding:18px 40px;border-radius:10px;text-decoration:none;font-weight:800;font-size:1.05rem;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.cta-band .btn-w:hover{transform:translateY(-3px)}
+/* MAPS */
+.maps-section{background:var(--surf)}
+.maps-container{border-radius:16px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+/* INNER HERO */
+.inner-hero{position:relative;display:flex;align-items:center;overflow:hidden;margin-top:0}
+.inner-hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,${p}ee,${acc}99);opacity:0.92}
+.inner-hero-overlay::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.03) 0px,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 16px)}
+.inner-hero-content{position:relative;z-index:1;max-width:1200px;width:100%;margin:0 auto;padding:0 5%}
+.inner-hero-title{font-family:'${t.fontHeading}',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:white;margin-bottom:.75rem}
+.inner-hero-sub{font-size:1.1rem;color:rgba(255,255,255,.8);max-width:560px;line-height:1.7}
+/* PORTFOLIO */
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.portfolio-card{border-radius:20px;overflow:hidden;aspect-ratio:4/3;position:relative;cursor:pointer;border:1px solid var(--bord);transition:transform .3s var(--tr),box-shadow .3s}
+.portfolio-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.portfolio-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;justify-content:flex-end;padding:1.75rem;opacity:0;transition:opacity .3s;backdrop-filter:blur(4px)}
+.portfolio-card:hover .portfolio-overlay{opacity:1}
+.portfolio-cat{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:.5rem}
+.portfolio-overlay h3{font-family:'${t.fontHeading}',serif;font-size:1.25rem;font-weight:700;color:white;margin-bottom:.5rem}
+.portfolio-overlay p{font-size:.875rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:.75rem}
+.portfolio-result{font-size:.8rem;font-weight:700;color:var(--acc);padding:5px 12px;background:rgba(255,255,255,.1);border-radius:100px;display:inline-block}
+/* ABOUT PAGE */
+.mission-section{text-align:center;padding:100px 5%;background:var(--surf)}
+.mission-quote{font-family:'${t.fontHeading}',serif;font-size:clamp(1.5rem,3.5vw,2.5rem);font-weight:700;line-height:1.3;max-width:900px;margin:0 auto;position:relative;padding:0 2rem}
+.mission-quote::before{content:'"';position:absolute;top:-1rem;left:0;font-size:8rem;line-height:1;color:var(--p);opacity:.2;font-family:'${t.fontHeading}',serif}
+.values-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;margin-top:3rem}
+.value-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2rem;transition:transform .3s,box-shadow .3s}
+.value-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.15)}
+.value-num{font-family:'${t.fontHeading}',serif;font-size:2.5rem;font-weight:900;color:var(--p);opacity:.3;line-height:1;margin-bottom:.5rem}
+.value-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.value-card p{font-size:.9rem;color:${muteText};line-height:1.6}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem}
+.team-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2rem;text-align:center;transition:transform .3s,box-shadow .3s}
+.team-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.15)}
+.team-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;font-weight:900;color:white;font-size:1.75rem;margin:0 auto 1rem}
+.team-card h3{font-size:1.05rem;font-weight:700;margin-bottom:.25rem}
+.team-role{font-size:.8rem;color:var(--p);font-weight:600;margin-bottom:.75rem}
+.team-card p{font-size:.875rem;color:${muteText};line-height:1.6}
+/* BLOG */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+.blog-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.blog-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.2)}
+.blog-top{height:140px;display:flex;align-items:flex-end;padding:1rem 1.25rem;position:relative}
+.blog-cat{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.2);color:white;padding:3px 10px;border-radius:100px;backdrop-filter:blur(4px)}
+.blog-body{padding:1.5rem}
+.blog-body h3{font-family:'${t.fontHeading}',serif;font-size:1.1rem;font-weight:700;margin-bottom:.75rem;line-height:1.3}
+.blog-body p{font-size:.875rem;color:${muteText};line-height:1.65;margin-bottom:1rem}
+.blog-meta{font-size:.75rem;color:${muteText};opacity:.7}
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:.75rem;max-width:800px;margin:0 auto}
+.faq-item{background:var(--surf);border:1px solid var(--bord);border-radius:14px;overflow:hidden}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;background:none;border:none;color:var(--txt);font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;text-align:left;gap:1rem;transition:background .2s}
+.faq-q:hover{background:color-mix(in srgb,var(--p) 6%,transparent)}
+.faq-icon{font-size:1.25rem;color:var(--p);transition:transform .3s;flex-shrink:0;line-height:1}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.faq-a.open{max-height:300px}
+.faq-a-inner{padding:0 1.5rem 1.25rem;font-size:.95rem;color:${muteText};line-height:1.75}
+/* CAREERS */
+.culture-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-bottom:5rem}
+.culture-text h2{font-family:'${t.fontHeading}',serif;font-size:clamp(1.75rem,3.5vw,2.75rem);font-weight:800;margin-bottom:1.25rem}
+.culture-text p{font-size:1.05rem;color:${muteText};line-height:1.8}
+.culture-deco{background:linear-gradient(135deg,var(--p),var(--acc));border-radius:24px;height:280px;display:flex;align-items:center;justify-content:center;font-size:5rem}
+.perks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin-bottom:4rem}
+.perk-card{background:var(--surf);border:1px solid var(--bord);border-radius:14px;padding:1.25rem 1.5rem;font-size:.95rem;font-weight:600;color:${muteText};transition:transform .2s,border-color .2s}
+.perk-card:hover{transform:translateY(-2px);border-color:var(--p)}
+.jobs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.job-card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;padding:2rem;transition:transform .3s,box-shadow .3s}
+.job-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.2)}
+.job-card h3{font-family:'${t.fontHeading}',serif;font-size:1.15rem;font-weight:700;margin-bottom:.75rem}
+.job-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.job-tag{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:100px;background:color-mix(in srgb,var(--p) 15%,transparent);color:var(--p)}
+.job-card p{font-size:.9rem;color:${muteText};line-height:1.65;margin-bottom:1.25rem}
+.btn-apply{display:inline-flex;background:var(--p);color:white;padding:10px 22px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:700;transition:opacity .2s}
+.btn-apply:hover{opacity:.85}
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:6rem;align-items:start}
+.contact-items{display:flex;flex-direction:column;gap:1.75rem;margin-top:2rem}
+.contact-item{display:flex;align-items:flex-start;gap:1rem}
 .contact-icon{width:48px;height:48px;border-radius:12px;background:color-mix(in srgb,var(--p) 15%,transparent);border:1px solid color-mix(in srgb,var(--p) 30%,transparent);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
-.contact-item strong{display:block;font-size:.875rem;font-weight:700;margin-bottom:3px}.contact-item span{font-size:.95rem;color:${isLight?'rgba(15,23,42,0.65)':'rgba(248,250,252,0.65)'}}
-.contact-form{display:flex;flex-direction:column;gap:1.25rem}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.field label{display:block;font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isLight?'rgba(15,23,42,0.55)':'rgba(248,250,252,0.55)'};margin-bottom:8px}
-.field input,.field textarea{width:100%;padding:14px 18px;background:var(--bg);border:1.5px solid var(--bord);border-radius:10px;color:var(--txt);font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}.field input:focus,.field textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px color-mix(in srgb,var(--p) 15%,transparent)}.field textarea{min-height:130px;resize:vertical}
-.form-submit{background:var(--p);color:white;border:none;padding:16px 32px;border-radius:10px;font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 6px 20px color-mix(in srgb,var(--p) 40%,transparent)}.form-submit:hover{transform:translateY(-2px)}
-footer{background:${isLight?'#0f172a':'#000'};color:rgba(255,255,255,.5);padding:4rem 5% 3rem}
-.footer-inner{max-width:1200px;margin:0 auto}.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;margin-bottom:3rem;flex-wrap:wrap}
-.footer-logo{font-family:'${t.fontHeading}',serif;font-size:1.5rem;font-weight:900;color:white;margin-bottom:.5rem}.footer-tagline{font-size:.9rem;color:rgba(255,255,255,.4)}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}.footer-links a{color:rgba(255,255,255,.45);text-decoration:none;font-size:.875rem;transition:color .2s}.footer-links a:hover{color:white}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}.footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
-.mobile-menu{display:none;position:fixed;inset:0;z-index:999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:2rem}.mobile-menu.open{display:flex}.mobile-menu a{font-size:1.5rem;font-weight:700;color:var(--txt);text-decoration:none}.mobile-close{position:absolute;top:1.5rem;right:2rem;font-size:2rem;cursor:pointer;background:none;border:none;color:var(--txt)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}@keyframes scrollLine{0%{top:-100%}100%{top:200%}}
-@media(max-width:900px){.about-grid,.contact-grid{grid-template-columns:1fr;gap:3.5rem}.form-row{grid-template-columns:1fr}}
-@media(max-width:768px){.nav-links,.nav-cta{display:none}.hamburger{display:flex}section{padding:80px 5%}.hero h1{font-size:2.4rem}}
+.contact-item strong{display:block;font-size:.875rem;font-weight:700;margin-bottom:3px}
+.contact-item span{font-size:.95rem;color:${muteText}}
+.contact-form{display:flex;flex-direction:column;gap:1.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.cf-field label{display:block;font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${muteText};margin-bottom:8px}
+.cf-field input,.cf-field textarea{width:100%;padding:14px 18px;background:var(--bg);border:1.5px solid var(--bord);border-radius:10px;color:var(--txt);font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.cf-field input:focus,.cf-field textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px color-mix(in srgb,var(--p) 15%,transparent)}
+.cf-field textarea{min-height:130px;resize:vertical}
+.form-submit{background:var(--p);color:white;border:none;padding:16px 32px;border-radius:10px;font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .25s var(--tr),box-shadow .25s;box-shadow:0 6px 20px color-mix(in srgb,var(--p) 40%,transparent)}
+.form-submit:hover{transform:translateY(-2px)}
+/* FOOTER */
+footer{background:${isLight ? '#0f172a' : '#000'};color:rgba(255,255,255,.5);padding:4rem 5% 3rem}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;margin-bottom:3rem;flex-wrap:wrap}
+.footer-logo{font-family:'${t.fontHeading}',serif;font-size:1.5rem;font-weight:900;color:white;margin-bottom:.5rem}
+.footer-tagline{font-size:.9rem;color:rgba(255,255,255,.4)}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.footer-links a{color:rgba(255,255,255,.45);text-decoration:none;font-size:.875rem;transition:color .2s;cursor:pointer}
+.footer-links a:hover{color:white}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-copy{font-size:.8rem;color:rgba(255,255,255,.25)}
+/* MOBILE MENU */
+.mobile-menu{display:none;position:fixed;inset:0;z-index:1002;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding-top:38px}
+.mobile-menu.open{display:flex}
+.mobile-menu a,.mobile-menu button.mm-link{font-size:1.4rem;font-weight:700;color:var(--txt);text-decoration:none;background:none;border:none;font-family:inherit;cursor:pointer}
+.mobile-close{position:absolute;top:calc(1.5rem + 38px);right:2rem;font-size:2rem;cursor:pointer;background:none;border:none;color:var(--txt)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@media(max-width:900px){.about-grid,.contact-grid,.culture-grid{grid-template-columns:1fr;gap:3.5rem}.form-row{grid-template-columns:1fr}}
+@media(max-width:768px){.nav-links,.nav-cta{display:none}.hamburger{display:flex}section{padding:70px 5%}.hero h1{font-size:2.4rem}.topbar .tb-city{display:none}}
 </style></head><body>
-<div class="mobile-menu" id="mm"><button class="mobile-close" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">✕</button><a href="#about" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">About</a><a href="#services" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Services</a><a href="#testimonials" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Reviews</a><a href="#contact" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Contact</a></div>
-<nav id="nav"><div class="nav-inner"><a href="#" class="nav-logo">${input.businessName}</a><ul class="nav-links"><li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#testimonials">Reviews</a></li><li><a href="#contact">Contact</a></li></ul><a href="#contact" class="nav-cta">${content.hero?.cta||'Get Started'}</a><button class="hamburger" onclick="document.getElementById('mm').classList.add('open');document.body.style.overflow='hidden'" aria-label="Menu"><span></span><span></span><span></span></button></div></nav>
-<section class="hero"><img class="hero-media" src="${heroImg}" alt="${input.businessName}" fetchpriority="high"><div class="hero-overlay"></div><div class="hero-content">${content.hero?.eyebrow?`<div class="hero-eyebrow">${content.hero.eyebrow}</div>`:''}<h1>${content.hero?.headline||input.businessName}</h1><p>${content.hero?.subheadline||''}</p><div class="hero-buttons"><a href="#contact" class="btn-p">${content.hero?.cta||'Get Started'} →</a>${content.hero?.ctaSecondary?`<a href="#about" class="btn-g">${content.hero.ctaSecondary}</a>`:''}</div></div><div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div></section>
-<section class="about" id="about"><div class="container"><div class="about-grid"><div class="reveal-left"><div class="about-image"><img src="${aboutImg}" alt="${input.businessName}" loading="lazy"></div></div><div class="reveal-right"><div class="section-label">Our Story</div><h2 class="section-title">${content.about?.heading||'About Us'}</h2><div class="about-body">${(content.about?.body||'').split('\n\n').map(p=>`<p>${p}</p>`).join('')}</div>${stats?`<div class="stats-row">${stats}</div>`:''}</div></div></div></section>
-<section id="services"><div class="container"><div class="section-header reveal"><div class="section-label">What We Do</div><h2 class="section-title">Our Services</h2></div><div class="services-grid">${services}</div></div></section>
-${process?`<section class="process-section"><div class="container"><div class="section-header reveal"><div class="section-label">How It Works</div><h2 class="section-title">Our Process</h2></div><div>${process}</div></div></section>`:''}
-<section id="testimonials"><div class="container"><div class="section-header reveal"><div class="section-label">Client Reviews</div><h2 class="section-title">What People Say</h2></div><div class="testimonials-grid">${testimonials}</div></div></section>
-<div class="cta-band"><h2 class="section-title reveal">${content.cta?.heading||'Ready to Get Started?'}</h2><p class="section-subtitle reveal">${content.cta?.body||''}</p><a href="#contact" class="btn-w reveal">${content.cta?.button||'Contact Us'} →</a></div>
-<section class="contact-section" id="contact"><div class="container"><div class="contact-grid"><div class="reveal-left"><div class="section-label">Reach Out</div><h2 class="section-title">Let's Talk</h2><p class="section-subtitle">${content.footer?.tagline||''}</p><div class="contact-items">${input.phone?`<div class="contact-item"><div class="contact-icon">📞</div><div><strong>Phone</strong><span>${input.phone}</span></div></div>`:''} ${input.email?`<div class="contact-item"><div class="contact-icon">✉️</div><div><strong>Email</strong><span>${input.email}</span></div></div>`:''} ${input.location?`<div class="contact-item"><div class="contact-icon">📍</div><div><strong>Location</strong><span>${input.location}</span></div></div>`:''}</div></div><div class="reveal-right"><form class="contact-form" onsubmit="handleForm(event)"><div class="form-row"><div class="field"><label>First Name</label><input type="text" placeholder="John" required></div><div class="field"><label>Last Name</label><input type="text" placeholder="Doe" required></div></div><div class="field"><label>Email</label><input type="email" placeholder="john@example.com" required></div><div class="field"><label>Phone</label><input type="tel" placeholder="(555) 000-0000"></div><div class="field"><label>Message</label><textarea placeholder="Tell us how we can help..."></textarea></div><button type="submit" class="form-submit">${content.cta?.button||'Send Message'} →</button></form></div></div></div></section>
-<footer><div class="footer-inner"><div class="footer-top"><div><div class="footer-logo">${input.businessName}</div><div class="footer-tagline">${content.footer?.tagline||''}</div></div><div class="footer-links"><a href="#about">About</a><a href="#services">Services</a><a href="#testimonials">Reviews</a><a href="#contact">Contact</a></div></div><div class="footer-bottom"><div class="footer-copy">© ${new Date().getFullYear()} ${input.businessName}. All rights reserved.</div>${input.location?`<div class="footer-copy">Serving ${input.location}</div>`:''}</div></div></footer>
+<div class="mobile-menu" id="mm">
+  <button class="mobile-close" onclick="document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">✕</button>
+  <button class="mm-link" onclick="nav2('home');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Home</button>
+  <button class="mm-link" onclick="nav2('services');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Services</button>
+  <button class="mm-link" onclick="nav2('portfolio');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Portfolio</button>
+  <button class="mm-link" onclick="nav2('about');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">About Us</button>
+  <button class="mm-link" onclick="nav2('blog');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Blog</button>
+  <button class="mm-link" onclick="nav2('faq');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">FAQ</button>
+  <button class="mm-link" onclick="nav2('careers');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Careers</button>
+  <button class="mm-link" onclick="nav2('contact');document.getElementById('mm').classList.remove('open');document.body.style.overflow=''">Contact</button>
+</div>
+<div class="topbar">
+  <div class="tb-left">${socialLinks}</div>
+  <div class="tb-right">${cityText ? '<span class="tb-city">' + cityText + '</span>' : ''}${websiteLink}</div>
+</div>
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="nav2('home');return false;">${input.businessName}</a>
+    <ul class="nav-links">
+      <li><button class="nav-link-item nav-active" data-page="home" onclick="nav2('home')">Home</button></li>
+      <li><button class="nav-link-item" data-page="services" onclick="nav2('services')">Services</button></li>
+      <li><button class="nav-link-item" data-page="portfolio" onclick="nav2('portfolio')">Portfolio</button></li>
+      <li><button class="nav-link-item" data-page="about" onclick="nav2('about')">About Us</button></li>
+      <li><button class="nav-link-item" data-page="blog" onclick="nav2('blog')">Blog</button></li>
+      <li><button class="nav-link-item" data-page="faq" onclick="nav2('faq')">FAQ</button></li>
+      <li><button class="nav-link-item" data-page="careers" onclick="nav2('careers')">Careers</button></li>
+      <li><button class="nav-link-item" data-page="contact" onclick="nav2('contact')">Contact</button></li>
+    </ul>
+    <a href="#" class="nav-cta" onclick="nav2('contact');return false;">${content.hero && content.hero.cta || 'Get Started'}</a>
+    <button class="hamburger" onclick="document.getElementById('mm').classList.add('open');document.body.style.overflow='hidden'" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- PAGE: HOME -->
+<div id="page-home" class="page page-home active">
+  <section class="hero">
+    ${heroMedia}
+    ${particles}
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      ${content.hero && content.hero.eyebrow ? '<div class="hero-eyebrow">' + content.hero.eyebrow + '</div>' : ''}
+      <h1>${content.hero && content.hero.headline || input.businessName}</h1>
+      <p>${content.hero && content.hero.subheadline || ''}</p>
+      <div class="hero-buttons">
+        <a href="#" class="btn-p" onclick="nav2('contact');return false;">${content.hero && content.hero.cta || 'Get Started'} →</a>
+        ${content.hero && content.hero.ctaSecondary ? '<a href="#" class="btn-g" onclick="nav2(\'about\');return false;">' + content.hero.ctaSecondary + '</a>' : ''}
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="reveal-left"><div class="about-image"><img src="${aboutImg}" alt="${input.businessName}" loading="lazy"></div></div>
+        <div class="reveal-right">
+          <div class="section-label">Our Story</div>
+          <h2 class="section-title">${content.about && content.about.heading || 'About Us'} <span class="lm">${initials}</span></h2>
+          <div class="about-body">${(content.about && content.about.body || '').split('\\n\\n').map(function(pp){ return '<p>' + pp + '</p>'; }).join('')}</div>
+          ${stats ? '<div class="stats-row">' + stats + '</div>' : ''}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">What We Do</div>
+        <h2 class="section-title">Our Services <span class="lm">${initials}</span></h2>
+      </div>
+      <div class="services-grid">${homeServices}</div>
+      <div style="text-align:center;margin-top:2.5rem"><a href="#" class="btn-p" onclick="nav2('services');return false;" style="display:inline-flex">View All Services →</a></div>
+    </div>
+  </section>
+
+  <section style="background:var(--surf)">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Client Reviews</div>
+        <h2 class="section-title">What People Say <span class="lm">${initials}</span></h2>
+      </div>
+      <div class="testimonials-grid">${testimonials}</div>
+    </div>
+  </section>
+
+  ${process ? '<section class="process-section"><div class="container"><div class="section-header reveal"><div class="section-label">How It Works</div><h2 class="section-title">Our Process <span class="lm">' + initials + '</span></h2></div><div>' + process + '</div></div></section>' : ''}
+
+  <div class="cta-band">
+    <h2 class="section-title reveal">${content.cta && content.cta.heading || 'Ready to Get Started?'}</h2>
+    <p class="section-subtitle reveal">${content.cta && content.cta.body || ''}</p>
+    <a href="#" class="btn-w reveal" onclick="nav2('contact');return false;">${content.cta && content.cta.button || 'Contact Us'} →</a>
+  </div>
+
+  <section class="maps-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Find Us</div>
+        <h2 class="section-title">Our Location <span class="lm">${initials}</span></h2>
+      </div>
+      <div class="maps-container reveal">${mapsEmbed}</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">${input.businessName}</div>
+          <div class="footer-tagline">${content.footer && content.footer.tagline || ''}</div>
+        </div>
+        <div class="footer-links">
+          <a onclick="nav2('about')">About</a>
+          <a onclick="nav2('services')">Services</a>
+          <a onclick="nav2('portfolio')">Portfolio</a>
+          <a onclick="nav2('blog')">Blog</a>
+          <a onclick="nav2('faq')">FAQ</a>
+          <a onclick="nav2('careers')">Careers</a>
+          <a onclick="nav2('contact')">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© ${year} ${input.businessName}. All rights reserved.</div>
+        ${input.location ? '<div class="footer-copy">Serving ' + input.location + '</div>' : ''}
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- PAGE: SERVICES -->
+<div id="page-services" class="page" style="padding-top:110px">
+  ${pageHero('Our Services', content.servicesPage && content.servicesPage.intro || '', '42vh')}
+  <section>
+    <div class="container">
+      <div class="services-full-grid">${allServices}</div>
+    </div>
+  </section>
+</div>
+
+<!-- PAGE: PORTFOLIO -->
+<div id="page-portfolio" class="page" style="padding-top:110px">
+  ${pageHero('Our Portfolio', 'Real results for real clients.', '42vh')}
+  <section>
+    <div class="container">
+      <div class="portfolio-grid">${portfolio}</div>
+    </div>
+  </section>
+</div>
+
+<!-- PAGE: ABOUT -->
+<div id="page-about" class="page" style="padding-top:110px">
+  ${pageHero('About Us', '', '42vh')}
+  <section class="mission-section">
+    <div class="container">
+      <p class="mission-quote reveal">${content.aboutPage && content.aboutPage.mission || (content.about && content.about.heading) || ''}</p>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="about-grid">
+        <div class="reveal-left"><div class="about-image"><img src="${aboutImg}" alt="${input.businessName}" loading="lazy"></div></div>
+        <div class="reveal-right">
+          <div class="section-label">Our Story</div>
+          <h2 class="section-title">${content.about && content.about.heading || 'About Us'} <span class="lm">${initials}</span></h2>
+          <div class="about-body">${(content.about && content.about.body || '').split('\\n\\n').map(function(pp){ return '<p>' + pp + '</p>'; }).join('')}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section style="background:var(--surf)">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">What We Stand For</div>
+        <h2 class="section-title">Our Values <span class="lm">${initials}</span></h2>
+      </div>
+      <div class="values-grid">${values}</div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">The Team</div>
+        <h2 class="section-title">Meet Our People <span class="lm">${initials}</span></h2>
+      </div>
+      <div class="team-grid">${team}</div>
+    </div>
+  </section>
+</div>
+
+<!-- PAGE: BLOG -->
+<div id="page-blog" class="page" style="padding-top:110px">
+  ${pageHero('Blog & Insights', 'Tips, stories, and updates from our team.', '42vh')}
+  <section>
+    <div class="container">
+      <div class="blog-grid">${blog}</div>
+    </div>
+  </section>
+</div>
+
+<!-- PAGE: FAQ -->
+<div id="page-faq" class="page" style="padding-top:110px">
+  ${pageHero('Frequently Asked Questions', 'Everything you need to know.', '42vh')}
+  <section>
+    <div class="container">
+      <div class="faq-list">${faq}</div>
+    </div>
+  </section>
+</div>
+
+<!-- PAGE: CAREERS -->
+<div id="page-careers" class="page" style="padding-top:110px">
+  ${pageHero('Join Our Team', "We're hiring great people.", '42vh')}
+  <section>
+    <div class="container">
+      <div class="culture-grid">
+        <div class="culture-text reveal-left">
+          <div class="section-label">Our Culture</div>
+          <h2>${content.careers && content.careers.culture ? 'Life at ' + input.businessName : 'Why Work With Us'}</h2>
+          <p>${content.careers && content.careers.culture || ''}</p>
+        </div>
+        <div class="culture-deco reveal-right">🚀</div>
+      </div>
+      <div class="section-header reveal">
+        <div class="section-label">Benefits</div>
+        <h2 class="section-title">Perks &amp; Benefits <span class="lm">${initials}</span></h2>
+      </div>
+      <div class="perks-grid">${perks}</div>
+      <div class="section-header reveal" style="margin-top:2rem">
+        <div class="section-label">Open Positions</div>
+        <h2 class="section-title">Current Openings <span class="lm">${initials}</span></h2>
+      </div>
+      <div class="jobs-grid">${openings}</div>
+    </div>
+  </section>
+</div>
+
+<!-- PAGE: CONTACT -->
+<div id="page-contact" class="page" style="padding-top:110px">
+  ${pageHero('Get In Touch', "We'd love to hear from you.", '35vh')}
+  <section>
+    <div class="container">
+      <div class="contact-grid">
+        <div class="reveal-left">
+          <div class="section-label">Reach Out</div>
+          <h2 class="section-title">Let's Talk <span class="lm">${initials}</span></h2>
+          <p class="section-subtitle">${content.footer && content.footer.tagline || ''}</p>
+          <div class="contact-items">
+            ${input.phone ? '<div class="contact-item"><div class="contact-icon">📞</div><div><strong>Phone</strong><span>' + input.phone + '</span></div></div>' : ''}
+            ${input.email ? '<div class="contact-item"><div class="contact-icon">✉️</div><div><strong>Email</strong><span>' + input.email + '</span></div></div>' : ''}
+            ${input.address ? '<div class="contact-item"><div class="contact-icon">📍</div><div><strong>Address</strong><span>' + input.address + '</span></div></div>' : (input.location ? '<div class="contact-item"><div class="contact-icon">📍</div><div><strong>Location</strong><span>' + input.location + '</span></div></div>' : '')}
+          </div>
+        </div>
+        <div class="reveal-right">
+          <form class="contact-form" onsubmit="handleContactForm(event)">
+            <div class="form-row">
+              <div class="cf-field"><label>First Name</label><input type="text" placeholder="John" required></div>
+              <div class="cf-field"><label>Last Name</label><input type="text" placeholder="Doe" required></div>
+            </div>
+            <div class="cf-field"><label>Email</label><input type="email" placeholder="john@example.com" required></div>
+            <div class="cf-field"><label>Phone</label><input type="tel" placeholder="(555) 000-0000"></div>
+            <div class="cf-field"><label>Message</label><textarea placeholder="Tell us how we can help..."></textarea></div>
+            <button type="submit" class="form-submit">${content.cta && content.cta.button || 'Send Message'} →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
 <script>
-const nav=document.getElementById('nav');
-window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60),{passive:true});
-const hm=document.querySelector('.hero-media');
-if(hm)window.addEventListener('scroll',()=>{if(window.scrollY<window.innerHeight)hm.style.transform='translateY('+(window.scrollY*.35)+'px)';},{passive:true});
-const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in-view');obs.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -60px 0px'});
-document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obs.observe(el));
-const cobs=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,target=parseInt(el.dataset.target),suffix=el.dataset.suffix||'',start=performance.now();function u(now){const p=Math.min((now-start)/1800,1),ease=1-Math.pow(1-p,4);el.textContent=Math.floor(ease*target)+suffix;if(p<1)requestAnimationFrame(u);}requestAnimationFrame(u);cobs.unobserve(el);});},{threshold:.5});
-document.querySelectorAll('.stat-value[data-target]').forEach(c=>cobs.observe(c));
-function handleForm(e){e.preventDefault();const btn=e.target.querySelector('.form-submit'),orig=btn.textContent;btn.textContent='Sent ✓';btn.style.background='#10b981';setTimeout(()=>{btn.textContent=orig;btn.style.background='';e.target.reset();},4000);}
+function nav2(page) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-link-item').forEach(function(a){ a.classList.toggle('nav-active', a.getAttribute('data-page') === page); });
+  window.scrollTo(0, 0);
+  setupReveal();
+}
+var navEl = document.getElementById('nav');
+window.addEventListener('scroll', function(){ navEl.classList.toggle('scrolled', window.scrollY > 20); }, {passive:true});
+var hm = document.querySelector('.hero-media');
+if (hm && hm.tagName === 'IMG') {
+  window.addEventListener('scroll', function(){
+    if (window.scrollY < window.innerHeight) hm.style.transform = 'translateY(' + (window.scrollY * 0.35) + 'px)';
+  }, {passive:true});
+}
+function setupReveal() {
+  var obs = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('in-view'); obs.unobserve(e.target); }
+    });
+  }, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(function(el){
+    if (!el.classList.contains('in-view')) obs.observe(el);
+  });
+}
+setupReveal();
+var cobs = new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if (!e.isIntersecting) return;
+    var el = e.target, target = parseInt(el.dataset.target), suffix = el.dataset.suffix || '+', start = performance.now();
+    function u(now) {
+      var prog = Math.min((now - start) / 1800, 1), ease = 1 - Math.pow(1 - prog, 4);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (prog < 1) requestAnimationFrame(u);
+    }
+    requestAnimationFrame(u);
+    cobs.unobserve(el);
+  });
+}, {threshold:0.5});
+document.querySelectorAll('.stat-value[data-target]').forEach(function(c){ cobs.observe(c); });
+function toggleFaq(i) {
+  var ans = document.getElementById('faqa' + i);
+  var icon = document.querySelector('#faq' + i + ' .faq-icon');
+  var isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(function(a){ a.classList.remove('open'); });
+  document.querySelectorAll('.faq-icon').forEach(function(ic){ ic.textContent = '+'; ic.style.transform = ''; });
+  if (!isOpen) {
+    ans.classList.add('open');
+    icon.textContent = '×';
+    icon.style.transform = 'rotate(45deg)';
+  }
+}
+function handleContactForm(e) {
+  e.preventDefault();
+  var btn = e.target.querySelector('.form-submit'), orig = btn.textContent;
+  btn.textContent = 'Sent ✓'; btn.style.background = '#10b981';
+  setTimeout(function(){ btn.textContent = orig; btn.style.background = ''; e.target.reset(); }, 4000);
+}
 <\/script></body></html>`;
 }
 
@@ -552,6 +1221,7 @@ async function generate() {
   const apiKey = document.getElementById('apiKey').value.trim();
   const businessName = document.getElementById('businessName').value.trim();
   const industry = document.getElementById('industry').value.trim();
+  const pexelsKey = document.getElementById('pexelsKey').value.trim();
 
   clearError();
   if (!apiKey) return showError('Please enter your Claude API key.');
@@ -566,59 +1236,111 @@ async function generate() {
   document.getElementById('featureList').style.display = 'none';
 
   const previewArea = document.getElementById('previewArea');
-  previewArea.innerHTML = `<div style="text-align:center"><div class="spinner"></div><p class="status">Claude is reading your assets and writing your site...</p><p class="status" style="margin-top:0.5rem;font-size:0.75rem">Usually 15–25 seconds</p></div>`;
+  previewArea.innerHTML = '<div style="text-align:center"><div class="spinner"></div><p class="status">Claude is reading your assets and writing your site...</p><p class="status" style="margin-top:0.5rem;font-size:0.75rem">Usually 20–35 seconds for 8 pages</p></div>';
+
+  const website = document.getElementById('website').value.trim();
+  const address = document.getElementById('address').value.trim();
+
+  const fbVal = document.getElementById('smFacebook').value.trim();
+  const igVal = document.getElementById('smInstagram').value.trim();
+  const twVal = document.getElementById('smTwitter').value.trim();
+  const liVal = document.getElementById('smLinkedIn').value.trim();
+  const ytVal = document.getElementById('smYouTube').value.trim();
+  const ttVal = document.getElementById('smTikTok').value.trim();
+  const socials = {};
+  if (fbVal) socials.facebook = fbVal;
+  if (igVal) socials.instagram = igVal;
+  if (twVal) socials.twitter = twVal;
+  if (liVal) socials.linkedin = liVal;
+  if (ytVal) socials.youtube = ytVal;
+  if (ttVal) socials.tiktok = ttVal;
 
   const input = {
     businessName, industry,
     location: document.getElementById('location').value.trim(),
     phone: document.getElementById('phone').value.trim(),
     email: document.getElementById('email').value.trim(),
-    services: document.getElementById('services').value.split(',').map(s=>s.trim()).filter(Boolean),
+    website, address,
+    services: document.getElementById('services').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
     description: document.getElementById('description').value.trim(),
     tone: selectedTone,
+    socials: socials,
   };
 
-  // Build message content — text prompt + any images/PDFs
-  const textPrompt = `You are a world-class copywriter and brand strategist. Generate website content for this business. Be highly specific — NOT generic AI copy. Use any brand assets provided to inform the tone, colors, and messaging.
+  const textPrompt = `You are a world-class copywriter and brand strategist. Generate complete website content for ALL 8 pages of this business website. Be highly specific — NOT generic AI copy.
 
 Business:
 - Name: ${input.businessName}
 - Industry: ${input.industry}
-- Location: ${input.location||'Not specified'}
-- Phone: ${input.phone||'Not specified'}
-- Email: ${input.email||'Not specified'}
-- Services: ${input.services.join(', ')||'Not specified'}
-- Description: ${input.description||'Not provided'}
+- Location: ${input.location || 'Not specified'}
+- Phone: ${input.phone || 'Not specified'}
+- Email: ${input.email || 'Not specified'}
+- Website: ${input.website || 'Not specified'}
+- Address: ${input.address || 'Not specified'}
+- Services: ${input.services.join(', ') || 'Not specified'}
+- Description: ${input.description || 'Not provided'}
 - Tone: ${input.tone}
-${uploadedFiles.filter(f=>f.note).map(f=>`- Asset: ${f.note}`).join('\n')}
+${uploadedFiles.filter(function(f){ return f.note; }).map(function(f){ return '- Asset: ' + f.note; }).join('\n')}
 
-${uploadedFiles.filter(f=>f.base64&&f.type==='image').length ? 'Brand images are attached — use them to understand the visual style, color palette, and brand personality.' : ''}
-${uploadedFiles.filter(f=>f.base64&&f.type==='pdf').length ? 'Brand PDF documents are attached — extract key messaging, values, and guidelines from them.' : ''}
+${uploadedFiles.filter(function(f){ return f.base64 && f.type === 'image'; }).length ? 'Brand images are attached — use them to understand the visual style, color palette, and brand personality.' : ''}
+${uploadedFiles.filter(function(f){ return f.base64 && f.type === 'pdf'; }).length ? 'Brand PDF documents are attached — extract key messaging, values, and guidelines from them.' : ''}
 
 Return ONLY valid JSON (no markdown, no explanation):
 {
   "meta": {"title":"","description":"","keywords":[]},
-  "hero": {"eyebrow":"3-5 word trust signal specific to this business","headline":"Bold specific headline — not generic","subheadline":"1-2 sentences of specific value","cta":"Action verb 2-4 words","ctaSecondary":"Softer 2-4 words"},
-  "about": {
-    "heading":"Creative heading not 'About Us'",
-    "body":"3 short paragraphs separated by \\n\\n. Human voice, not AI.",
-    "stats":[{"value":"10+","numericValue":10,"suffix":"+","label":"Years in Business"},{"value":"500+","numericValue":500,"suffix":"+","label":"Happy Clients"},{"value":"98%","numericValue":98,"suffix":"%","label":"5-Star Reviews"}]
+  "unsplashQuery": "3-4 specific words for hero image (e.g. 'modern dental office')",
+  "hero": {
+    "eyebrow": "3-5 word trust signal",
+    "headline": "Bold specific headline",
+    "subheadline": "1-2 sentences of specific value",
+    "cta": "Action verb 2-4 words",
+    "ctaSecondary": "Softer 2-4 words",
+    "videoQuery": "3-4 specific words for Pexels video (e.g. 'dental office treatment')"
   },
-  "services":[{"title":"Specific service name","description":"2-3 sentences benefit-first","icon":"single emoji"}],
-  "process":[{"step":"01","title":"Step name","description":"One sentence"},{"step":"02","title":"Step name","description":"One sentence"},{"step":"03","title":"Step name","description":"One sentence"}],
-  "testimonials":[{"quote":"Specific 2-3 sentence testimonial with real detail","author":"Full Name","role":"Their role","rating":5},{"quote":"","author":"","role":"","rating":5},{"quote":"","author":"","role":"","rating":5}],
-  "cta":{"heading":"Compelling CTA headline","body":"1-2 sentences removing last objection","button":"Action text"},
-  "footer":{"tagline":"Under 8 words — memorable and specific"},
-  "unsplashQuery":"3-4 specific words for hero image (e.g. 'modern dental office interior')"
-}`;
+  "about": {
+    "heading": "Creative heading not About Us",
+    "body": "3 short paragraphs separated by \\n\\n. Human voice.",
+    "stats": [{"value":"10+","numericValue":10,"suffix":"+","label":"Years in Business"},{"value":"500+","numericValue":500,"suffix":"+","label":"Happy Clients"},{"value":"98%","numericValue":98,"suffix":"%","label":"5-Star Reviews"}]
+  },
+  "services": [
+    {"title":"Service name","description":"2-3 sentences benefit-first","icon":"single emoji","features":["benefit 1","benefit 2","benefit 3"]}
+  ],
+  "process": [{"step":"01","title":"Step name","description":"One sentence"},{"step":"02","title":"","description":""},{"step":"03","title":"","description":""}],
+  "testimonials": [{"quote":"Specific 2-3 sentence testimonial","author":"Full Name","role":"Their role","rating":5},{"quote":"","author":"","role":"","rating":5},{"quote":"","author":"","role":"","rating":5}],
+  "portfolio": [
+    {"title":"Project name","category":"Category","description":"2 sentences about the project","result":"Specific measurable outcome"}
+  ],
+  "team": [
+    {"name":"Full Name","role":"Job Title","bio":"2 sentences about them","initial":"F"}
+  ],
+  "blog": [
+    {"title":"Post title","category":"Category","summary":"2-3 sentences","date":"Month Year","readTime":"X min read"}
+  ],
+  "faq": [
+    {"q":"Question?","a":"2-3 sentence answer"}
+  ],
+  "careers": {
+    "culture": "2-3 sentences about company culture",
+    "perks": ["Perk 1","Perk 2","Perk 3","Perk 4","Perk 5","Perk 6"],
+    "openings": [{"title":"Job Title","type":"Full-time","location":"City, ST","description":"2 sentences about role"}]
+  },
+  "aboutPage": {
+    "mission": "One powerful mission statement sentence",
+    "values": [{"title":"Value name","description":"1 sentence"},{"title":"","description":""},{"title":"","description":""},{"title":"","description":""}]
+  },
+  "servicesPage": {"intro": "2-3 sentences about services approach"},
+  "cta": {"heading":"Compelling CTA headline","body":"1-2 sentences","button":"Action text"},
+  "footer": {"tagline":"Under 8 words — memorable"}
+}
 
-  // Build multimodal content array
+Provide exactly: 6 services (with 3 features each), 6 portfolio items, 4 team members, 4 blog posts, 10 FAQ items, 3 career openings, 4 values.`;
+
   const contentBlocks = [{ type: 'text', text: textPrompt }];
 
   for (const f of uploadedFiles) {
     if (!f.base64) continue;
     if (f.type === 'image') {
-      contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType||'image/jpeg', data: f.base64 } });
+      contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType || 'image/jpeg', data: f.base64 } });
     } else if (f.type === 'pdf') {
       contentBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 } });
     }
@@ -633,16 +1355,21 @@ Return ONLY valid JSON (no markdown, no explanation):
 
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.error?.message || err.error || `Error ${res.status}`);
+      throw new Error(err.error && err.error.message || err.error || ('Error ' + res.status));
     }
 
     const data = await res.json();
-    const text = data.content?.[0]?.text || '';
+    const text = data.content && data.content[0] && data.content[0].text || '';
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('No JSON in response — try again');
     const content = JSON.parse(jsonMatch[0]);
 
-    generatedHTML = buildHTML(content, selectedTemplate, input);
+    const videoUrl = await fetchPexelsVideo(
+      (content.hero && content.hero.videoQuery) || content.unsplashQuery || industry,
+      pexelsKey
+    );
+
+    generatedHTML = buildHTML(content, selectedTemplate, input, videoUrl);
 
     const iframe = document.createElement('iframe');
     iframe.style.cssText = 'width:100%;height:100%;border:none';
@@ -657,7 +1384,7 @@ Return ONLY valid JSON (no markdown, no explanation):
     document.getElementById('actionButtons').style.display = 'flex';
 
   } catch (err) {
-    previewArea.innerHTML = `<div class="preview-empty"><div class="icon">⚠️</div><p>Generation failed</p><small>${err.message}</small></div>`;
+    previewArea.innerHTML = '<div class="preview-empty"><div class="icon">⚠️</div><p>Generation failed</p><small>' + err.message + '</small></div>';
     showError(err.message);
     document.getElementById('featureList').style.display = 'block';
   } finally {
@@ -675,11 +1402,11 @@ function openFullscreen() {
 
 function downloadSite() {
   if (!generatedHTML) return;
-  const name = document.getElementById('businessName').value.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
-  const blob = new Blob([generatedHTML], {type:'text/html'});
+  const name = document.getElementById('businessName').value.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const blob = new Blob([generatedHTML], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href=url; a.download=`${name||'website'}.html`; a.click();
+  a.href = url; a.download = (name || 'website') + '.html'; a.click();
   URL.revokeObjectURL(url);
 }
 </script>
