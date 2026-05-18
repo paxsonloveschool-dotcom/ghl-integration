@@ -633,24 +633,15 @@ Return ONLY valid JSON (no markdown, no explanation):
 }`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2500,
-        messages: [{ role: 'user', content: prompt }],
-      }),
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ apiKey, prompt }),
     });
 
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.error?.message || `API error ${res.status}`);
+      throw new Error(err.error?.message || err.error || `API error ${res.status}`);
     }
 
     const data = await res.json();
