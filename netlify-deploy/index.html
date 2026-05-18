@@ -1333,7 +1333,7 @@ Return ONLY valid JSON (no markdown, no explanation):
   "footer": {"tagline":"Under 8 words — memorable"}
 }
 
-Provide exactly: 6 services (with 3 features each), 6 portfolio items, 4 team members, 4 blog posts, 10 FAQ items, 3 career openings, 4 values.`;
+Provide exactly: 4 services (with 3 features each), 4 portfolio items, 3 team members, 3 blog posts, 6 FAQ items, 2 career openings, 3 values. Keep each text field concise — 1-2 sentences max.`;
 
   const contentBlocks = [{ type: 'text', text: textPrompt }];
 
@@ -1354,8 +1354,10 @@ Provide exactly: 6 services (with 3 features each), 6 portfolio items, 4 team me
     });
 
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error && err.error.message || err.error || ('Error ' + res.status));
+      let errMsg = 'Error ' + res.status;
+      if (res.status === 502 || res.status === 504) errMsg = 'Request timed out — try again (generation can take 20-30s)';
+      else { try { const e = await res.json(); errMsg = (e.error && e.error.message) || e.error || errMsg; } catch {} }
+      throw new Error(errMsg);
     }
 
     const data = await res.json();
