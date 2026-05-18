@@ -124,3 +124,12 @@ class GHLClient:
     def list_pipelines(self) -> dict[str, Any]:
         params = {"locationId": self.location_id}
         return self._req("GET", "/opportunities/pipelines", params=params)
+
+    # --- Funnels / Websites ---------------------------------------------------
+
+    def list_funnels(self, limit: int = 20, offset: int = 0) -> dict[str, Any]:
+        params = {"locationId": self.location_id, "limit": limit, "offset": offset}
+        return self._req("GET", "/funnels/funnel/list", params=params)
+
+    def get_funnel(self, funnel_id: str) -> dict[str, Any]:
+        return self._req("GET", f"/funnels/{funnel_id}")

@@ -149,6 +149,51 @@ TOOLS: list[dict[str, Any]] = [
         },
     },
     {
+        "name": "ghl_create_opportunity",
+        "description": (
+            "Create a sales opportunity (deal) in a GHL pipeline for a contact. "
+            "Use this whenever you add a prospect to track them through the sales process."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "pipeline_id": {"type": "string", "description": "GHL pipeline ID"},
+                "stage_id": {"type": "string", "description": "GHL pipeline stage ID"},
+                "name": {"type": "string", "description": "Opportunity name, e.g. 'Riverside Plumbing - Website'"},
+                "contact_id": {"type": "string", "description": "GHL contact ID"},
+                "monetary_value": {"type": "number", "description": "Expected deal value in USD", "default": 997},
+                "status": {"type": "string", "enum": ["open", "won", "lost", "abandoned"], "default": "open"},
+            },
+            "required": ["pipeline_id", "stage_id", "name", "contact_id"],
+        },
+    },
+    {
+        "name": "ghl_list_pipelines",
+        "description": "List all sales pipelines and their stages in GHL. Call this once to get pipeline_id and stage_id values for ghl_create_opportunity.",
+        "input_schema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "ghl_list_funnels",
+        "description": "List all funnels and websites in GHL for this location.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "limit": {"type": "integer", "default": 20},
+            },
+        },
+    },
+    {
+        "name": "ghl_get_funnel",
+        "description": "Get details of a specific GHL funnel/website by ID.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "funnel_id": {"type": "string"},
+            },
+            "required": ["funnel_id"],
+        },
+    },
+    {
         "name": "finish_cycle",
         "description": (
             "Signal that this work cycle is complete. The agent will save state "
@@ -232,6 +277,21 @@ def _handle(name: str, args: dict[str, Any], state: dict[str, Any]) -> dict[str,
                 r = client.send_email(args["contact_id"], args["subject"], args["html"])
             elif name == "ghl_send_sms":
                 r = client.send_sms(args["contact_id"], args["message"])
+            elif name == "ghl_create_opportunity":
+                r = client.create_opportunity(
+                    pipeline_id=args["pipeline_id"],
+                    stage_id=args["stage_id"],
+                    name=args["name"],
+                    contact_id=args["contact_id"],
+                    monetary_value=args.get("monetary_value", 997),
+                    status=args.get("status", "open"),
+                )
+            elif name == "ghl_list_pipelines":
+                r = client.list_pipelines()
+            elif name == "ghl_list_funnels":
+                r = client.list_funnels(limit=args.get("limit", 20))
+            elif name == "ghl_get_funnel":
+                r = client.get_funnel(args["funnel_id"])
             else:
                 return {"result": f"unknown GHL tool: {name}", "is_error": True}
             memory.journal({"type": "ghl_call", "tool": name, "args": args})

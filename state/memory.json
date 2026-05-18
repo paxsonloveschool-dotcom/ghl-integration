@@ -3,15 +3,79 @@
     "spent_usd": 0.0,
     "starting_usd": 200.0
   },
-  "created_at": "2026-05-11T06:59:28.617918+00:00",
+  "created_at": "2026-05-18T00:00:00+00:00",
   "cycle_count": 0,
   "kpis": {
     "customers": 0,
     "leads": 0,
     "mrr_usd": 0.0
   },
-  "last_cycle": "2026-05-18T14:56:36.111489+00:00",
-  "notes": [],
-  "tasks": [],
+  "last_cycle": null,
+  "notes": [
+    {
+      "tag": "decision",
+      "text": "Business model: Website Factory. Build and sell professional websites to local home-service contractors (HVAC, plumbing, electrical, roofing) using GHL. One-time fee $797-$1,997 + optional $97-$197/month retainer. Starting niche: HVAC and plumbing contractors in mid-size US cities who have no website or a broken one.",
+      "ts": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "tag": "decision",
+      "text": "Prospecting approach: use web_search to find local HVAC/plumbing businesses that have a GBP listing but no website link (or a broken website). Target cities: Tulsa OK, Fresno CA, Albuquerque NM, Baton Rouge LA, Knoxville TN. These are large enough to have many contractors but small enough that competition from web agencies is lower.",
+      "ts": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "tag": "decision",
+      "text": "Pricing and positioning: Lead with 'We build your website in 48 hours, or it\\'s free.' Starter package $797 (5-page site, lead form, GMB embed). Pro package $1,297 (+ SEO setup, booking calendar). Monthly care plan $97/month. Do NOT compete on price with overseas agencies — compete on speed and local focus.",
+      "ts": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "tag": "decision",
+      "text": "GHL setup needed: create a 'Website Factory' pipeline with stages: Outreach -> Replied -> Discovery Call -> Proposal Sent -> Deposit Paid -> Build In Progress -> Launched -> Retainer Active. Also need a website template in GHL Website Builder for contractor sites (header, services, about, reviews, contact/booking).",
+      "ts": "2026-05-18T00:00:00+00:00"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "text": "Call ghl_list_pipelines to see existing pipelines. If no 'Website Factory' pipeline exists, queue approval for human to create it in GHL UI with stages: Outreach, Replied, Discovery Call, Proposal Sent, Deposit Paid, Build In Progress, Launched, Retainer Active.",
+      "status": "open",
+      "created_at": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "id": 2,
+      "text": "Call ghl_list_funnels to inventory existing GHL website templates. Note any contractor-friendly template names for reuse.",
+      "status": "open",
+      "created_at": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "id": 3,
+      "text": "Use web_search to find 10 HVAC or plumbing contractors in Tulsa OK that have a GBP listing but no website or a clearly broken/outdated one. Record each prospect as a note with: business name, phone, address, GBP URL if found, website status.",
+      "status": "open",
+      "created_at": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "id": 4,
+      "text": "Draft a cold outreach script (email + SMS variant) for HVAC/plumbing contractors. Should be short, specific, and lead with the pain (no website = lost calls). Queue it for human approval before sending any real messages.",
+      "status": "open",
+      "created_at": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "id": 5,
+      "text": "For each prospect found in task 3: create a GHL contact with tag 'prospect-hvac-tulsa' and a matching opportunity in the pipeline at stage 'Outreach' with monetary_value=997. Requires pipeline_id from task 1.",
+      "status": "open",
+      "created_at": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "id": 6,
+      "text": "Research: what domain registrar/host to use for client sites built on GHL? Options: GHL native domain, Cloudflare Registrar, Namecheap. Recommend one and note it.",
+      "status": "open",
+      "created_at": "2026-05-18T00:00:00+00:00"
+    },
+    {
+      "id": 7,
+      "text": "Draft a one-page 'Website Factory' proposal PDF outline that Ron can generate for interested prospects: what's included, timeline (48h), price tiers, payment terms (50% deposit, 50% on launch), and monthly care plan upsell.",
+      "status": "open",
+      "created_at": "2026-05-18T00:00:00+00:00"
+    }
+  ],
   "version": 1
 }
