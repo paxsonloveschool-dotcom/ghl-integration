@@ -1216,7 +1216,7 @@ function handleContactForm(e) {
 <\/script></body></html>`;
 }
 
-// ── CLAUDE API CALL HELPER ──
+// ── CLAUDE API CALL HELPER (calls Anthropic directly — no proxy timeout) ──
 async function callClaude(apiKey, promptText, fileBlocks) {
   const contentBlocks = [{ type: 'text', text: promptText }];
   for (const f of (fileBlocks || [])) {
@@ -1224,15 +1224,23 @@ async function callClaude(apiKey, promptText, fileBlocks) {
     if (f.type === 'image') contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType || 'image/jpeg', data: f.base64 } });
     else if (f.type === 'pdf') contentBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 } });
   }
-  const res = await fetch('/api/generate', {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ apiKey, messages: [{ role: 'user', content: contentBlocks }] }),
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 3000,
+      messages: [{ role: 'user', content: contentBlocks }],
+    }),
   });
   if (!res.ok) {
     let msg = 'Error ' + res.status;
-    if (res.status === 502 || res.status === 504) msg = 'Request timed out — please try again';
-    else { try { const e = await res.json(); msg = (e.error && e.error.message) || e.error || msg; } catch {} }
+    try { const e = await res.json(); msg = (e.error && e.error.message) || e.error || msg; } catch {}
     throw new Error(msg);
   }
   const data = await res.json();
