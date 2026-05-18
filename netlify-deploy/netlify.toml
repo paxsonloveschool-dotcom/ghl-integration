@@ -1,6 +1,5 @@
 [functions]
   directory = "netlify/functions"
-  timeout = 26
 
 [[redirects]]
   from = "/api/generate"

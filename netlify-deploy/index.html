@@ -1216,6 +1216,32 @@ function handleContactForm(e) {
 <\/script></body></html>`;
 }
 
+// ── CLAUDE API CALL HELPER ──
+async function callClaude(apiKey, promptText, fileBlocks) {
+  const contentBlocks = [{ type: 'text', text: promptText }];
+  for (const f of (fileBlocks || [])) {
+    if (!f.base64) continue;
+    if (f.type === 'image') contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType || 'image/jpeg', data: f.base64 } });
+    else if (f.type === 'pdf') contentBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 } });
+  }
+  const res = await fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ apiKey, messages: [{ role: 'user', content: contentBlocks }] }),
+  });
+  if (!res.ok) {
+    let msg = 'Error ' + res.status;
+    if (res.status === 502 || res.status === 504) msg = 'Request timed out — please try again';
+    else { try { const e = await res.json(); msg = (e.error && e.error.message) || e.error || msg; } catch {} }
+    throw new Error(msg);
+  }
+  const data = await res.json();
+  const text = (data.content && data.content[0] && data.content[0].text) || '';
+  const m = text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error('No JSON returned — try again');
+  return JSON.parse(m[0]);
+}
+
 // ── GENERATE ──
 async function generate() {
   const apiKey = document.getElementById('apiKey').value.trim();
@@ -1236,11 +1262,13 @@ async function generate() {
   document.getElementById('featureList').style.display = 'none';
 
   const previewArea = document.getElementById('previewArea');
-  previewArea.innerHTML = '<div style="text-align:center"><div class="spinner"></div><p class="status">Claude is reading your assets and writing your site...</p><p class="status" style="margin-top:0.5rem;font-size:0.75rem">Usually 20–35 seconds for 8 pages</p></div>';
+  function setStatus(msg, sub) {
+    previewArea.innerHTML = '<div style="text-align:center"><div class="spinner"></div><p class="status">' + msg + '</p>' + (sub ? '<p class="status" style="margin-top:0.5rem;font-size:0.75rem">' + sub + '</p>' : '') + '</div>';
+  }
+  setStatus('Step 1 of 2 — Writing home page copy…', 'Claude is crafting your hero, about, services & testimonials');
 
   const website = document.getElementById('website').value.trim();
   const address = document.getElementById('address').value.trim();
-
   const fbVal = document.getElementById('smFacebook').value.trim();
   const igVal = document.getElementById('smInstagram').value.trim();
   const twVal = document.getElementById('smTwitter').value.trim();
@@ -1267,104 +1295,60 @@ async function generate() {
     socials: socials,
   };
 
-  const textPrompt = `You are a world-class copywriter and brand strategist. Generate complete website content for ALL 8 pages of this business website. Be highly specific — NOT generic AI copy.
+  const bizCtx = `Business: ${input.businessName} | Industry: ${input.industry} | Location: ${input.location||'N/A'} | Phone: ${input.phone||'N/A'} | Email: ${input.email||'N/A'} | Services: ${input.services.join(', ')||'N/A'} | Description: ${input.description||'N/A'} | Tone: ${input.tone}`;
 
-Business:
-- Name: ${input.businessName}
-- Industry: ${input.industry}
-- Location: ${input.location || 'Not specified'}
-- Phone: ${input.phone || 'Not specified'}
-- Email: ${input.email || 'Not specified'}
-- Website: ${input.website || 'Not specified'}
-- Address: ${input.address || 'Not specified'}
-- Services: ${input.services.join(', ') || 'Not specified'}
-- Description: ${input.description || 'Not provided'}
-- Tone: ${input.tone}
-${uploadedFiles.filter(function(f){ return f.note; }).map(function(f){ return '- Asset: ' + f.note; }).join('\n')}
+  const assetNotes = uploadedFiles.filter(function(f){ return f.note; }).map(function(f){ return f.note; }).join('; ');
+  const hasImages = uploadedFiles.some(function(f){ return f.base64 && f.type === 'image'; });
+  const hasPDFs = uploadedFiles.some(function(f){ return f.base64 && f.type === 'pdf'; });
 
-${uploadedFiles.filter(function(f){ return f.base64 && f.type === 'image'; }).length ? 'Brand images are attached — use them to understand the visual style, color palette, and brand personality.' : ''}
-${uploadedFiles.filter(function(f){ return f.base64 && f.type === 'pdf'; }).length ? 'Brand PDF documents are attached — extract key messaging, values, and guidelines from them.' : ''}
+  // ── CALL 1: Home page content ──
+  const prompt1 = `You are a world-class copywriter. Generate home page content for this business. Be specific, NOT generic.
+${bizCtx}
+${assetNotes ? 'Assets: ' + assetNotes : ''}
+${hasImages ? 'Brand images attached — use them for visual tone.' : ''}
+${hasPDFs ? 'Brand PDFs attached — extract key messaging.' : ''}
 
-Return ONLY valid JSON (no markdown, no explanation):
+Return ONLY valid JSON:
 {
-  "meta": {"title":"","description":"","keywords":[]},
-  "unsplashQuery": "3-4 specific words for hero image (e.g. 'modern dental office')",
-  "hero": {
-    "eyebrow": "3-5 word trust signal",
-    "headline": "Bold specific headline",
-    "subheadline": "1-2 sentences of specific value",
-    "cta": "Action verb 2-4 words",
-    "ctaSecondary": "Softer 2-4 words",
-    "videoQuery": "3-4 specific words for Pexels video (e.g. 'dental office treatment')"
-  },
-  "about": {
-    "heading": "Creative heading not About Us",
-    "body": "3 short paragraphs separated by \\n\\n. Human voice.",
-    "stats": [{"value":"10+","numericValue":10,"suffix":"+","label":"Years in Business"},{"value":"500+","numericValue":500,"suffix":"+","label":"Happy Clients"},{"value":"98%","numericValue":98,"suffix":"%","label":"5-Star Reviews"}]
-  },
-  "services": [
-    {"title":"Service name","description":"2-3 sentences benefit-first","icon":"single emoji","features":["benefit 1","benefit 2","benefit 3"]}
-  ],
-  "process": [{"step":"01","title":"Step name","description":"One sentence"},{"step":"02","title":"","description":""},{"step":"03","title":"","description":""}],
-  "testimonials": [{"quote":"Specific 2-3 sentence testimonial","author":"Full Name","role":"Their role","rating":5},{"quote":"","author":"","role":"","rating":5},{"quote":"","author":"","role":"","rating":5}],
-  "portfolio": [
-    {"title":"Project name","category":"Category","description":"2 sentences about the project","result":"Specific measurable outcome"}
-  ],
-  "team": [
-    {"name":"Full Name","role":"Job Title","bio":"2 sentences about them","initial":"F"}
-  ],
-  "blog": [
-    {"title":"Post title","category":"Category","summary":"2-3 sentences","date":"Month Year","readTime":"X min read"}
-  ],
-  "faq": [
-    {"q":"Question?","a":"2-3 sentence answer"}
-  ],
-  "careers": {
-    "culture": "2-3 sentences about company culture",
-    "perks": ["Perk 1","Perk 2","Perk 3","Perk 4","Perk 5","Perk 6"],
-    "openings": [{"title":"Job Title","type":"Full-time","location":"City, ST","description":"2 sentences about role"}]
-  },
-  "aboutPage": {
-    "mission": "One powerful mission statement sentence",
-    "values": [{"title":"Value name","description":"1 sentence"},{"title":"","description":""},{"title":"","description":""},{"title":"","description":""}]
-  },
-  "servicesPage": {"intro": "2-3 sentences about services approach"},
-  "cta": {"heading":"Compelling CTA headline","body":"1-2 sentences","button":"Action text"},
-  "footer": {"tagline":"Under 8 words — memorable"}
+  "meta":{"title":"","description":""},
+  "unsplashQuery":"3-4 words for hero photo",
+  "hero":{"eyebrow":"short trust signal","headline":"bold specific headline","subheadline":"1-2 specific sentences","cta":"2-4 words","ctaSecondary":"2-4 words","videoQuery":"3-4 words for video background"},
+  "about":{"heading":"creative heading","body":"2 short paragraphs separated by \\n\\n","stats":[{"value":"10+","numericValue":10,"suffix":"+","label":"Years"},{"value":"500+","numericValue":500,"suffix":"+","label":"Clients"},{"value":"98%","numericValue":98,"suffix":"%","label":"Satisfaction"}]},
+  "services":[{"title":"","description":"1-2 sentences","icon":"emoji","features":["","",""]}],
+  "process":[{"step":"01","title":"","description":"1 sentence"},{"step":"02","title":"","description":""},{"step":"03","title":"","description":""}],
+  "testimonials":[{"quote":"2-3 specific sentences","author":"","role":"","rating":5},{"quote":"","author":"","role":"","rating":5},{"quote":"","author":"","role":"","rating":5}],
+  "cta":{"heading":"","body":"1 sentence","button":""},
+  "footer":{"tagline":"under 8 words"},
+  "servicesPage":{"intro":"1-2 sentences"}
 }
-
-Provide exactly: 4 services (with 3 features each), 4 portfolio items, 3 team members, 3 blog posts, 6 FAQ items, 2 career openings, 3 values. Keep each text field concise — 1-2 sentences max.`;
-
-  const contentBlocks = [{ type: 'text', text: textPrompt }];
-
-  for (const f of uploadedFiles) {
-    if (!f.base64) continue;
-    if (f.type === 'image') {
-      contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType || 'image/jpeg', data: f.base64 } });
-    } else if (f.type === 'pdf') {
-      contentBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 } });
-    }
-  }
+Provide exactly 4 services with 3 features each.`;
 
   try {
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ apiKey, messages: [{ role: 'user', content: contentBlocks }] }),
-    });
+    const home = await callClaude(apiKey, prompt1, uploadedFiles);
 
-    if (!res.ok) {
-      let errMsg = 'Error ' + res.status;
-      if (res.status === 502 || res.status === 504) errMsg = 'Request timed out — try again (generation can take 20-30s)';
-      else { try { const e = await res.json(); errMsg = (e.error && e.error.message) || e.error || errMsg; } catch {} }
-      throw new Error(errMsg);
-    }
+    setStatus('Step 2 of 2 — Building inner pages…', 'Portfolio, Blog, FAQ, Careers, Team, About');
 
-    const data = await res.json();
-    const text = data.content && data.content[0] && data.content[0].text || '';
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON in response — try again');
-    const content = JSON.parse(jsonMatch[0]);
+    // ── CALL 2: Inner pages content ──
+    const servicesList = (home.services || []).map(function(s){ return s.title; }).join(', ');
+    const prompt2 = `You are a world-class copywriter. Generate inner page content for this business website.
+${bizCtx}
+Services already written: ${servicesList}
+
+Return ONLY valid JSON:
+{
+  "portfolio":[{"title":"","category":"","description":"1-2 sentences","result":"measurable outcome"}],
+  "team":[{"name":"","role":"","bio":"1-2 sentences","initial":"X"}],
+  "blog":[{"title":"","category":"","summary":"2 sentences","date":"Month Year","readTime":"X min read"}],
+  "faq":[{"q":"","a":"2 sentences"}],
+  "careers":{"culture":"2 sentences","perks":["","","","",""],"openings":[{"title":"","type":"Full-time","location":"","description":"1-2 sentences"}]},
+  "aboutPage":{"mission":"one powerful sentence","values":[{"title":"","description":"1 sentence"},{"title":"","description":""},{"title":"","description":""}]}
+}
+Provide exactly: 4 portfolio items, 3 team members, 3 blog posts, 6 FAQ items, 2 job openings, 3 values.`;
+
+    const inner = await callClaude(apiKey, prompt2, []);
+
+    // Merge both responses
+    const content = Object.assign({}, home, inner);
 
     const videoUrl = await fetchPexelsVideo(
       (content.hero && content.hero.videoQuery) || content.unsplashQuery || industry,
