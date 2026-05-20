@@ -1,0 +1,676 @@
+{
+  "generated_at": "2026-05-20T16:59:58.283846Z",
+  "source": "mock",
+  "count": 50,
+  "leads": [
+    {
+      "id": "956827c38e2a",
+      "name": "Quincy Tran",
+      "phone": "+10838637940",
+      "email": "quincy.tran@example.com",
+      "source": "referral",
+      "tags": [
+        "replied",
+        "vip",
+        "qualified"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-17T18:59:58.282929Z",
+      "score": 100
+    },
+    {
+      "id": "2dbbcbe04007",
+      "name": "Sam Reed",
+      "phone": "+12620450533",
+      "email": "sam.reed@example.com",
+      "source": "referral",
+      "tags": [
+        "cold",
+        "follow-up",
+        "qualified"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-05-19T05:59:58.283250Z",
+      "score": 100
+    },
+    {
+      "id": "08fde7f1c32e",
+      "name": "Vince Tran",
+      "phone": "+11905865185",
+      "email": "vince.tran@example.com",
+      "source": "webinar",
+      "tags": [
+        "hot",
+        "engaged",
+        "replied"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-20T03:59:58.283534Z",
+      "score": 100
+    },
+    {
+      "id": "318254611ecb",
+      "name": "Sam Gomez",
+      "phone": "+11034131647",
+      "email": "sam.gomez@example.com",
+      "source": "webinar",
+      "tags": [
+        "replied",
+        "qualified"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-13T11:59:58.282972Z",
+      "score": 95
+    },
+    {
+      "id": "b71156d2d252",
+      "name": "Lara Hill",
+      "phone": "+12871012269",
+      "email": "lara.hill@example.com",
+      "source": "inbound",
+      "tags": [
+        "cold",
+        "engaged",
+        "vip"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-05-19T04:59:58.283017Z",
+      "score": 95
+    },
+    {
+      "id": "ecabafc9672f",
+      "name": "Zane Ford",
+      "phone": "+16025634216",
+      "email": "zane.ford@example.com",
+      "source": "google-ad",
+      "tags": [
+        "qualified"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-20T01:59:58.283262Z",
+      "score": 95
+    },
+    {
+      "id": "80c0006a2bd7",
+      "name": "Priya Tran",
+      "phone": "+11769367632",
+      "email": "priya.tran@example.com",
+      "source": "google-ad",
+      "tags": [
+        "qualified",
+        "vip",
+        "cold"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-05-20T13:59:58.283340Z",
+      "score": 95
+    },
+    {
+      "id": "b11525eb93ff",
+      "name": "Priya Adams",
+      "phone": "+15466889373",
+      "email": "priya.adams@example.com",
+      "source": "webinar",
+      "tags": [
+        "hot",
+        "engaged",
+        "replied"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-15T03:59:58.283390Z",
+      "score": 95
+    },
+    {
+      "id": "eb36a8967614",
+      "name": "Uma Evans",
+      "phone": "+14210249947",
+      "email": "uma.evans@example.com",
+      "source": "inbound",
+      "tags": [
+        "follow-up",
+        "engaged"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-19T02:59:58.283703Z",
+      "score": 95
+    },
+    {
+      "id": "3694504a78f3",
+      "name": "Hana Lopez",
+      "phone": "+12408240084",
+      "email": "hana.lopez@example.com",
+      "source": "inbound",
+      "tags": [
+        "hot",
+        "vip",
+        "cold"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-17T20:59:58.283642Z",
+      "score": 90
+    },
+    {
+      "id": "0fe4f40fe601",
+      "name": "Nora Ford",
+      "phone": "+14731781080",
+      "email": "nora.ford@example.com",
+      "source": "google-ad",
+      "tags": [
+        "engaged"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-19T09:59:58.283147Z",
+      "score": 85
+    },
+    {
+      "id": "2406c48d4308",
+      "name": "Uma Diaz",
+      "phone": "+10433218196",
+      "email": "uma.diaz@example.com",
+      "source": "referral",
+      "tags": [],
+      "status": "contacted",
+      "last_activity_at": "2026-05-20T16:59:58.282718Z",
+      "score": 80
+    },
+    {
+      "id": "de5778acc968",
+      "name": "Carlos Bell",
+      "phone": "+13105183473",
+      "email": "carlos.bell@example.com",
+      "source": "referral",
+      "tags": [
+        "qualified",
+        "engaged",
+        "follow-up"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-04-05T12:59:58.283090Z",
+      "score": 80
+    },
+    {
+      "id": "c1de0db1e581",
+      "name": "Hana Iyer",
+      "phone": "+16247510799",
+      "email": "hana.iyer@example.com",
+      "source": "inbound",
+      "tags": [
+        "cold"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-05-19T14:59:58.283203Z",
+      "score": 80
+    },
+    {
+      "id": "41bbbfee0383",
+      "name": "Hana Moore",
+      "phone": "+12316658760",
+      "email": "hana.moore@example.com",
+      "source": "scraper",
+      "tags": [
+        "vip",
+        "cold",
+        "hot"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-17T03:59:58.283377Z",
+      "score": 80
+    },
+    {
+      "id": "3ea6068e16f6",
+      "name": "Xavier Ford",
+      "phone": "+17298069901",
+      "email": "xavier.ford@example.com",
+      "source": "google-ad",
+      "tags": [
+        "qualified",
+        "hot",
+        "replied"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-06T12:59:58.283463Z",
+      "score": 80
+    },
+    {
+      "id": "99c6321539f2",
+      "name": "Yara Adams",
+      "phone": "+13309232719",
+      "email": "yara.adams@example.com",
+      "source": "referral",
+      "tags": [
+        "vip",
+        "replied"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-05-17T02:59:58.283509Z",
+      "score": 80
+    },
+    {
+      "id": "fe91b3020060",
+      "name": "Mike Hill",
+      "phone": "+14957885685",
+      "email": "mike.hill@example.com",
+      "source": "referral",
+      "tags": [
+        "replied",
+        "vip",
+        "follow-up"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-05-12T18:59:58.283599Z",
+      "score": 80
+    },
+    {
+      "id": "ca6777b0e4b7",
+      "name": "Jen Hill",
+      "phone": "+13036541458",
+      "email": "jen.hill@example.com",
+      "source": "inbound",
+      "tags": [
+        "hot",
+        "vip"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-05-05T19:59:58.283282Z",
+      "score": 75
+    },
+    {
+      "id": "66b13b0f47c1",
+      "name": "Vince Hill",
+      "phone": "+16193990916",
+      "email": "vince.hill@example.com",
+      "source": "webinar",
+      "tags": [
+        "replied",
+        "qualified"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-02-18T22:59:58.283191Z",
+      "score": 70
+    },
+    {
+      "id": "adadb6c5477d",
+      "name": "Ivan Bell",
+      "phone": "+10524278680",
+      "email": "ivan.bell@example.com",
+      "source": "facebook-ad",
+      "tags": [
+        "cold"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-19T14:59:58.283238Z",
+      "score": 70
+    },
+    {
+      "id": "129058599f0f",
+      "name": "Greg Nguyen",
+      "phone": "+16299468044",
+      "email": "greg.nguyen@example.com",
+      "source": "google-ad",
+      "tags": [
+        "engaged",
+        "vip"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-05-17T03:59:58.283317Z",
+      "score": 70
+    },
+    {
+      "id": "a66025a2af8b",
+      "name": "Rita Hill",
+      "phone": "+11727889579",
+      "email": "rita.hill@example.com",
+      "source": "google-ad",
+      "tags": [
+        "qualified",
+        "follow-up",
+        "engaged"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-04-05T03:59:58.283352Z",
+      "score": 70
+    },
+    {
+      "id": "26698f6fa664",
+      "name": "Greg Ortiz",
+      "phone": "+15564641708",
+      "email": "greg.ortiz@example.com",
+      "source": "facebook-ad",
+      "tags": [
+        "follow-up"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-05-20T05:59:58.283492Z",
+      "score": 70
+    },
+    {
+      "id": "2b4c80d60414",
+      "name": "Owen Hill",
+      "phone": "+17996507527",
+      "email": "owen.hill@example.com",
+      "source": "scraper",
+      "tags": [
+        "replied",
+        "vip"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-17T05:59:58.283562Z",
+      "score": 70
+    },
+    {
+      "id": "7b25424cfa98",
+      "name": "Rita Gomez",
+      "phone": "+14657871331",
+      "email": "rita.gomez@example.com",
+      "source": "referral",
+      "tags": [
+        "cold"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-05-13T16:59:58.283078Z",
+      "score": 65
+    },
+    {
+      "id": "b7e49cf6013a",
+      "name": "Greg Moore",
+      "phone": "+10260647468",
+      "email": "greg.moore@example.com",
+      "source": "referral",
+      "tags": [
+        "replied"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-04-29T12:59:58.283165Z",
+      "score": 65
+    },
+    {
+      "id": "35953ece00b2",
+      "name": "Yara Hill",
+      "phone": "+14873471434",
+      "email": "yara.hill@example.com",
+      "source": "referral",
+      "tags": [],
+      "status": "contacted",
+      "last_activity_at": "2026-05-13T06:59:58.283364Z",
+      "score": 65
+    },
+    {
+      "id": "04f281be2c76",
+      "name": "Owen Cruz",
+      "phone": "+19065940139",
+      "email": "owen.cruz@example.com",
+      "source": "referral",
+      "tags": [
+        "cold",
+        "hot"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-02-19T16:59:58.283714Z",
+      "score": 65
+    },
+    {
+      "id": "2a84ffcb7036",
+      "name": "Wendy Cruz",
+      "phone": "+19283276483",
+      "email": "wendy.cruz@example.com",
+      "source": "facebook-ad",
+      "tags": [
+        "vip"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-13T15:59:58.282988Z",
+      "score": 55
+    },
+    {
+      "id": "a44654d2a34b",
+      "name": "Mike Iyer",
+      "phone": "+11395376724",
+      "email": "mike.iyer@example.com",
+      "source": "google-ad",
+      "tags": [
+        "follow-up",
+        "cold"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-18T09:59:58.283002Z",
+      "score": 55
+    },
+    {
+      "id": "e796ebc587b5",
+      "name": "Dana Nguyen",
+      "phone": "+15667010651",
+      "email": "dana.nguyen@example.com",
+      "source": "google-ad",
+      "tags": [
+        "cold"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-05-17T10:59:58.283104Z",
+      "score": 55
+    },
+    {
+      "id": "3dc076f5368e",
+      "name": "Sam Reed",
+      "phone": "+10500978820",
+      "email": "sam.reed@example.com",
+      "source": "scraper",
+      "tags": [
+        "hot"
+      ],
+      "status": "new",
+      "last_activity_at": "2026-04-05T14:59:58.283177Z",
+      "score": 55
+    },
+    {
+      "id": "6d40cb67f52b",
+      "name": "Sam Iyer",
+      "phone": "+10196556981",
+      "email": "sam.iyer@example.com",
+      "source": "facebook-ad",
+      "tags": [
+        "replied"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-05-05T22:59:58.283294Z",
+      "score": 55
+    },
+    {
+      "id": "5dbbaaac79ae",
+      "name": "Quincy Patel",
+      "phone": "+12148951343",
+      "email": "quincy.patel@example.com",
+      "source": "facebook-ad",
+      "tags": [],
+      "status": "contacted",
+      "last_activity_at": "2026-05-17T12:59:58.283329Z",
+      "score": 55
+    },
+    {
+      "id": "5699c46503a6",
+      "name": "Yara Ford",
+      "phone": "+14190496631",
+      "email": "yara.ford@example.com",
+      "source": "webinar",
+      "tags": [
+        "hot"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-02-18T18:59:58.283522Z",
+      "score": 55
+    },
+    {
+      "id": "8879974a7c43",
+      "name": "Wendy Evans",
+      "phone": "+16284987769",
+      "email": "wendy.evans@example.com",
+      "source": "facebook-ad",
+      "tags": [
+        "vip"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-15T06:59:58.283546Z",
+      "score": 55
+    },
+    {
+      "id": "0af53a45bfe7",
+      "name": "Sam Tran",
+      "phone": "+10913341232",
+      "email": "sam.tran@example.com",
+      "source": "google-ad",
+      "tags": [
+        "hot"
+      ],
+      "status": "nurture",
+      "last_activity_at": "2026-04-05T14:59:58.283680Z",
+      "score": 55
+    },
+    {
+      "id": "6ecedb562471",
+      "name": "Uma Quinn",
+      "phone": "+19325288095",
+      "email": "uma.quinn@example.com",
+      "source": "inbound",
+      "tags": [],
+      "status": "qualified",
+      "last_activity_at": "2026-04-29T16:59:58.283052Z",
+      "score": 50
+    },
+    {
+      "id": "dcebf181f5a2",
+      "name": "Rita Adams",
+      "phone": "+18313678377",
+      "email": "rita.adams@example.com",
+      "source": "inbound",
+      "tags": [],
+      "status": "contacted",
+      "last_activity_at": "2026-04-29T16:59:58.283580Z",
+      "score": 50
+    },
+    {
+      "id": "154024734518",
+      "name": "Aaron Quinn",
+      "phone": "+18356159514",
+      "email": "aaron.quinn@example.com",
+      "source": "scraper",
+      "tags": [
+        "replied",
+        "engaged",
+        "vip"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-04-05T07:59:58.283306Z",
+      "score": 45
+    },
+    {
+      "id": "0d0009b6d81d",
+      "name": "Zane Stone",
+      "phone": "+14131869993",
+      "email": "zane.stone@example.com",
+      "source": "google-ad",
+      "tags": [
+        "engaged",
+        "replied",
+        "cold"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-04-05T04:59:58.283668Z",
+      "score": 45
+    },
+    {
+      "id": "f7bdc51fcc92",
+      "name": "Wendy Tran",
+      "phone": "+17403447134",
+      "email": "wendy.tran@example.com",
+      "source": "facebook-ad",
+      "tags": [
+        "engaged"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-02-18T19:59:58.283692Z",
+      "score": 45
+    },
+    {
+      "id": "85f649fae812",
+      "name": "Dana Cruz",
+      "phone": "+16155940781",
+      "email": "dana.cruz@example.com",
+      "source": "scraper",
+      "tags": [
+        "vip",
+        "follow-up"
+      ],
+      "status": "qualified",
+      "last_activity_at": "2026-05-06T14:59:58.282954Z",
+      "score": 40
+    },
+    {
+      "id": "bd1c8b4c422d",
+      "name": "Lara Cruz",
+      "phone": "+13542784980",
+      "email": "lara.cruz@example.com",
+      "source": "referral",
+      "tags": [],
+      "status": "qualified",
+      "last_activity_at": "2026-04-05T07:59:58.283215Z",
+      "score": 40
+    },
+    {
+      "id": "03f2f99a80fe",
+      "name": "Dana Diaz",
+      "phone": "+18244935348",
+      "email": "dana.diaz@example.com",
+      "source": "facebook-ad",
+      "tags": [],
+      "status": "nurture",
+      "last_activity_at": "2026-04-29T08:59:58.283227Z",
+      "score": 40
+    },
+    {
+      "id": "39f05615abef",
+      "name": "Xavier Gomez",
+      "phone": "+15182337498",
+      "email": "xavier.gomez@example.com",
+      "source": "referral",
+      "tags": [],
+      "status": "qualified",
+      "last_activity_at": "2026-02-19T07:59:58.283629Z",
+      "score": 40
+    },
+    {
+      "id": "b4f4ad24f3ae",
+      "name": "Priya Ortiz",
+      "phone": "+15204711671",
+      "email": "priya.ortiz@example.com",
+      "source": "referral",
+      "tags": [],
+      "status": "contacted",
+      "last_activity_at": "2026-02-18T20:59:58.283657Z",
+      "score": 40
+    },
+    {
+      "id": "2a9097689714",
+      "name": "Vince Diaz",
+      "phone": "+18451462704",
+      "email": "vince.diaz@example.com",
+      "source": "webinar",
+      "tags": [],
+      "status": "qualified",
+      "last_activity_at": "2026-04-05T11:59:58.283035Z",
+      "score": 30
+    },
+    {
+      "id": "0add2b8e754d",
+      "name": "Hana Bell",
+      "phone": "+13911718227",
+      "email": "hana.bell@example.com",
+      "source": "google-ad",
+      "tags": [
+        "cold",
+        "vip"
+      ],
+      "status": "contacted",
+      "last_activity_at": "2026-04-05T11:59:58.283066Z",
+      "score": 30
+    }
+  ]
+}

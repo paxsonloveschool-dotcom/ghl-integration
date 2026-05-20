@@ -115,6 +115,44 @@ Anything that costs money or sends a first outbound batch is queued via
 3. Remove the entry from `approvals_needed` and add a note describing what
    you authorized. Commit & push — Ron will see it next cycle.
 
+## Lead Portal
+
+A static, mobile-friendly portal at `docs/index.html` shows your leads with
+search, filter, and click-to-call / SMS / email buttons. The agent refreshes
+`docs/leads.json` at the start of every cycle — from real GoHighLevel data
+when `GHL_API_TOKEN` is set, or from a deterministic mock list otherwise.
+
+### How leads are scored
+
+A simple 0-100 score so the highest-priority calls float to the top:
+
+- **Recency** of last activity (up to +40)
+- **Contactability** — has phone (+20), has email (+10)
+- **Tags** — `hot`/`qualified` (+25), `replied`/`engaged` (+15),
+  `do-not-call` zeroes the score
+- **Source** — `referral` or `inbound` (+10)
+
+Tweak the weights in `agent/leads.py::_score`.
+
+### Open it from anywhere
+
+The portal is plain HTML/JS so any of these work:
+
+1. **GitHub Pages (recommended for team access).** In the repo, go to
+   **Settings → Pages → Source: Deploy from a branch → main / `/docs`**.
+   After a minute the portal is live at
+   `https://<org>.github.io/ghl-integration/` — bookmark it on every device.
+2. **Raw GitHub URL.** Browse to `docs/index.html` in the repo UI; the
+   "raw" view won't render, but Pages or a local clone will.
+3. **Local.** Clone the repo and open `docs/index.html` in a browser.
+
+### Refresh cadence
+
+Leads refresh whenever the agent runs (hourly cron in
+`.github/workflows/agent.yml`). To force an immediate refresh, hit
+**Actions → agent → Run workflow**. The workflow commits the updated
+`docs/leads.json` back to the branch so the next page load shows it.
+
 ## Safety notes
 
 - The agent cannot itself buy anything. It can only ask. Keep it that way

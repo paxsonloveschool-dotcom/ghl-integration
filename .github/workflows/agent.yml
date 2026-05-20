@@ -58,8 +58,8 @@ jobs:
         run: |
           git config user.name "ron-agent[bot]"
           git config user.email "ron-agent@users.noreply.github.com"
-          if [ -n "$(git status --porcelain state/)" ]; then
-            git add state/
+          if [ -n "$(git status --porcelain state/ docs/)" ]; then
+            git add state/ docs/
             git commit -m "agent: cycle $(date -u +%Y-%m-%dT%H:%M:%SZ)"
             # Retry push a few times in case of concurrent commits
             for i in 1 2 3; do
@@ -68,5 +68,5 @@ jobs:
               sleep 5
             done
           else
-            echo "no state changes to commit"
+            echo "no state or portal changes to commit"
           fi
