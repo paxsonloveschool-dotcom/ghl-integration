@@ -1,0 +1,52 @@
+name: Real Estate Agent
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # every hour
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run agent cycle
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GHL_API_TOKEN: ${{ secrets.GHL_API_TOKEN }}
+          GHL_LOCATION_ID: ${{ secrets.GHL_LOCATION_ID }}
+          AGENT_NAME: ${{ vars.AGENT_NAME || 'Alex' }}
+          COMPANY_NAME: ${{ vars.COMPANY_NAME || 'Premier Realty' }}
+          MARKET_AREA: ${{ vars.MARKET_AREA || 'your area' }}
+          AGENT_PHONE: ${{ vars.AGENT_PHONE || '' }}
+        run: python -m agent.realestate.main --mode scheduled
+
+      - name: Export pipeline to portal JSON
+        env:
+          GHL_API_TOKEN: ${{ secrets.GHL_API_TOKEN }}
+          GHL_LOCATION_ID: ${{ secrets.GHL_LOCATION_ID }}
+        run: python -m agent.realestate.export
+
+      - name: Commit state and portal back
+        run: |
+          git config user.name "re-agent[bot]"
+          git config user.email "re-agent@noreply"
+          git add state/re_memory.json state/re_journal.jsonl docs/re_leads.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore(re-agent): cycle $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
