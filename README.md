@@ -89,6 +89,25 @@ docker run -d \
 Works on Fly.io, Railway, Render, Cloud Run, Fargate, or any Docker host.
 The `/state` volume keeps memory across restarts.
 
+## Orchestration Deck (demo dashboard)
+
+`dashboard/index.html` is a self-contained, zero-dependency "Jarvis-style"
+command deck that visualizes Ron as a 105-node recruitment mesh: an
+orchestrator core, 8 squadron leads, and 96 simulated messenger agents
+working sales-recruitment pipelines (source → outreach → reply → qualify →
+book). Built for demos — galaxy/Obsidian-graph aesthetic, live ops stream,
+per-agent SMS transcripts, KPI tickers, and a boot sequence.
+
+```bash
+# open directly, or serve it:
+python3 -m http.server 8000 --directory dashboard
+# → http://localhost:8000
+```
+
+Controls: scroll to zoom, drag to pan, click a node (or roster row) to
+inspect an agent's live conversation. All activity is simulated client-side;
+nothing touches the real GHL APIs.
+
 ## Layout
 
 ```
@@ -100,6 +119,8 @@ agent/
   ghl.py      # GoHighLevel v2 REST client
   memory.py   # JSON state + append-only journal
 state/        # durable memory (committed by Actions)
+dashboard/
+  index.html  # Orchestration Deck — simulated 100-agent demo UI
 .github/workflows/agent.yml  # hourly cron + manual trigger
 ```
 
