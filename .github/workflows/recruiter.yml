@@ -1,0 +1,62 @@
+name: recruiter
+
+on:
+  schedule:
+    # Hourly, offset from the business agent's cron to avoid commit races.
+    - cron: "20 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write  # commit candidate state back to the repo
+
+concurrency:
+  group: recruiter
+  cancel-in-progress: false
+
+jobs:
+  cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run recruiter cycle
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GHL_API_TOKEN: ${{ secrets.GHL_API_TOKEN }}
+          GHL_LOCATION_ID: ${{ secrets.GHL_LOCATION_ID }}
+          # Flip to "true" (repo Settings -> Variables) once you've reviewed
+          # a few cycles of drafts in state/recruiter/outbox.json.
+          RECRUITER_AUTOSEND: ${{ vars.RECRUITER_AUTOSEND || 'false' }}
+          RECRUITER_DAILY_SEND_CAP: ${{ vars.RECRUITER_DAILY_SEND_CAP || '50' }}
+        run: python -m recruiter.main --mode scheduled
+
+      - name: Commit state changes
+        if: always()
+        run: |
+          git config user.name "restore-recruiter[bot]"
+          git config user.email "restore-recruiter@users.noreply.github.com"
+          if [ -n "$(git status --porcelain state/recruiter/)" ]; then
+            git add state/recruiter/
+            git commit -m "recruiter: cycle $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            for i in 1 2 3; do
+              git pull --rebase origin "${GITHUB_REF_NAME}" && git push && break
+              echo "push attempt $i failed, retrying"
+              sleep 5
+            done
+          else
+            echo "no state changes to commit"
+          fi
