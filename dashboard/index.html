@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RON // NEXUS — 100-Agent Recruitment Orchestration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #04050d;
+    --bg2: #0a0c1c;
+    --panel: rgba(10, 13, 30, 0.72);
+    --panel-border: rgba(124, 92, 255, 0.28);
+    --obsidian: #7c5cff;
+    --obsidian-dim: #4c3a99;
+    --cyan: #2de2ff;
+    --cyan-dim: #1a8ca3;
+    --magenta: #ff4ecd;
+    --amber: #ffb02e;
+    --green: #3dffa0;
+    --red: #ff4e6a;
+    --text: #cfd6ff;
+    --text-dim: #6b74a8;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --ui: 'Rajdhani', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--ui); }
+
+  /* ===== background layers ===== */
+  #starfield { position: fixed; inset: 0; z-index: 0; }
+  .nebula {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 45% at 70% 20%, rgba(124, 92, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(45, 226, 255, 0.08), transparent 60%),
+      radial-gradient(ellipse 40% 35% at 85% 75%, rgba(255, 78, 205, 0.06), transparent 60%);
+  }
+  .scanlines {
+    position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: 0.5;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0 1px, transparent 1px 3px);
+  }
+  .vignette {
+    position: fixed; inset: 0; z-index: 59; pointer-events: none;
+    box-shadow: inset 0 0 220px rgba(0,0,0,0.85);
+  }
+
+  /* ===== boot overlay ===== */
+  #boot {
+    position: fixed; inset: 0; z-index: 100; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.9s ease; font-family: var(--mono);
+  }
+  #boot.done { opacity: 0; pointer-events: none; }
+  .boot-core {
+    width: 140px; height: 140px; border-radius: 50%; position: relative; margin-bottom: 36px;
+    background: radial-gradient(circle, rgba(45,226,255,0.9) 0%, rgba(124,92,255,0.35) 45%, transparent 70%);
+    animation: corePulse 1.6s ease-in-out infinite;
+  }
+  .boot-core::before, .boot-core::after {
+    content: ''; position: absolute; inset: -18px; border-radius: 50%;
+    border: 1px solid rgba(45,226,255,0.5); border-top-color: transparent; border-bottom-color: transparent;
+    animation: spin 2.4s linear infinite;
+  }
+  .boot-core::after { inset: -34px; border-color: rgba(124,92,255,0.45); border-left-color: transparent; border-right-color: transparent; animation: spinRev 3.8s linear infinite; }
+  @keyframes corePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spinRev { to { transform: rotate(-360deg); } }
+  #bootLog { width: min(560px, 86vw); height: 200px; overflow: hidden; font-size: 13px; color: var(--cyan); }
+  #bootLog div { opacity: 0.85; line-height: 1.7; white-space: nowrap; }
+  #bootLog .ok::after { content: '  [ OK ]'; color: var(--green); }
+  .boot-title { font-family: var(--display); font-size: 26px; letter-spacing: 8px; color: #fff; margin-bottom: 8px; text-shadow: 0 0 24px var(--cyan); }
+  .boot-sub { font-size: 12px; letter-spacing: 4px; color: var(--text-dim); margin-bottom: 28px; }
+
+  /* ===== HUD frame ===== */
+  #hud { position: fixed; inset: 0; z-index: 10; display: grid;
+    grid-template-rows: 64px 1fr 150px;
+    grid-template-columns: 300px 1fr 348px;
+    grid-template-areas: "top top top" "left center right" "bottom bottom right";
+    gap: 10px; padding: 10px; }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    backdrop-filter: blur(8px); position: relative; overflow: hidden;
+    clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  }
+  .panel::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: 0.6;
+  }
+  .panel-title {
+    font-family: var(--display); font-size: 10px; letter-spacing: 3px; color: var(--cyan);
+    padding: 10px 14px 8px; border-bottom: 1px solid rgba(45,226,255,0.12);
+    display: flex; justify-content: space-between; align-items: center; text-transform: uppercase;
+  }
+  .panel-title .tick { color: var(--text-dim); font-family: var(--mono); font-size: 9px; letter-spacing: 1px; }
+
+  /* top bar */
+  #topbar { grid-area: top; display: flex; align-items: center; gap: 18px; padding: 0 20px; }
+  .logo-mark { width: 38px; height: 38px; position: relative; flex: none; }
+  .logo-mark svg { width: 100%; height: 100%; animation: spin 14s linear infinite; }
+  .brand { display: flex; flex-direction: column; }
+  .brand h1 { font-family: var(--display); font-size: 17px; letter-spacing: 5px; color: #fff; text-shadow: 0 0 18px rgba(45,226,255,0.8); }
+  .brand span { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
+  .top-stats { display: flex; gap: 8px; margin-left: auto; }
+  .tstat { padding: 6px 16px; border: 1px solid rgba(124,92,255,0.25); background: rgba(124,92,255,0.06); text-align: center; min-width: 108px;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+  .tstat .v { font-family: var(--display); font-size: 16px; color: #fff; }
+  .tstat .v.cy { color: var(--cyan); text-shadow: 0 0 12px rgba(45,226,255,0.7); }
+  .tstat .v.gr { color: var(--green); text-shadow: 0 0 12px rgba(61,255,160,0.6); }
+  .tstat .v.am { color: var(--amber); text-shadow: 0 0 12px rgba(255,176,46,0.6); }
+  .tstat .l { font-size: 9px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
+  #clock { font-family: var(--mono); font-size: 13px; color: var(--cyan); text-align: right; line-height: 1.4; }
+  #clock .date { color: var(--text-dim); font-size: 10px; }
+  .sys-ok { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 2px; color: var(--green); }
+  .sys-ok .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  /* left: squads */
+  #squads { grid-area: left; display: flex; flex-direction: column; }
+  #squadList { flex: 1; overflow-y: auto; padding: 6px; }
+  .squad {
+    padding: 9px 12px; margin: 4px 2px; cursor: pointer; border: 1px solid transparent;
+    border-left: 2px solid var(--sq, var(--obsidian)); background: rgba(255,255,255,0.02);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .squad:hover, .squad.sel { background: rgba(124,92,255,0.12); border-color: rgba(124,92,255,0.4); }
+  .squad-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .squad-name { font-weight: 700; font-size: 13px; letter-spacing: 1.5px; color: #e8ebff; text-transform: uppercase; }
+  .squad-count { font-family: var(--mono); font-size: 10px; color: var(--sq, var(--obsidian)); }
+  .squad-role { font-size: 11px; color: var(--text-dim); letter-spacing: 0.5px; }
+  .squad-bar { height: 3px; margin-top: 6px; background: rgba(255,255,255,0.06); position: relative; }
+  .squad-bar i { position: absolute; inset: 0 auto 0 0; background: var(--sq, var(--obsidian)); box-shadow: 0 0 8px var(--sq, var(--obsidian)); transition: width 0.6s; }
+
+  /* center: galaxy */
+  #galaxyPanel { grid-area: center; }
+  #galaxy { position: absolute; inset: 0; cursor: crosshair; }
+  .galaxy-hint { position: absolute; bottom: 10px; left: 14px; font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 1px; z-index: 5; pointer-events: none; }
+  .center-overlay-title { position: absolute; top: 10px; left: 14px; z-index: 5; font-family: var(--display); font-size: 10px; letter-spacing: 3px; color: var(--cyan); pointer-events: none; }
+  .center-overlay-title span { color: var(--text-dim); display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 1px; margin-top: 3px; }
+
+  /* right: feed */
+  #feedPanel { grid-area: right; display: flex; flex-direction: column; }
+  #feed { flex: 1; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+  .msg { padding: 8px 10px; background: rgba(255,255,255,0.025); border-left: 2px solid var(--mc, var(--cyan)); animation: msgIn 0.35s ease; }
+  @keyframes msgIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+  .msg-head { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; margin-bottom: 3px; }
+  .msg-agent { color: var(--mc, var(--cyan)); letter-spacing: 1px; }
+  .msg-time { color: var(--text-dim); }
+  .msg-body { font-size: 12px; line-height: 1.45; color: #c6cdf2; }
+  .msg-tag { display: inline-block; font-size: 9px; font-family: var(--mono); letter-spacing: 1px; padding: 1px 6px; margin-top: 4px;
+    border: 1px solid var(--mc, var(--cyan)); color: var(--mc, var(--cyan)); opacity: 0.85; }
+
+  /* bottom: throughput + log */
+  #bottom { grid-area: bottom; display: grid; grid-template-columns: 1fr 1fr 330px; gap: 10px; background: none; border: none; clip-path: none; backdrop-filter: none; overflow: visible; }
+  #bottom::before { display: none; }
+  .chart-wrap { position: absolute; inset: 30px 10px 8px; }
+  .chart-wrap canvas { width: 100%; height: 100%; }
+  #syslog { font-family: var(--mono); font-size: 10px; line-height: 1.65; padding: 6px 12px; overflow: hidden; position: absolute; inset: 30px 0 0 0; }
+  #syslog div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #syslog .t { color: var(--obsidian); }
+  #syslog .ok { color: var(--green); }
+  #syslog .warn { color: var(--amber); }
+
+  /* funnel */
+  #funnelBody { position: absolute; inset: 30px 14px 10px; display: flex; flex-direction: column; justify-content: space-around; }
+  .frow { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+  .frow .fl { width: 86px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; font-size: 10px; }
+  .frow .fbar { flex: 1; height: 10px; background: rgba(255,255,255,0.05); position: relative; clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 100%, 0 100%); }
+  .frow .fbar i { position: absolute; inset: 0 auto 0 0; transition: width 0.8s; }
+  .frow .fv { width: 52px; text-align: right; font-family: var(--mono); font-size: 11px; color: #fff; }
+
+  /* agent detail modal */
+  #detail {
+    position: fixed; z-index: 70; top: 84px; right: 368px; width: 380px; max-height: calc(100vh - 260px);
+    display: none; flex-direction: column;
+  }
+  #detail.open { display: flex; }
+  #detailBody { overflow-y: auto; padding: 12px 14px; }
+  .d-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
+  .d-row .k { color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; font-size: 10px; }
+  .d-row .v { font-family: var(--mono); color: #fff; }
+  .d-convo { margin-top: 12px; }
+  .d-convo h4 { font-size: 10px; letter-spacing: 2px; color: var(--cyan); margin-bottom: 8px; font-family: var(--display); }
+  .bubble { max-width: 88%; padding: 7px 10px; margin: 5px 0; font-size: 12px; line-height: 1.45; border-radius: 2px; }
+  .bubble.agent { background: rgba(124,92,255,0.16); border-left: 2px solid var(--obsidian); }
+  .bubble.lead { background: rgba(45,226,255,0.08); border-right: 2px solid var(--cyan); margin-left: auto; text-align: right; }
+  .bubble .who { display: block; font-family: var(--mono); font-size: 9px; color: var(--text-dim); margin-bottom: 2px; letter-spacing: 1px; }
+  #detailClose { position: absolute; top: 8px; right: 10px; cursor: pointer; color: var(--text-dim); font-family: var(--mono); font-size: 14px; z-index: 2; }
+  #detailClose:hover { color: var(--red); }
+
+  /* tooltip */
+  #tip { position: fixed; z-index: 80; pointer-events: none; display: none; font-family: var(--mono); font-size: 10px;
+    background: rgba(5,7,18,0.95); border: 1px solid var(--cyan); padding: 6px 10px; color: var(--cyan); letter-spacing: 1px;
+    box-shadow: 0 0 18px rgba(45,226,255,0.25); }
+  #tip .sub { color: var(--text-dim); }
+
+  /* scrollbars */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(124,92,255,0.4); }
+
+  @media (max-width: 1180px) {
+    #hud { grid-template-columns: 240px 1fr 290px; }
+    #detail { right: 300px; width: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<!-- ===== BOOT SEQUENCE ===== -->
+<div id="boot">
+  <div class="boot-core"></div>
+  <div class="boot-title">RON // NEXUS</div>
+  <div class="boot-sub">AGENT ORCHESTRATION KERNEL v2.7</div>
+  <div id="bootLog"></div>
+</div>
+
+<!-- ===== HUD ===== -->
+<div id="hud">
+
+  <div id="topbar" class="panel">
+    <div class="logo-mark">
+      <svg viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" stroke="#2de2ff" stroke-width="1" stroke-dasharray="6 4" opacity="0.8"/>
+        <circle cx="20" cy="20" r="12" stroke="#7c5cff" stroke-width="1.5" stroke-dasharray="3 5"/>
+        <circle cx="20" cy="20" r="5" fill="#2de2ff" opacity="0.9"/>
+      </svg>
+    </div>
+    <div class="brand">
+      <h1>RON // NEXUS</h1>
+      <span>Recruitment Swarm &middot; Sales Division</span>
+    </div>
+    <div class="top-stats">
+      <div class="tstat"><div class="v cy" id="stAgents">100</div><div class="l">Agents Live</div></div>
+      <div class="tstat"><div class="v" id="stConvos">0</div><div class="l">Active Convos</div></div>
+      <div class="tstat"><div class="v am" id="stMsgs">0</div><div class="l">Msgs / Min</div></div>
+      <div class="tstat"><div class="v gr" id="stBooked">0</div><div class="l">Calls Booked</div></div>
+      <div class="tstat"><div class="v gr" id="stHired">0</div><div class="l">Reps Placed</div></div>
+    </div>
+    <div class="sys-ok"><div class="dot"></div>ALL SYSTEMS NOMINAL</div>
+    <div id="clock"><div class="time">00:00:00</div><div class="date">&mdash;</div></div>
+  </div>
+
+  <div id="squads" class="panel">
+    <div class="panel-title">Squad Manifest <span class="tick">10 SQUADS / 100 UNITS</span></div>
+    <div id="squadList"></div>
+  </div>
+
+  <div id="galaxyPanel" class="panel">
+    <div class="center-overlay-title">ORCHESTRATION GALAXY<span id="galaxySub">CORE: RON-PRIME &middot; ROUTING 100 UNITS</span></div>
+    <canvas id="galaxy"></canvas>
+    <div class="galaxy-hint">[ HOVER ] inspect unit &nbsp; [ CLICK ] open dossier &nbsp; [ DRAG ] rotate field</div>
+  </div>
+
+  <div id="feedPanel" class="panel">
+    <div class="panel-title">Live Comms Intercept <span class="tick" id="feedTick">CH 001-100</span></div>
+    <div id="feed"></div>
+  </div>
+
+  <div id="bottom">
+    <div class="panel">
+      <div class="panel-title">Message Throughput <span class="tick">60s WINDOW</span></div>
+      <div class="chart-wrap"><canvas id="throughput"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Recruitment Funnel <span class="tick">SESSION</span></div>
+      <div id="funnelBody"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Kernel Log</div>
+      <div id="syslog"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- agent dossier -->
+<div id="detail" class="panel">
+  <div class="panel-title" id="detailTitle">UNIT DOSSIER</div>
+  <div id="detailClose">[x]</div>
+  <div id="detailBody"></div>
+</div>
+
+<div id="tip"></div>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+
+<script>
+'use strict';
+/* =========================================================
+   RON // NEXUS — 100-agent recruitment orchestration demo
+   Pure-canvas Jarvis-style HUD. All data is simulated.
+   ========================================================= */
+
+const $ = s => document.querySelector(s);
+const rand = (a, b) => a + Math.random() * (b - a);
+const ri = (a, b) => Math.floor(rand(a, b + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const pad = n => String(n).padStart(2, '0');
+
+/* ---------- squad + agent model ---------- */
+const SQUADS = [
+  { name: 'SOURCING',   role: 'Talent pool discovery & scraping', color: '#2de2ff' },
+  { name: 'FIRST-TOUCH',role: 'Cold Messenger / IG DM openers',   color: '#7c5cff' },
+  { name: 'ENGAGE',     role: 'Conversation & rapport building',  color: '#ff4ecd' },
+  { name: 'QUALIFY',    role: 'Screening & fit scoring',          color: '#ffb02e' },
+  { name: 'OBJECTION',  role: 'Objection handling specialists',   color: '#ff4e6a' },
+  { name: 'SCHEDULER',  role: 'Calendar negotiation & booking',   color: '#3dffa0' },
+  { name: 'FOLLOW-UP',  role: 'No-show recovery & reminders',     color: '#2dbcff' },
+  { name: 'NURTURE',    role: 'Long-cycle drip & warm holds',     color: '#b06bff' },
+  { name: 'REVIVAL',    role: 'Dead-lead resurrection ops',       color: '#ff8a3d' },
+  { name: 'ANALYTICS',  role: 'Signal intel & swarm tuning',      color: '#8ef6e4' },
+];
+const CALLSIGNS = ['NOVA','VEGA','ORION','PULSAR','LYRA','DRACO','RIGEL','ATLAS','QUASAR','HALO'];
+const STATUSES = ['ENGAGING','QUALIFYING','BOOKING','LISTENING','FOLLOW-UP','IDLE'];
+const CHANNELS = ['FB MESSENGER','IG DM','SMS','WHATSAPP'];
+
+const LEAD_FIRST = ['Jake','Maria','Devon','Sofia','Tyler','Aisha','Brandon','Chloe','Marcus','Nina','Logan','Priya','Carlos','Emma','Jordan','Tasha','Ryan','Yuki','Andre','Bella'];
+const LEAD_LAST  = ['M.','R.','T.','K.','S.','D.','W.','H.','B.','L.'];
+
+const AGENT_LINES = [
+  'Hey {lead} — saw your background in retail sales. We\'re hiring closers for a remote high-ticket team. Open to a quick chat?',
+  '{lead}, quick one — are you currently set on commission structure, or open to something uncapped?',
+  'Totally fair. Most of our top reps said the same thing before they saw the comp plan. Want me to send it over?',
+  'Love that energy. What does your availability look like Thursday for a 15-min intro call?',
+  'You\'d be talking with our sales director — zero pressure, just a fit check both ways.',
+  'Just confirmed your slot. Sending the calendar invite + a 2-min brief on the role now.',
+  'Circling back {lead} — still interested in the closer role? We\'re finalizing this week\'s cohort.',
+  'No worries on the reschedule. Does Tuesday 2pm or 4:30pm work better?',
+  'Quick q — how many years have you been in phone or DM sales?',
+  'That objection makes sense. The base draw covers your first 30 days while you ramp. Does that change things?',
+];
+const LEAD_LINES = [
+  'yeah I might be interested, what\'s the pay like?',
+  'is this remote? I\'m in Texas',
+  'I\'ve done about 3 years of car sales, does that count?',
+  'honestly I\'m tired of my current gig lol. tell me more',
+  'Thursday works. what time?',
+  'what company is this for?',
+  'is it commission only? that\'s a no for me usually',
+  'ok send me the details',
+  'sorry missed the call, can we redo it?',
+  'sounds too good to be true ngl but I\'m listening',
+];
+const SYS_EVENTS = [
+  ['ok',  'route: {a} → lead {l} via {ch}'],
+  ['ok',  'sentiment Δ+ on thread #{n} — escalating priority'],
+  ['ok',  '{a} handed off thread #{n} to SCHEDULER ring'],
+  ['ok',  'calendar slot locked: Thu {h}:00 — invite dispatched'],
+  ['warn','rate-limit shield engaged on {ch} lane {n}'],
+  ['ok',  'fit-score {s}/100 computed for lead {l}'],
+  ['ok',  'memory checkpoint committed — cycle {n}'],
+  ['ok',  'REVIVAL ring reclaimed dormant thread #{n}'],
+  ['warn','human-approval gate queued: first outbound batch {n}'],
+  ['ok',  'swarm rebalance: +2 units to QUALIFY ring'],
+];
+
+const agents = [];
+SQUADS.forEach((sq, si) => {
+  for (let i = 0; i < 10; i++) {
+    agents.push({
+      id: si * 10 + i,
+      squad: si,
+      callsign: `${CALLSIGNS[si]}-${pad(i + 1)}`,
+      status: pick(STATUSES),
+      channel: pick(CHANNELS),
+      lead: `${pick(LEAD_FIRST)} ${pick(LEAD_LAST)}`,
+      convos: ri(2, 14),
+      sent: ri(40, 420),
+      booked: ri(0, 9),
+      fit: ri(42, 98),
+      uptime: ri(3, 96),
+      activity: Math.random(),          // drives glow
+      orbitR: 0, orbitA: 0, orbitSpeed: 0, x: 0, y: 0,
+      pulse: 0,
+    });
+  }
+});
+
+/* ---------- KPI state ---------- */
+const kpi = { convos: ri(180, 240), msgs: 0, booked: ri(30, 45), hired: ri(6, 11),
+  funnel: { reached: 1842, replied: 689, qualified: 312, booked: 0, showed: 96, hired: 0 } };
+kpi.funnel.booked = kpi.booked + 80;
+kpi.funnel.hired = kpi.hired;
+
+/* ---------- boot sequence ---------- */
+const BOOT_LINES = [
+  'mounting obsidian memory lattice .......',
+  'spinning up swarm kernel v2.7 ..........',
+  'loading GHL conversation bridge ........',
+  'binding 100 messenger units ............',
+  'arming SOURCING ring  [10 units] .......',
+  'arming FIRST-TOUCH ring [10 units] .....',
+  'arming ENGAGE ring [10 units] ..........',
+  'arming QUALIFY ring [10 units] .........',
+  'arming SCHEDULER ring [10 units] .......',
+  'arming auxiliary rings [50 units] ......',
+  'synchronizing orbital telemetry ........',
+  'human-approval gate: ACTIVE ............',
+  'RON-PRIME core online. handing off to HUD',
+];
+(function boot() {
+  const log = $('#bootLog');
+  let i = 0;
+  const t = setInterval(() => {
+    if (i >= BOOT_LINES.length) {
+      clearInterval(t);
+      setTimeout(() => $('#boot').classList.add('done'), 500);
+      return;
+    }
+    const d = document.createElement('div');
+    d.textContent = '> ' + BOOT_LINES[i];
+    d.classList.add('ok');
+    log.appendChild(d);
+    if (log.children.length > 9) log.removeChild(log.firstChild);
+    i++;
+  }, 230);
+})();
+
+/* ---------- starfield ---------- */
+(function stars() {
+  const c = $('#starfield'), x = c.getContext('2d');
+  let stars = [];
+  function size() {
+    c.width = innerWidth; c.height = innerHeight;
+    stars = Array.from({ length: 240 }, () => ({
+      x: Math.random() * c.width, y: Math.random() * c.height,
+      r: Math.random() * 1.3 + 0.2, tw: Math.random() * Math.PI * 2, sp: rand(0.002, 0.01),
+    }));
+  }
+  size(); addEventListener('resize', size);
+  (function draw() {
+    x.clearRect(0, 0, c.width, c.height);
+    for (const s of stars) {
+      s.tw += s.sp * 16;
+      const a = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(s.tw));
+      x.fillStyle = `rgba(200,215,255,${a})`;
+      x.beginPath(); x.arc(s.x, s.y, s.r, 0, 7); x.fill();
+    }
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ---------- squad list ---------- */
+let selectedSquad = -1;
+(function squadList() {
+  const el = $('#squadList');
+  SQUADS.forEach((sq, i) => {
+    const d = document.createElement('div');
+    d.className = 'squad'; d.style.setProperty('--sq', sq.color); d.dataset.i = i;
+    d.innerHTML = `
+      <div class="squad-head"><span class="squad-name">${sq.name}</span><span class="squad-count">10 UNITS</span></div>
+      <div class="squad-role">${sq.role}</div>
+      <div class="squad-bar"><i style="width:${ri(35, 95)}%"></i></div>`;
+    d.onclick = () => {
+      selectedSquad = selectedSquad === i ? -1 : i;
+      document.querySelectorAll('.squad').forEach(s => s.classList.toggle('sel', +s.dataset.i === selectedSquad));
+      $('#galaxySub').textContent = selectedSquad < 0
+        ? 'CORE: RON-PRIME · ROUTING 100 UNITS'
+        : `FOCUS: ${sq.name} RING · ${SQUADS[selectedSquad].role.toUpperCase()}`;
+    };
+    el.appendChild(d);
+  });
+  // ambient load-bar wobble
+  setInterval(() => {
+    document.querySelectorAll('.squad-bar i').forEach(b => { b.style.width = ri(30, 96) + '%'; });
+  }, 3200);
+})();
+
+/* ---------- galaxy canvas ---------- */
+const gal = (() => {
+  const c = $('#galaxy'), x = c.getContext('2d');
+  let W = 0, H = 0, cx = 0, cy = 0;
+  let rot = 0, rotVel = 0.0009, dragging = false, lastMx = 0;
+  let hovered = null;
+  const pulses = [];   // travelling message pulses agent->core or core->agent
+
+  function size() {
+    const r = c.parentElement.getBoundingClientRect();
+    c.width = W = r.width; c.height = H = r.height;
+    cx = W / 2; cy = H / 2;
+    layout();
+  }
+  function layout() {
+    const maxR = Math.min(W, H) / 2 - 36;
+    agents.forEach(a => {
+      const ring = a.squad;                       // 10 concentric squad rings
+      a.orbitR = maxR * (0.30 + 0.07 * ring);
+      a.orbitA = (a.id % 10) / 10 * Math.PI * 2 + ring * 0.35;
+      a.orbitSpeed = (0.0014 - ring * 0.00009) * (ring % 2 ? 1 : -1);
+    });
+  }
+  addEventListener('resize', size);
+  requestAnimationFrame(size);
+
+  c.addEventListener('mousedown', e => { dragging = true; lastMx = e.clientX; });
+  addEventListener('mouseup', () => dragging = false);
+  c.addEventListener('mousemove', e => {
+    if (dragging) { rot += (e.clientX - lastMx) * 0.004; lastMx = e.clientX; }
+    const r = c.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+    hovered = null;
+    for (const a of agents) {
+      if ((a.x - mx) ** 2 + (a.y - my) ** 2 < 90) { hovered = a; break; }
+    }
+    const tip = $('#tip');
+    if (hovered) {
+      tip.style.display = 'block';
+      tip.style.left = e.clientX + 16 + 'px';
+      tip.style.top = e.clientY + 8 + 'px';
+      tip.innerHTML = `${hovered.callsign} · ${SQUADS[hovered.squad].name}<br>
+        <span class="sub">${hovered.status} · ${hovered.channel} · fit ${hovered.fit}</span>`;
+      c.style.cursor = 'pointer';
+    } else { tip.style.display = 'none'; c.style.cursor = 'crosshair'; }
+  });
+  c.addEventListener('mouseleave', () => { $('#tip').style.display = 'none'; hovered = null; });
+  c.addEventListener('click', () => { if (hovered) openDossier(hovered); });
+
+  function firePulse(agent, inbound) {
+    pulses.push({ a: agent, t: 0, inbound, color: SQUADS[agent.squad].color });
+    agent.pulse = 1;
+  }
+
+  let coreT = 0;
+  function draw() {
+    x.clearRect(0, 0, W, H);
+    coreT += 0.016;
+    rot += rotVel;
+
+    /* squad orbit rings */
+    for (let i = 0; i < 10; i++) {
+      const maxR = Math.min(W, H) / 2 - 36;
+      const R = maxR * (0.30 + 0.07 * i);
+      const focus = selectedSquad === -1 || selectedSquad === i;
+      x.beginPath();
+      x.strokeStyle = focus ? SQUADS[i].color + '33' : 'rgba(120,130,180,0.05)';
+      x.lineWidth = 1;
+      x.setLineDash([2, 6]);
+      x.arc(cx, cy, R, 0, Math.PI * 2);
+      x.stroke();
+      x.setLineDash([]);
+    }
+
+    /* core: RON-PRIME arc reactor */
+    const cr = 26 + Math.sin(coreT * 2) * 2;
+    const grad = x.createRadialGradient(cx, cy, 2, cx, cy, cr * 2.6);
+    grad.addColorStop(0, 'rgba(45,226,255,0.95)');
+    grad.addColorStop(0.35, 'rgba(124,92,255,0.45)');
+    grad.addColorStop(1, 'transparent');
+    x.fillStyle = grad;
+    x.beginPath(); x.arc(cx, cy, cr * 2.6, 0, 7); x.fill();
+
+    for (let k = 0; k < 3; k++) {
+      x.beginPath();
+      x.strokeStyle = k === 1 ? 'rgba(124,92,255,0.8)' : 'rgba(45,226,255,0.7)';
+      x.lineWidth = 1.6;
+      const off = coreT * (k % 2 ? 1.4 : -1) + k * 2.1;
+      x.arc(cx, cy, cr + 9 + k * 8, off, off + Math.PI * (1.1 + k * 0.2));
+      x.stroke();
+    }
+    x.fillStyle = '#eaffff';
+    x.font = '700 10px Orbitron';
+    x.textAlign = 'center';
+    x.fillText('RON-PRIME', cx, cy + cr + 38);
+
+    /* agents */
+    for (const a of agents) {
+      a.orbitA += a.orbitSpeed;
+      const ang = a.orbitA + rot * (a.squad % 2 ? 1 : -1);
+      a.x = cx + Math.cos(ang) * a.orbitR;
+      a.y = cy + Math.sin(ang) * a.orbitR * 0.92;   // slight ellipse = depth
+
+      const focus = selectedSquad === -1 || selectedSquad === a.squad;
+      const col = SQUADS[a.squad].color;
+      a.pulse = Math.max(0, a.pulse - 0.03);
+      const r = 2.4 + a.activity * 1.6 + a.pulse * 4;
+
+      if (a.pulse > 0.05 || a === hovered) {
+        x.beginPath();
+        x.strokeStyle = col + (a === hovered ? 'cc' : '88');
+        x.lineWidth = 0.6;
+        x.moveTo(a.x, a.y); x.lineTo(cx, cy); x.stroke();
+      }
+      x.beginPath();
+      x.fillStyle = focus ? col : 'rgba(120,130,180,0.18)';
+      x.shadowColor = col; x.shadowBlur = focus ? 8 + a.pulse * 16 : 0;
+      x.arc(a.x, a.y, r, 0, 7);
+      x.fill();
+      x.shadowBlur = 0;
+
+      if (a === hovered) {
+        x.beginPath(); x.strokeStyle = col; x.lineWidth = 1;
+        x.arc(a.x, a.y, r + 6 + Math.sin(coreT * 6) * 2, 0, 7); x.stroke();
+        x.fillStyle = col; x.font = '10px "Share Tech Mono"'; x.textAlign = 'center';
+        x.fillText(a.callsign, a.x, a.y - 14);
+      }
+    }
+
+    /* travelling pulses */
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i];
+      p.t += 0.035;
+      if (p.t >= 1) { pulses.splice(i, 1); continue; }
+      const f = p.inbound ? p.t : 1 - p.t;
+      const px = p.a.x + (cx - p.a.x) * f;
+      const py = p.a.y + (cy - p.a.y) * f;
+      x.beginPath();
+      x.fillStyle = p.color;
+      x.shadowColor = p.color; x.shadowBlur = 12;
+      x.arc(px, py, 2.4, 0, 7);
+      x.fill(); x.shadowBlur = 0;
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+  return { firePulse };
+})();
+
+/* ---------- live feed + event engine ---------- */
+const feedEl = $('#feed');
+let msgsThisMinute = 0;
+const msgTimestamps = [];
+
+function now() {
+  const d = new Date();
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function pushFeed(agent, body, tag, fromLead) {
+  const sq = SQUADS[agent.squad];
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.style.setProperty('--mc', fromLead ? '#2de2ff' : sq.color);
+  d.innerHTML = `
+    <div class="msg-head">
+      <span class="msg-agent">${fromLead ? agent.lead.toUpperCase() + ' → ' + agent.callsign : agent.callsign + ' → ' + agent.lead.toUpperCase()}</span>
+      <span class="msg-time">${now()}</span>
+    </div>
+    <div class="msg-body">${body}</div>
+    <span class="msg-tag">${tag}</span>`;
+  feedEl.prepend(d);
+  while (feedEl.children.length > 40) feedEl.removeChild(feedEl.lastChild);
+}
+
+const syslogEl = $('#syslog');
+function pushLog(kind, text) {
+  const d = document.createElement('div');
+  d.className = kind;
+  d.innerHTML = `<span class="t">[${now()}]</span> ${text}`;
+  syslogEl.prepend(d);
+  while (syslogEl.children.length > 7) syslogEl.removeChild(syslogEl.lastChild);
+}
+
+function tickEvent() {
+  const a = pick(agents);
+  const fromLead = Math.random() < 0.42;
+  const tmpl = fromLead ? pick(LEAD_LINES) : pick(AGENT_LINES);
+  const body = tmpl.replace('{lead}', a.lead.split(' ')[0]);
+  const tag = `${a.channel} · ${SQUADS[a.squad].name}`;
+  pushFeed(a, body, tag, fromLead);
+  gal.firePulse(a, fromLead);
+  a.activity = Math.min(1, a.activity + 0.25);
+  a.sent++;
+  msgTimestamps.push(Date.now());
+  msgsThisMinute++;
+
+  // KPI drift
+  if (Math.random() < 0.06) { kpi.booked++; kpi.funnel.booked++; a.booked++; pushLog('ok', `call locked by ${a.callsign} — lead ${a.lead}`); }
+  if (Math.random() < 0.015) { kpi.hired++; kpi.funnel.hired++; pushLog('ok', `★ OFFER ACCEPTED — pipeline ${a.callsign} closed lead ${a.lead}`); }
+  if (Math.random() < 0.12) kpi.funnel.replied++;
+  if (Math.random() < 0.08) kpi.funnel.qualified++;
+  kpi.funnel.reached += ri(1, 4);
+  kpi.convos += ri(-1, 2);
+  if (kpi.convos < 140) kpi.convos = 140;
+
+  setTimeout(tickEvent, rand(220, 950));
+}
+
+function tickSyslog() {
+  const [kind, tmpl] = pick(SYS_EVENTS);
+  const a = pick(agents);
+  pushLog(kind, tmpl
+    .replace('{a}', a.callsign).replace('{l}', a.lead)
+    .replace('{ch}', a.channel).replace('{n}', ri(100, 999))
+    .replace('{h}', ri(9, 17)).replace('{s}', ri(50, 99)));
+  setTimeout(tickSyslog, rand(900, 2600));
+}
+
+/* ---------- KPI + clock render loop ---------- */
+function renderKpis() {
+  const cutoff = Date.now() - 60000;
+  while (msgTimestamps.length && msgTimestamps[0] < cutoff) msgTimestamps.shift();
+  $('#stConvos').textContent = kpi.convos;
+  $('#stMsgs').textContent = msgTimestamps.length;
+  $('#stBooked').textContent = kpi.booked;
+  $('#stHired').textContent = kpi.hired;
+
+  const f = kpi.funnel;
+  const rows = [
+    ['Reached', f.reached, '#7c5cff'], ['Replied', f.replied, '#2de2ff'],
+    ['Qualified', f.qualified, '#ffb02e'], ['Booked', f.booked, '#ff4ecd'],
+    ['Showed', f.showed, '#2dbcff'], ['Hired', f.hired, '#3dffa0'],
+  ];
+  const max = f.reached;
+  $('#funnelBody').innerHTML = rows.map(([l, v, col]) => `
+    <div class="frow">
+      <span class="fl">${l}</span>
+      <div class="fbar"><i style="width:${Math.max(2, v / max * 100)}%;background:${col};box-shadow:0 0 8px ${col}"></i></div>
+      <span class="fv">${v.toLocaleString()}</span>
+    </div>`).join('');
+
+  const d = new Date();
+  $('#clock .time').textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  $('#clock .date').textContent = d.toISOString().slice(0, 10) + ' UTC' ;
+}
+setInterval(renderKpis, 500);
+
+/* agents decay activity slowly */
+setInterval(() => agents.forEach(a => a.activity = Math.max(0.05, a.activity * 0.96)), 400);
+
+/* ---------- throughput chart ---------- */
+(function chart() {
+  const c = $('#throughput'), x = c.getContext('2d');
+  const hist = new Array(60).fill(0);
+  function size() { const r = c.parentElement.getBoundingClientRect(); c.width = r.width; c.height = r.height; }
+  size(); addEventListener('resize', size);
+  setInterval(() => { hist.push(msgsThisMinute); msgsThisMinute = Math.floor(msgsThisMinute * 0.6); if (hist.length > 60) hist.shift(); }, 1000);
+  (function draw() {
+    const W = c.width, H = c.height;
+    x.clearRect(0, 0, W, H);
+    // grid
+    x.strokeStyle = 'rgba(124,92,255,0.12)'; x.lineWidth = 1;
+    for (let i = 1; i < 4; i++) { x.beginPath(); x.moveTo(0, H * i / 4); x.lineTo(W, H * i / 4); x.stroke(); }
+    const max = Math.max(12, ...hist);
+    // area
+    x.beginPath();
+    hist.forEach((v, i) => {
+      const px = i / (hist.length - 1) * W;
+      const py = H - (v / max) * (H - 8) - 2;
+      i ? x.lineTo(px, py) : x.moveTo(px, py);
+    });
+    x.strokeStyle = '#2de2ff'; x.lineWidth = 1.6;
+    x.shadowColor = '#2de2ff'; x.shadowBlur = 8;
+    x.stroke(); x.shadowBlur = 0;
+    x.lineTo(W, H); x.lineTo(0, H); x.closePath();
+    const g = x.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, 'rgba(45,226,255,0.25)'); g.addColorStop(1, 'transparent');
+    x.fillStyle = g; x.fill();
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ---------- dossier ---------- */
+function openDossier(a) {
+  const sq = SQUADS[a.squad];
+  $('#detailTitle').innerHTML = `UNIT DOSSIER — <span style="color:${sq.color}">${a.callsign}</span>`;
+  const convo = [];
+  const lead = a.lead.split(' ')[0];
+  for (let i = 0; i < 6; i++) {
+    convo.push(i % 2 === 0
+      ? `<div class="bubble agent"><span class="who">${a.callsign}</span>${pick(AGENT_LINES).replace('{lead}', lead)}</div>`
+      : `<div class="bubble lead"><span class="who">${a.lead}</span>${pick(LEAD_LINES)}</div>`);
+  }
+  $('#detailBody').innerHTML = `
+    <div class="d-row"><span class="k">Squad</span><span class="v" style="color:${sq.color}">${sq.name}</span></div>
+    <div class="d-row"><span class="k">Mission</span><span class="v">${sq.role}</span></div>
+    <div class="d-row"><span class="k">Status</span><span class="v">${a.status}</span></div>
+    <div class="d-row"><span class="k">Channel</span><span class="v">${a.channel}</span></div>
+    <div class="d-row"><span class="k">Active threads</span><span class="v">${a.convos}</span></div>
+    <div class="d-row"><span class="k">Messages sent</span><span class="v">${a.sent}</span></div>
+    <div class="d-row"><span class="k">Calls booked</span><span class="v">${a.booked}</span></div>
+    <div class="d-row"><span class="k">Avg fit score</span><span class="v">${a.fit}/100</span></div>
+    <div class="d-row"><span class="k">Uptime</span><span class="v">${a.uptime}h</span></div>
+    <div class="d-convo">
+      <h4>LIVE THREAD — ${a.lead.toUpperCase()} · ${a.channel}</h4>
+      ${convo.join('')}
+    </div>`;
+  $('#detail').classList.add('open');
+}
+$('#detailClose').onclick = () => $('#detail').classList.remove('open');
+addEventListener('keydown', e => { if (e.key === 'Escape') $('#detail').classList.remove('open'); });
+
+/* ---------- ignition ---------- */
+setTimeout(() => { tickEvent(); tickSyslog(); }, 3600);
+renderKpis();
+</script>
+</body>
+</html>
