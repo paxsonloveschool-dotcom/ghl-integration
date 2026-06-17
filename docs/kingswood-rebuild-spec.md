@@ -1,10 +1,15 @@
-# Kingswood Landscape — rebuild spec (reference)
+# Kingswood Landscape — layout reference spec
 
-Working spec for rebuilding the **Custom Pools & Outdoor Structures** page for a
-client. Content below was reconstructed from public search indexing — the live
-page and its assets could not be fetched from the Claude cloud environment
-(egress is GitHub-only). Run `tools/extract-site/extract.sh` locally to capture
-the real markup, palette, and fonts, then fill in the `TODO` tokens here.
+> **Client:** H&P Landscaping (College Station, TX) — real content pulled from
+> `hplandscapingllc.com`. **Reference only:** Kingswood (structure/layout, *not*
+> its copy or photos). The built page lives at
+> `site/services/custom-pools-outdoor-structures.html` with original copy + H&P's
+> real NAP; photos drop into `site/assets/pools/` (see `site/assets/README.md`).
+
+Working spec for the **Custom Pools & Outdoor Structures** page. Content below was
+reconstructed from public search indexing — the live Kingswood page and its
+assets could not be fetched from the Claude cloud environment (egress is
+GitHub-only). Used as a structural skeleton; all shipped copy is original.
 
 > **IP guardrail:** use this for *structure and direction only*. Replace every
 > headline, paragraph, photo, and the logo with the client's own original

@@ -17,8 +17,17 @@ see `../../site/README.md`.)
 
 ```bash
 cd tools/extract-site
+
+# Pull the CLIENT's own assets (photos + logo) for the build:
+./extract.sh https://www.hplandscapingllc.com/
+
+# Optional: capture the layout REFERENCE page (structure only, not its content):
 ./extract.sh https://www.kingswoodlandscape.com/services/custom-pools-outdoor-structures
 ```
+
+For the H&P build, copy the real photos/logo out of
+`extract-www.hplandscapingllc.com/site/` into `site/assets/` using the
+filenames in `site/assets/README.md`.
 
 Output lands in `extract-www.kingswoodlandscape.com/`:
 
