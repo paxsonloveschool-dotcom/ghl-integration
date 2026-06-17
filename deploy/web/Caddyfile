@@ -1,0 +1,25 @@
+# Caddyfile — serves the H&P Landscaping static site with automatic HTTPS.
+#
+# SITE_DOMAIN is read from the environment (.env). Caddy automatically obtains
+# and renews a free Let's Encrypt certificate for the domain and its www.
+# subdomain — no manual SSL setup.
+
+{$SITE_DOMAIN}, www.{$SITE_DOMAIN} {
+	root * /srv
+	encode gzip zstd
+	file_server
+
+	# Clean URLs / single-page friendliness: fall back to index.html.
+	try_files {path} {path}/ /index.html
+
+	# Sensible caching for static assets.
+	@assets path *.css *.js *.png *.jpg *.jpeg *.gif *.svg *.webp *.ico *.woff *.woff2
+	header @assets Cache-Control "public, max-age=604800"
+
+	# Basic hardening headers.
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
