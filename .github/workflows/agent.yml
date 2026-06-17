@@ -2,9 +2,9 @@ name: agent
 
 on:
   schedule:
-    # Every hour on the hour. Adjust to taste; GitHub may delay heavily on
-    # free runners during peak times.
-    - cron: "0 * * * *"
+    # Every 6 hours (00:00, 06:00, 12:00, 18:00 UTC) — four cycles a day.
+    # Adjust to taste; GitHub may delay heavily on free runners during peak times.
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       mode:
