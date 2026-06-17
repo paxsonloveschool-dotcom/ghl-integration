@@ -1,0 +1,34 @@
+name: cloudflare-pages
+
+# Deploys the static site in site/ to Cloudflare Pages (your Cloudflare account,
+# your domain). DISABLED until you opt in, so it never fails noisily:
+#   1. Create a Cloudflare API token (template: "Edit Cloudflare Workers" or a
+#      custom token with Account > Cloudflare Pages > Edit).
+#   2. Repo Settings > Secrets and variables > Actions:
+#        - Secret  CLOUDFLARE_API_TOKEN   = <the token>
+#        - Secret  CLOUDFLARE_ACCOUNT_ID  = <your account id>
+#        - Variable CF_PAGES_ENABLED      = true
+# After that, every push to site/ deploys automatically. See deploy/cloudflare/README.md.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/cloudflare-pages.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # Skipped (neutral, not failed) until you set the CF_PAGES_ENABLED variable.
+    if: ${{ vars.CF_PAGES_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name=hp-landscaping --branch=main
