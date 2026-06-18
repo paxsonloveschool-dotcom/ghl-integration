@@ -171,13 +171,71 @@ img { max-width: 100%; display: block; }
 .footer-brand .brand-name em { font-style: normal; color: var(--green-500); }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,.12); margin-top: 2rem; padding-top: 1.2rem; font-size: .88rem; }
 
+/* ===== Service page: hero with media ===== */
+.page-hero { background: linear-gradient(160deg, var(--green-100), #fff 70%); }
+.page-hero-inner { display: grid; grid-template-columns: 1.05fr .95fr; gap: 2.5rem; align-items: center; padding: 3.5rem 20px 4rem; }
+.breadcrumb { font-size: .85rem; color: var(--muted); margin-bottom: .6rem; }
+.breadcrumb a { color: var(--green-700); }
+
+/* ===== Drop-in image slots ===== */
+/* A .media wrapper shows a branded gradient until a real photo is dropped in
+   site/assets/. The <img> sits on top; if the file is missing the gradient
+   and caption still read cleanly. */
+.media {
+  position: relative; border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, var(--green-500), var(--green-700) 60%, var(--green-900));
+  display: flex; align-items: flex-end;
+}
+.media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.media figcaption {
+  position: relative; z-index: 1; padding: .7rem 1rem; color: #fff; font-weight: 600;
+  width: 100%; background: linear-gradient(transparent, rgba(20,61,31,.72));
+}
+.media.tall { aspect-ratio: 3 / 4; }
+.media.wide { aspect-ratio: 16 / 9; }
+
+/* ===== Split feature ===== */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
+.split.reverse .split-media { order: 2; }
+
+/* ===== Process steps ===== */
+.process { counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+.step {
+  position: relative; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 2.2rem 1.6rem 1.6rem; box-shadow: var(--shadow);
+}
+.step::before {
+  counter-increment: step; content: counter(step);
+  position: absolute; top: -18px; left: 1.4rem;
+  width: 40px; height: 40px; border-radius: 999px; background: var(--green-600); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;
+  box-shadow: var(--shadow);
+}
+.step h3 { margin-bottom: .35rem; }
+.step p { color: var(--muted); margin: 0; }
+
+/* ===== CTA band ===== */
+.cta-band { background: linear-gradient(135deg, var(--green-700), var(--green-900)); color: #fff; text-align: center; }
+.cta-band h2 { color: #fff; }
+.cta-band p { color: rgba(255,255,255,.85); max-width: 52ch; margin-inline: auto; }
+.cta-band .btn { background: #fff; color: var(--green-900); border-color: #fff; margin-top: 1rem; }
+.cta-band .btn:hover { background: var(--green-100); border-color: var(--green-100); }
+
+/* ===== Spec list (materials/finishes) ===== */
+.spec-list { columns: 2; gap: 2rem; list-style: none; padding: 0; margin: 0; }
+.spec-list li { position: relative; padding-left: 1.6rem; margin-bottom: .55rem; break-inside: avoid; color: var(--ink); }
+.spec-list li::before { content: "✓"; position: absolute; left: 0; color: var(--green-600); font-weight: 800; }
+
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
   .services, .testimonials { grid-template-columns: 1fr 1fr; }
   .gallery-grid { grid-template-columns: 1fr 1fr; }
-  .hero-inner, .why, .quote-wrap { grid-template-columns: 1fr; }
+  .hero-inner, .why, .quote-wrap, .page-hero-inner, .split, .process { grid-template-columns: 1fr; }
+  .split.reverse .split-media { order: -1; }
   .hero-art { min-height: 220px; order: -1; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
+  .spec-list { columns: 1; }
 }
 @media (max-width: 600px) {
   .nav-toggle { display: flex; }
