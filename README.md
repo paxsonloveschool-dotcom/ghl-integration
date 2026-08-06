@@ -89,6 +89,14 @@ docker run -d \
 Works on Fly.io, Railway, Render, Cloud Run, Fargate, or any Docker host.
 The `/state` volume keeps memory across restarts.
 
+## Demo dashboard
+
+`dashboard/index.html` is a self-contained, Jarvis-style "orchestration
+galaxy" HUD that showcases the system as a 100-agent recruitment swarm —
+boot sequence, orbiting agent squads, live comms feed, KPIs, and funnel.
+All data is simulated; just open the file in a browser. See
+[dashboard/README.md](dashboard/README.md).
+
 ## Layout
 
 ```
