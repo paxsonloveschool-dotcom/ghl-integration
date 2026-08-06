@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RON // ORCHESTRATION DECK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060d;
+  --cyan:#4dd8ff;
+  --cyan-dim:rgba(77,216,255,.35);
+  --cyan-faint:rgba(77,216,255,.10);
+  --amber:#ffb454;
+  --green:#5dffa6;
+  --magenta:#ff5dc8;
+  --red:#ff5d6c;
+  --text:#bfe9ff;
+  --text-dim:#5d86a8;
+  --panel:rgba(8,16,30,.72);
+  --mono:'Share Tech Mono','Courier New',monospace;
+  --disp:'Orbitron','Segoe UI',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px}
+canvas{display:block}
+#stars,#graph{position:fixed;inset:0;width:100vw;height:100vh}
+#graph{cursor:crosshair}
+
+/* ---------- scanlines / vignette ---------- */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:40;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.13) 2px 4px),
+    radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,10,.55) 100%);
+}
+#fx::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(77,216,255,.04), rgba(0,0,0,0) 10%);
+  animation:flicker 7s infinite}
+@keyframes flicker{0%,100%{opacity:.6}48%{opacity:.6}50%{opacity:.95}52%{opacity:.6}80%{opacity:.7}}
+
+/* ---------- HUD layout ---------- */
+#hud{position:fixed;inset:0;z-index:20;display:grid;pointer-events:none;
+  grid-template-rows:52px 1fr 96px;
+  grid-template-columns:288px 1fr 348px;
+  grid-template-areas:"top top top" "left mid right" "bottom bottom bottom";
+  gap:10px;padding:10px}
+.panel{background:var(--panel);border:1px solid var(--cyan-dim);position:relative;
+  backdrop-filter:blur(6px);pointer-events:auto;overflow:hidden;
+  box-shadow:0 0 18px rgba(77,216,255,.06), inset 0 0 30px rgba(77,216,255,.03)}
+.panel::before,.panel::after{content:'';position:absolute;width:14px;height:14px;border:2px solid var(--cyan);pointer-events:none}
+.panel::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.panel::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+.ptitle{font-family:var(--disp);font-size:10px;letter-spacing:3px;color:var(--cyan);
+  padding:8px 12px;border-bottom:1px solid var(--cyan-faint);display:flex;justify-content:space-between;align-items:center;
+  text-shadow:0 0 8px var(--cyan-dim)}
+.ptitle .tag{color:var(--text-dim);letter-spacing:1px;font-size:9px}
+
+/* top bar */
+#topbar{grid-area:top;display:flex;align-items:center;gap:18px;padding:0 18px}
+#logo{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:4px;color:#fff;
+  text-shadow:0 0 14px var(--cyan),0 0 40px rgba(77,216,255,.4)}
+#logo b{color:var(--cyan)}
+.tb-item{display:flex;flex-direction:column;line-height:1.25}
+.tb-item .k{font-size:9px;letter-spacing:2px;color:var(--text-dim)}
+.tb-item .v{font-size:13px;color:var(--cyan)}
+#topbar .spacer{flex:1}
+#sysok{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-size:10px;letter-spacing:2px;color:var(--green)}
+#sysok .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+#demo-badge{border:1px solid var(--amber);color:var(--amber);font-size:9px;letter-spacing:2px;
+  padding:3px 8px;animation:pulse 2.4s infinite}
+
+/* left panel */
+#left{grid-area:left;display:flex;flex-direction:column}
+#squads{padding:6px 0;flex:0 0 auto}
+.squad{display:flex;align-items:center;gap:8px;padding:5px 12px;cursor:pointer;border-left:2px solid transparent}
+.squad:hover,.squad.sel{background:var(--cyan-faint);border-left-color:var(--cyan)}
+.squad .sw{width:8px;height:8px;flex:0 0 8px;transform:rotate(45deg)}
+.squad .nm{flex:1;letter-spacing:1px}
+.squad .ct{color:var(--text-dim)}
+#roster{flex:1;overflow-y:auto;border-top:1px solid var(--cyan-faint)}
+#roster::-webkit-scrollbar{width:4px}
+#roster::-webkit-scrollbar-thumb{background:var(--cyan-dim)}
+.agent-row{display:flex;gap:8px;padding:4px 12px;cursor:pointer;align-items:center;font-size:12px}
+.agent-row:hover,.agent-row.sel{background:var(--cyan-faint)}
+.agent-row .st{width:6px;height:6px;border-radius:50%;flex:0 0 6px}
+.agent-row .cs{width:62px;color:var(--text)}
+.agent-row .ac{flex:1;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* center: empty pass-through, holds reticle text */
+#mid{grid-area:mid;pointer-events:none;position:relative}
+#hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  color:var(--text-dim);font-size:10px;letter-spacing:2px;text-align:center;opacity:.8}
+
+/* right panel */
+#right{grid-area:right;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+#feedpanel{flex:1.1;display:flex;flex-direction:column;min-height:0}
+#detailpanel{flex:1;display:flex;flex-direction:column;min-height:0}
+#feed{flex:1;overflow-y:auto;padding:6px 10px}
+#feed::-webkit-scrollbar{width:4px}
+#feed::-webkit-scrollbar-thumb{background:var(--cyan-dim)}
+.ev{padding:3px 0;font-size:11.5px;line-height:1.45;border-bottom:1px dotted rgba(77,216,255,.07);animation:evin .3s ease-out}
+@keyframes evin{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+.ev .t{color:var(--text-dim)}
+.ev .who{color:var(--cyan)}
+.ev.good .who{color:var(--green)}
+.ev.hot .who{color:var(--magenta)}
+.ev.warn .who{color:var(--amber)}
+
+/* detail / transcript */
+#detail{flex:1;overflow-y:auto;padding:8px 10px}
+#detail::-webkit-scrollbar{width:4px}
+#detail::-webkit-scrollbar-thumb{background:var(--cyan-dim)}
+#detail .none{color:var(--text-dim);padding:20px 6px;text-align:center;letter-spacing:1px}
+.dmeta{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;margin-bottom:8px;font-size:11px}
+.dmeta .k{color:var(--text-dim)}
+.dmeta .v{color:var(--cyan);text-align:right}
+.bubble{max-width:88%;margin:5px 0;padding:6px 9px;font-size:11.5px;line-height:1.45;position:relative}
+.bubble.out{margin-left:auto;border:1px solid var(--cyan-dim);background:rgba(77,216,255,.07);color:var(--text)}
+.bubble.in{margin-right:auto;border:1px solid rgba(255,180,84,.4);background:rgba(255,180,84,.07);color:#ffe2bd}
+.bubble .bt{display:block;font-size:9px;color:var(--text-dim);margin-top:3px;letter-spacing:1px}
+
+/* bottom bar */
+#bottom{grid-area:bottom;display:flex;align-items:stretch;gap:0}
+.kpi{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 16px;border-right:1px solid var(--cyan-faint)}
+.kpi .kv{font-family:var(--disp);font-size:24px;font-weight:600;color:#fff;text-shadow:0 0 12px var(--cyan-dim)}
+.kpi .kk{font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:2px}
+.kpi.green .kv{color:var(--green);text-shadow:0 0 12px rgba(93,255,166,.4)}
+.kpi.amber .kv{color:var(--amber);text-shadow:0 0 12px rgba(255,180,84,.4)}
+.kpi.magenta .kv{color:var(--magenta);text-shadow:0 0 12px rgba(255,93,200,.4)}
+#funnel{flex:1.6;padding:10px 16px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.frow{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:1px}
+.frow .fl{width:74px;color:var(--text-dim);text-align:right}
+.frow .fbar{flex:1;height:7px;background:rgba(77,216,255,.06);position:relative;overflow:hidden}
+.frow .fbar i{position:absolute;inset:0;right:auto;background:linear-gradient(90deg,var(--cyan-dim),var(--cyan));
+  box-shadow:0 0 8px var(--cyan-dim);transition:width .8s ease}
+.frow .fv{width:42px;color:var(--cyan)}
+
+/* tooltip */
+#tip{position:fixed;z-index:50;pointer-events:none;display:none;background:rgba(5,12,24,.92);
+  border:1px solid var(--cyan);padding:8px 11px;font-size:11px;line-height:1.5;max-width:240px;
+  box-shadow:0 0 20px rgba(77,216,255,.25)}
+#tip .tt{font-family:var(--disp);color:var(--cyan);letter-spacing:2px;font-size:10px}
+#tip .ts{color:var(--text-dim)}
+
+/* boot overlay */
+#boot{position:fixed;inset:0;z-index:100;background:#02040a;display:flex;align-items:center;justify-content:center;
+  transition:opacity .9s}
+#boot.done{opacity:0;pointer-events:none}
+#bootbox{width:min(620px,90vw)}
+#boottitle{font-family:var(--disp);font-weight:800;font-size:26px;letter-spacing:8px;color:#fff;
+  text-shadow:0 0 20px var(--cyan),0 0 60px rgba(77,216,255,.5);margin-bottom:6px;text-align:center}
+#bootsub{text-align:center;color:var(--text-dim);letter-spacing:3px;font-size:10px;margin-bottom:26px}
+#bootlines{height:230px;overflow:hidden;font-size:12px;line-height:1.8;color:var(--text)}
+#bootlines .ok{color:var(--green)}
+#bootlines .ln{opacity:0;animation:lnin .15s forwards}
+@keyframes lnin{to{opacity:1}}
+#bootbar{height:3px;background:rgba(77,216,255,.12);margin-top:18px;position:relative;overflow:hidden}
+#bootbar i{position:absolute;inset:0;right:auto;width:0;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+#bootskip{text-align:center;margin-top:14px;color:var(--text-dim);font-size:10px;letter-spacing:2px;animation:pulse 2s infinite}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<canvas id="graph"></canvas>
+
+<div id="hud">
+  <div class="panel" id="topbar">
+    <div id="logo">RON<b>//</b>ORCHESTRATION DECK</div>
+    <div class="tb-item"><span class="k">MESH</span><span class="v" id="tb-mesh">—</span></div>
+    <div class="tb-item"><span class="k">UPTIME</span><span class="v" id="tb-uptime">00:00:00</span></div>
+    <div class="tb-item"><span class="k">CYCLE</span><span class="v" id="tb-cycle">—</span></div>
+    <div class="tb-item"><span class="k">TOKENS / EST COST</span><span class="v" id="tb-tokens">—</span></div>
+    <div class="spacer"></div>
+    <div id="demo-badge">DEMO SIMULATION</div>
+    <div id="sysok"><span class="dot"></span>ALL SYSTEMS NOMINAL</div>
+    <div class="tb-item"><span class="k">LOCAL TIME</span><span class="v" id="tb-clock">—</span></div>
+  </div>
+
+  <div class="panel" id="left">
+    <div class="ptitle">SQUADRONS <span class="tag" id="agentcount"></span></div>
+    <div id="squads"></div>
+    <div class="ptitle">AGENT ROSTER <span class="tag">LIVE</span></div>
+    <div id="roster"></div>
+  </div>
+
+  <div id="mid"><div id="hint">SCROLL · ZOOM&nbsp;&nbsp;&nbsp;DRAG · PAN&nbsp;&nbsp;&nbsp;CLICK NODE · INSPECT</div></div>
+
+  <div id="right">
+    <div class="panel" id="feedpanel">
+      <div class="ptitle">LIVE OPS STREAM <span class="tag" id="evrate">0 ev/min</span></div>
+      <div id="feed"></div>
+    </div>
+    <div class="panel" id="detailpanel">
+      <div class="ptitle">AGENT INSPECTOR <span class="tag" id="dsel">NO TARGET</span></div>
+      <div id="detail"><div class="none">[ SELECT AN AGENT NODE ]</div></div>
+    </div>
+  </div>
+
+  <div class="panel" id="bottom">
+    <div class="kpi"><div class="kv" id="k-sourced">0</div><div class="kk">CANDIDATES SOURCED</div></div>
+    <div class="kpi"><div class="kv" id="k-convos">0</div><div class="kk">ACTIVE CONVERSATIONS</div></div>
+    <div class="kpi amber"><div class="kv" id="k-replies">0</div><div class="kk">REPLIES RECEIVED</div></div>
+    <div class="kpi green"><div class="kv" id="k-qualified">0</div><div class="kk">QUALIFIED LEADS</div></div>
+    <div class="kpi magenta"><div class="kv" id="k-booked">0</div><div class="kk">INTERVIEWS BOOKED</div></div>
+    <div class="kpi"><div class="kv" id="k-rate">—</div><div class="kk">RESPONSE RATE</div></div>
+    <div id="funnel">
+      <div class="frow"><span class="fl">SOURCED</span><div class="fbar"><i id="f0"></i></div><span class="fv" id="fv0">0</span></div>
+      <div class="frow"><span class="fl">CONTACTED</span><div class="fbar"><i id="f1"></i></div><span class="fv" id="fv1">0</span></div>
+      <div class="frow"><span class="fl">REPLIED</span><div class="fbar"><i id="f2"></i></div><span class="fv" id="fv2">0</span></div>
+      <div class="frow"><span class="fl">QUALIFIED</span><div class="fbar"><i id="f3"></i></div><span class="fv" id="fv3">0</span></div>
+      <div class="frow"><span class="fl">BOOKED</span><div class="fbar"><i id="f4"></i></div><span class="fv" id="fv4">0</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="tip"></div>
+<div id="fx"></div>
+
+<div id="boot">
+  <div id="bootbox">
+    <div id="boottitle">R O N</div>
+    <div id="bootsub">AUTONOMOUS RECRUITMENT MESH · GHL INTEGRATION LAYER</div>
+    <div id="bootlines"></div>
+    <div id="bootbar"><i id="bootfill"></i></div>
+    <div id="bootskip">[ CLICK TO SKIP ]</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* =====================================================================
+   RON ORCHESTRATION DECK — simulated 100-agent recruitment mesh demo
+   ===================================================================== */
+
+const TAU = Math.PI*2;
+const rand = (a,b)=>a+Math.random()*(b-a);
+const pick = a=>a[Math.floor(Math.random()*a.length)];
+const pad = n=>String(n).padStart(2,'0');
+
+/* ---------------- configuration ---------------- */
+const SQUADS = [
+  {key:'SRC', name:'SOURCING',      color:'#4dd8ff', n:13},
+  {key:'FCT', name:'FIRST CONTACT', color:'#5dffa6', n:13},
+  {key:'FUP', name:'FOLLOW-UP',     color:'#ffb454', n:13},
+  {key:'QAL', name:'QUALIFICATION', color:'#ff5dc8', n:12},
+  {key:'SCH', name:'SCHEDULING',    color:'#b18bff', n:12},
+  {key:'NUR', name:'NURTURE',       color:'#5dc8ff', n:12},
+  {key:'REA', name:'REACTIVATION',  color:'#ff8a5d', n:11},
+  {key:'INT', name:'INTEL',         color:'#7dffe0', n:10},
+];
+// 96 field agents + 8 squad leads + core = 105 node mesh
+
+const FIRST = ['Maya','Jordan','Alex','Sam','Riley','Casey','Devon','Tatum','Quinn','Marcus','Lena','Omar','Priya','Diego','Nina','Cole','Zara','Felix','Iris','Hugo','Skye','Reese','Noah','Ava','Liam','Emma','Kai','Ruby','Jude','Wren','Ezra','Nova','Theo','Sage','Remy','Blake'];
+const LAST = ['Ramirez','Chen','Okafor','Novak','Silva','Hayes','Kowalski','Tanaka','Brooks','Ali','Fischer','Moreau','Patel','Vance','Diaz','Holt','Nguyen','Stone','Ferraro','Lindqvist','Mercer','Adeyemi','Castillo','Reyes','Bauer','Knight'];
+const ROLES = ['SDR','Account Executive','Setter','Closer','Insurance Producer','Solar Consultant','Recruiter','BDR','Sales Manager','Inside Sales Rep'];
+const SOURCES = ['LinkedIn','Indeed','FB Jobs','Referral net','ZipRecruiter','Alumni list','IG DMs','Talent pool'];
+
+const OUT_MSGS = [
+  c=>`Hey ${c.first} — came across your ${c.src} profile. We're hiring a ${c.role} on a high-output sales team. Worth a 10-min intro this week?`,
+  c=>`${c.first}, quick one — your background in ${c.role.toLowerCase()} work caught our screen. Comp is base + uncapped. Open to hearing more?`,
+  c=>`Hi ${c.first}! I help staff a fast-growing sales org. Your track record looked strong. Any interest in a ${c.role} seat?`,
+  c=>`${c.first} — saw the numbers you posted last quarter. We pay for exactly that. 10 minutes Thursday?`,
+];
+const REPLY_MSGS = [
+  ()=>`Yeah I might be open to it. What's the comp structure?`,
+  ()=>`Interesting timing actually — what's the role?`,
+  ()=>`Who is this? lol. But ok, tell me more`,
+  ()=>`I'm happy where I'm at but curious what you've got`,
+  ()=>`Sure, send details. Remote or in office?`,
+];
+const QUAL_MSGS = [
+  ()=>`Solid — base + commission, OTE in the range you mentioned works for me.`,
+  ()=>`I've been selling for 3 years, consistently top of the board.`,
+  ()=>`Yes I have my license, and yes I can start within 2 weeks.`,
+  ()=>`That comp plan actually beats what I'm on now. Keep talking.`,
+];
+const BOOK_MSGS = [
+  ()=>`Thursday 2pm works. Send the invite.`,
+  ()=>`Booked it — see you on the call.`,
+  ()=>`Tomorrow morning is perfect. Confirmed.`,
+];
+const FUP_MSGS = [
+  c=>`${c.first} — floating this back up. Spots are filling for the ${c.role} seat. Still open to a chat?`,
+  c=>`No stress if the timing's off, ${c.first}. Door's open this week if you want the details.`,
+];
+
+/* ---------------- agent + graph model ---------------- */
+const ST = {
+  IDLE:      {label:'IDLE',       color:'#3a5a78'},
+  SOURCING:  {label:'SOURCING',   color:'#4dd8ff'},
+  OUTREACH:  {label:'OUTREACH',   color:'#4dd8ff'},
+  AWAITING:  {label:'AWAITING',   color:'#ffb454'},
+  REPLIED:   {label:'ENGAGED',    color:'#ffb454'},
+  QUALIFYING:{label:'QUALIFYING', color:'#5dffa6'},
+  BOOKING:   {label:'BOOKING',    color:'#ff5dc8'},
+};
+
+function mkCandidate(){
+  const first = pick(FIRST);
+  return {first, last:pick(LAST), name:first+' '+pick(LAST), role:pick(ROLES), src:pick(SOURCES)};
+}
+
+const nodes = [];   // {type:'core'|'hub'|'agent', ...}
+const core = {type:'core', id:'CORE', x:0, y:0, r:26};
+nodes.push(core);
+
+const hubs = [];
+SQUADS.forEach((s,i)=>{
+  const hub = {type:'hub', id:s.key+'-LEAD', squad:i, baseA:i/SQUADS.length*TAU, orbitR:300,
+               speed:0.018, x:0, y:0, r:10, color:s.color};
+  hubs.push(hub); nodes.push(hub);
+});
+
+const agents = [];
+SQUADS.forEach((s,si)=>{
+  for(let i=0;i<s.n;i++){
+    const a = {
+      type:'agent', squad:si, hub:hubs[si],
+      id:`${s.key}-${pad(i+1)}`,
+      color:s.color,
+      orbitR:rand(62,148), baseA:rand(0,TAU),
+      speed:rand(0.06,0.16)*(Math.random()<0.3?-1:1),
+      wob:rand(0,TAU), x:0,y:0, r:3.4,
+      status:'IDLE', candidate:mkCandidate(),
+      transcript:[], msgsSent:0, booked:0, activity:0,
+    };
+    agents.push(a); nodes.push(a);
+  }
+});
+
+// Obsidian-style cross links between random agents
+const crossLinks = [];
+for(let i=0;i<46;i++){
+  const a = pick(agents), b = pick(agents);
+  if(a!==b) crossLinks.push([a,b]);
+}
+
+/* ---------------- canvases ---------------- */
+const starsC = document.getElementById('stars'), starsX = starsC.getContext('2d');
+const graphC = document.getElementById('graph'), gx = graphC.getContext('2d');
+let W=0,H=0,DPR=Math.min(devicePixelRatio||1,2);
+const starField = [];
+
+function resize(){
+  W=innerWidth; H=innerHeight;
+  for(const c of [starsC,graphC]){ c.width=W*DPR; c.height=H*DPR; c.style.width=W+'px'; c.style.height=H+'px'; }
+  buildStars();
+}
+function buildStars(){
+  starField.length=0;
+  const n = Math.floor(W*H/3400);
+  for(let i=0;i<n;i++) starField.push({x:Math.random()*W, y:Math.random()*H, z:rand(.3,1), tw:rand(0,TAU)});
+}
+addEventListener('resize', resize); resize();
+
+/* camera */
+const cam = {x:0, y:0, z:1};
+let dragging=false, dragMoved=false, lx=0, ly=0;
+graphC.addEventListener('mousedown', e=>{dragging=true;dragMoved=false;lx=e.clientX;ly=e.clientY;});
+addEventListener('mousemove', e=>{
+  if(dragging){
+    const dx=e.clientX-lx, dy=e.clientY-ly;
+    if(Math.abs(dx)+Math.abs(dy)>3) dragMoved=true;
+    cam.x-=dx/cam.z; cam.y-=dy/cam.z; lx=e.clientX; ly=e.clientY;
+  }
+  hover(e.clientX, e.clientY);
+});
+addEventListener('mouseup', ()=>{dragging=false;});
+graphC.addEventListener('wheel', e=>{
+  e.preventDefault();
+  cam.z = Math.max(.45, Math.min(2.6, cam.z * (e.deltaY<0?1.1:0.9)));
+},{passive:false});
+graphC.addEventListener('click', e=>{
+  if(dragMoved) return;
+  const n = nodeAt(e.clientX, e.clientY);
+  if(n && n.type==='agent') select(n);
+});
+
+function w2s(x,y){ return [(x-cam.x)*cam.z + W/2, (y-cam.y)*cam.z + H/2]; }
+function nodeAt(sx,sy){
+  let best=null, bd=14;
+  for(const n of nodes){
+    const [x,y]=w2s(n.x,n.y);
+    const d=Math.hypot(sx-x,sy-y);
+    if(d<bd+(n.r||3)*cam.z){ bd=d; best=n; }
+  }
+  return best;
+}
+
+/* tooltip + hover */
+const tip = document.getElementById('tip');
+let hovered=null;
+function hover(sx,sy){
+  const n = nodeAt(sx,sy);
+  hovered = n;
+  if(!n){ tip.style.display='none'; graphC.style.cursor=dragging?'grabbing':'crosshair'; return; }
+  graphC.style.cursor='pointer';
+  let html='';
+  if(n.type==='core'){
+    html=`<div class="tt">RON PRIME</div><div class="ts">orchestrator core · model router<br>haiku-4.5 → sonnet-4.6 → opus-4.7</div>`;
+  }else if(n.type==='hub'){
+    const s=SQUADS[n.squad];
+    html=`<div class="tt">${s.key} LEAD</div><div class="ts">${s.name} squadron coordinator<br>${s.n} field agents attached</div>`;
+  }else{
+    html=`<div class="tt">${n.id}</div><div class="ts">${SQUADS[n.squad].name} · ${ST[n.status].label}<br>target: ${n.candidate.name} (${n.candidate.role})<br>msgs sent: ${n.msgsSent} · booked: ${n.booked}</div>`;
+  }
+  tip.innerHTML=html;
+  tip.style.display='block';
+  tip.style.left=Math.min(sx+16, W-260)+'px';
+  tip.style.top=Math.min(sy+16, H-110)+'px';
+}
+
+/* ---------------- pulses (messages traveling links) ---------------- */
+const pulses=[];
+function firePulse(a,b,color){
+  pulses.push({a,b,t:0,speed:rand(.012,.02),color});
+  if(pulses.length>140) pulses.splice(0, pulses.length-140);
+}
+
+/* ---------------- render loop ---------------- */
+let T=0;
+function frame(){
+  T+=1/60;
+
+  /* stars */
+  starsX.setTransform(DPR,0,0,DPR,0,0);
+  starsX.fillStyle='#04060d'; starsX.fillRect(0,0,W,H);
+  // nebulae
+  const neb=(x,y,r,c)=>{ const g=starsX.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,c); g.addColorStop(1,'rgba(0,0,0,0)'); starsX.fillStyle=g; starsX.fillRect(x-r,y-r,r*2,r*2); };
+  neb(W*.78,H*.22,W*.4,'rgba(40,18,80,.20)');
+  neb(W*.18,H*.78,W*.38,'rgba(8,60,90,.18)');
+  neb(W*.5,H*.5,W*.32,'rgba(10,40,70,.12)');
+  for(const s of starField){
+    const a=.25+.5*Math.abs(Math.sin(T*0.6*s.z+s.tw));
+    starsX.fillStyle=`rgba(190,225,255,${a*s.z})`;
+    starsX.fillRect(s.x, (s.y + T*2.2*s.z)%H, s.z>.8?1.6:1, s.z>.8?1.6:1);
+  }
+
+  /* node positions */
+  for(const h of hubs){
+    const a=h.baseA + T*h.speed;
+    h.x=Math.cos(a)*h.orbitR; h.y=Math.sin(a)*h.orbitR*0.86;
+  }
+  for(const ag of agents){
+    const a=ag.baseA + T*ag.speed;
+    const wob=Math.sin(T*.7+ag.wob)*5;
+    ag.x=ag.hub.x+Math.cos(a)*(ag.orbitR+wob);
+    ag.y=ag.hub.y+Math.sin(a)*(ag.orbitR+wob)*0.92;
+    ag.activity=Math.max(0, ag.activity-0.008);
+  }
+
+  /* graph */
+  gx.setTransform(DPR,0,0,DPR,0,0);
+  gx.clearRect(0,0,W,H);
+
+  // links: core->hubs
+  gx.lineWidth=1;
+  for(const h of hubs){
+    const [x1,y1]=w2s(core.x,core.y), [x2,y2]=w2s(h.x,h.y);
+    const g=gx.createLinearGradient(x1,y1,x2,y2);
+    g.addColorStop(0,'rgba(77,216,255,.35)'); g.addColorStop(1, h.color+'66');
+    gx.strokeStyle=g; gx.beginPath(); gx.moveTo(x1,y1); gx.lineTo(x2,y2); gx.stroke();
+  }
+  // hub->agent links
+  for(const ag of agents){
+    const [x1,y1]=w2s(ag.hub.x,ag.hub.y), [x2,y2]=w2s(ag.x,ag.y);
+    const glow = 0.10 + ag.activity*0.5;
+    gx.strokeStyle=ag.color+Math.round(glow*255).toString(16).padStart(2,'0');
+    gx.beginPath(); gx.moveTo(x1,y1); gx.lineTo(x2,y2); gx.stroke();
+  }
+  // cross links (faint, Obsidian web)
+  gx.strokeStyle='rgba(120,170,220,.05)';
+  for(const [a,b] of crossLinks){
+    const [x1,y1]=w2s(a.x,a.y),[x2,y2]=w2s(b.x,b.y);
+    gx.beginPath(); gx.moveTo(x1,y1); gx.lineTo(x2,y2); gx.stroke();
+  }
+
+  // pulses
+  for(let i=pulses.length-1;i>=0;i--){
+    const p=pulses[i]; p.t+=p.speed;
+    if(p.t>=1){ pulses.splice(i,1); continue; }
+    const px=p.a.x+(p.b.x-p.a.x)*p.t, py=p.a.y+(p.b.y-p.a.y)*p.t;
+    const [sx,sy]=w2s(px,py);
+    gx.fillStyle=p.color; gx.beginPath(); gx.arc(sx,sy,2.2*cam.z,0,TAU); gx.fill();
+    gx.fillStyle=p.color+'44'; gx.beginPath(); gx.arc(sx,sy,5.5*cam.z,0,TAU); gx.fill();
+  }
+
+  // agent nodes
+  for(const ag of agents){
+    const [x,y]=w2s(ag.x,ag.y);
+    if(x<-30||y<-30||x>W+30||y>H+30) continue;
+    const c=ST[ag.status].color;
+    const r=(ag.r + ag.activity*4)*cam.z;
+    gx.fillStyle=c+'33'; gx.beginPath(); gx.arc(x,y,r*2.6,0,TAU); gx.fill();
+    gx.fillStyle=c; gx.beginPath(); gx.arc(x,y,r,0,TAU); gx.fill();
+    if(ag===selected || ag===hovered){
+      gx.strokeStyle='#fff'; gx.lineWidth=1.2;
+      gx.beginPath(); gx.arc(x,y,r+5,T*2%TAU,(T*2+4.6)%TAU); gx.stroke();
+      gx.lineWidth=1;
+    }
+  }
+
+  // hub nodes (diamonds)
+  for(const h of hubs){
+    const [x,y]=w2s(h.x,h.y); const r=h.r*cam.z;
+    gx.save(); gx.translate(x,y); gx.rotate(Math.PI/4 + T*.3);
+    gx.fillStyle=h.color+'2e'; gx.fillRect(-r*1.9,-r*1.9,r*3.8,r*3.8);
+    gx.fillStyle=h.color; gx.fillRect(-r*.8,-r*.8,r*1.6,r*1.6);
+    gx.restore();
+    gx.fillStyle=h.color; gx.font=`${Math.max(8,9*cam.z)}px "Share Tech Mono", monospace`;
+    gx.textAlign='center';
+    gx.fillText(SQUADS[h.squad].name, x, y - r*2.4 - 4);
+  }
+
+  // core: layered Jarvis rings
+  {
+    const [x,y]=w2s(0,0); const z=cam.z;
+    const ring=(rad,a0,a1,w,c)=>{ gx.strokeStyle=c; gx.lineWidth=w; gx.beginPath(); gx.arc(x,y,rad*z,a0,a1); gx.stroke(); };
+    const pul=.5+.5*Math.sin(T*2.4);
+    gx.fillStyle=`rgba(77,216,255,${.10+pul*.08})`; gx.beginPath(); gx.arc(x,y,52*z,0,TAU); gx.fill();
+    gx.fillStyle='#dffaff'; gx.beginPath(); gx.arc(x,y,(8+pul*2)*z,0,TAU); gx.fill();
+    gx.fillStyle='rgba(77,216,255,.8)'; gx.beginPath(); gx.arc(x,y,14*z,0,TAU); gx.fill();
+    ring(22, T*1.2, T*1.2+4.4, 2.5*z, 'rgba(77,216,255,.9)');
+    ring(30, -T*.8, -T*.8+2.2, 1.5*z, 'rgba(77,216,255,.5)');
+    ring(30, -T*.8+Math.PI, -T*.8+Math.PI+2.2, 1.5*z, 'rgba(77,216,255,.5)');
+    ring(40, T*.45, T*.45+1.1, 4*z, 'rgba(255,180,84,.55)');
+    ring(40, 0, TAU, .6, 'rgba(77,216,255,.18)');
+    ring(52, -T*.3, -T*.3+5.6, .8, 'rgba(77,216,255,.30)');
+    gx.fillStyle='#fff'; gx.font=`600 ${Math.max(9,10*z)}px Orbitron, sans-serif`; gx.textAlign='center';
+    gx.fillText('RON PRIME', x, y+68*z);
+    gx.lineWidth=1;
+  }
+
+  requestAnimationFrame(frame);
+}
+
+/* ---------------- simulation engine ---------------- */
+const kpi = {sourced:1240, contacted:864, convos:0, replies:317, qualified:88, booked:31, tokens:8_412_000};
+const disp = {...kpi, rate:0};
+let evCount=0, evWindow=[];
+const feed = document.getElementById('feed');
+let selected=null;
+
+function now(){ const d=new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; }
+
+function logEvent(agent, text, cls=''){
+  const el=document.createElement('div');
+  el.className='ev '+cls;
+  el.innerHTML=`<span class="t">${now()}</span> <span class="who">[${agent.id}]</span> ${text}`;
+  feed.prepend(el);
+  while(feed.children.length>70) feed.lastChild.remove();
+  evCount++; evWindow.push(Date.now());
+}
+
+function say(agent, dir, text){
+  agent.transcript.push({dir, text, t:now()});
+  if(agent.transcript.length>24) agent.transcript.shift();
+  if(agent===selected) renderDetail();
+}
+
+function advance(ag){
+  const c=ag.candidate;
+  const hub=ag.hub;
+  switch(ag.status){
+    case 'IDLE':
+      ag.status='SOURCING';
+      firePulse(core,hub,'#4dd8ff'); firePulse(hub,ag,'#4dd8ff');
+      logEvent(ag, `tasked by ${SQUADS[ag.squad].key}-LEAD · scanning ${c.src} for ${c.role} profiles`);
+      break;
+    case 'SOURCING':
+      ag.status='OUTREACH'; kpi.sourced++;
+      logEvent(ag, `candidate locked: <b>${c.name}</b> (${c.role}) via ${c.src}`);
+      break;
+    case 'OUTREACH': {
+      ag.status='AWAITING'; ag.msgsSent++; kpi.contacted++; kpi.tokens+=rand(800,2400)|0;
+      const m=pick(OUT_MSGS)(c);
+      say(ag,'out',m);
+      firePulse(ag,hub,'#4dd8ff');
+      logEvent(ag, `→ SMS to ${c.first}: “${m.slice(0,54)}…”`);
+      break;
+    }
+    case 'AWAITING': {
+      const roll=Math.random();
+      if(roll<0.44){
+        ag.status='REPLIED'; kpi.replies++;
+        const m=pick(REPLY_MSGS)();
+        say(ag,'in',m);
+        firePulse(hub,ag,'#ffb454');
+        logEvent(ag, `← reply from ${c.first}: “${m.slice(0,46)}…”`, 'warn');
+      } else if(roll<0.62){
+        ag.msgsSent++; kpi.tokens+=rand(600,1600)|0;
+        const m=pick(FUP_MSGS)(c);
+        say(ag,'out',m);
+        logEvent(ag, `→ follow-up ${ag.msgsSent} queued for ${c.first}`);
+      } else if(roll<0.70){
+        logEvent(ag, `no response from ${c.name} after ${ag.msgsSent} touches · recycling to NURTURE pool`);
+        ag.candidate=mkCandidate(); ag.transcript=[]; ag.status='IDLE'; ag.msgsSent=0;
+      }
+      break;
+    }
+    case 'REPLIED': {
+      ag.status='QUALIFYING'; kpi.tokens+=rand(1200,3000)|0;
+      say(ag,'out',`Love it. Quick gut-check so I don't waste your time, ${c.first}: years in sales, and are you open to ${pick(['remote','hybrid','in-office'])}?`);
+      logEvent(ag, `engaging ${c.first} · running qualification script`, 'warn');
+      firePulse(ag,hub,'#5dffa6');
+      break;
+    }
+    case 'QUALIFYING': {
+      if(Math.random()<0.62){
+        ag.status='BOOKING'; kpi.qualified++;
+        const m=pick(QUAL_MSGS)();
+        say(ag,'in',m);
+        logEvent(ag, `${c.name} QUALIFIED · criteria 4/4 · pushing calendar link`, 'good');
+        firePulse(ag,core,'#5dffa6');
+      } else {
+        logEvent(ag, `${c.name} disqualified (comp mismatch) · archived to CRM`, '');
+        ag.candidate=mkCandidate(); ag.transcript=[]; ag.status='IDLE'; ag.msgsSent=0;
+      }
+      break;
+    }
+    case 'BOOKING': {
+      if(Math.random()<0.7){
+        ag.status='IDLE'; ag.booked++; kpi.booked++;
+        const m=pick(BOOK_MSGS)();
+        say(ag,'in',m);
+        say(ag,'out',`Locked in. Calendar invite + reminder cadence armed. See you there, ${c.first}.`);
+        logEvent(ag, `★ INTERVIEW BOOKED — ${c.name} (${c.role}) · synced to GHL calendar`, 'hot');
+        firePulse(ag,core,'#ff5dc8'); firePulse(core,hub,'#ff5dc8');
+        ag.candidate=mkCandidate(); ag.transcript=[]; ag.msgsSent=0;
+      } else {
+        say(ag,'in',`Can we do next week instead? This week is slammed.`);
+        logEvent(ag, `${c.first} requested reschedule · holding slot`, 'warn');
+      }
+      break;
+    }
+  }
+  ag.activity=1;
+}
+
+/* warm start: scatter agents across states so the mesh looks alive immediately */
+for(const ag of agents){
+  const r=Math.random();
+  if(r<.18) ag.status='IDLE';
+  else if(r<.34){ ag.status='SOURCING'; }
+  else if(r<.50){ ag.status='OUTREACH'; }
+  else if(r<.78){ ag.status='AWAITING'; ag.msgsSent=1+(Math.random()*2|0); say(ag,'out',pick(OUT_MSGS)(ag.candidate)); }
+  else if(r<.90){ ag.status='REPLIED'; say(ag,'out',pick(OUT_MSGS)(ag.candidate)); say(ag,'in',pick(REPLY_MSGS)()); }
+  else { ag.status='QUALIFYING'; say(ag,'out',pick(OUT_MSGS)(ag.candidate)); say(ag,'in',pick(REPLY_MSGS)()); }
+}
+
+let simT=0;
+setInterval(()=>{
+  const n=1+(Math.random()*3|0);
+  for(let i=0;i<n;i++) advance(pick(agents));
+  kpi.convos = agents.filter(a=>['AWAITING','REPLIED','QUALIFYING','BOOKING'].includes(a.status)).length;
+  simT++;
+}, 360);
+
+/* ambient pulses so the mesh always shimmers */
+setInterval(()=>{
+  const ag=pick(agents);
+  firePulse(ag.hub, ag, ag.color);
+  if(Math.random()<.3) firePulse(core, pick(hubs), '#4dd8ff');
+}, 180);
+
+/* ---------------- HUD wiring ---------------- */
+const $=id=>document.getElementById(id);
+$('agentcount').textContent = `${agents.length + hubs.length} UNITS`;
+$('tb-mesh').textContent = `${agents.length + hubs.length + 1} NODES / ${agents.length} FIELD`;
+
+/* squads list */
+const squadsEl=$('squads');
+let squadFilter=-1;
+SQUADS.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='squad';
+  d.innerHTML=`<span class="sw" style="background:${s.color};box-shadow:0 0 6px ${s.color}"></span><span class="nm">${s.name}</span><span class="ct">${s.n} + LEAD</span>`;
+  d.onclick=()=>{ squadFilter = (squadFilter===i?-1:i);
+    [...squadsEl.children].forEach((c,j)=>c.classList.toggle('sel', j===squadFilter));
+    renderRoster(); };
+  squadsEl.appendChild(d);
+});
+
+/* roster */
+const rosterEl=$('roster');
+const rosterRows=new Map();
+function renderRoster(){
+  rosterEl.innerHTML=''; rosterRows.clear();
+  for(const ag of agents){
+    if(squadFilter>=0 && ag.squad!==squadFilter) continue;
+    const d=document.createElement('div');
+    d.className='agent-row'+(ag===selected?' sel':'');
+    d.innerHTML=`<span class="st"></span><span class="cs">${ag.id}</span><span class="ac"></span>`;
+    d.onclick=()=>select(ag);
+    rosterEl.appendChild(d); rosterRows.set(ag,d);
+  }
+}
+renderRoster();
+
+function select(ag){
+  selected=ag;
+  $('dsel').textContent=ag.id;
+  renderRoster(); renderDetail();
+}
+
+function renderDetail(){
+  const d=$('detail');
+  if(!selected){ d.innerHTML='<div class="none">[ SELECT AN AGENT NODE ]</div>'; return; }
+  const ag=selected, c=ag.candidate, s=SQUADS[ag.squad];
+  let h=`<div class="dmeta">
+    <span class="k">CALLSIGN</span><span class="v">${ag.id}</span>
+    <span class="k">SQUADRON</span><span class="v" style="color:${s.color}">${s.name}</span>
+    <span class="k">STATUS</span><span class="v" style="color:${ST[ag.status].color}">${ST[ag.status].label}</span>
+    <span class="k">TARGET</span><span class="v">${c.name}</span>
+    <span class="k">ROLE / SOURCE</span><span class="v">${c.role} · ${c.src}</span>
+    <span class="k">TOUCHES / BOOKED</span><span class="v">${ag.msgsSent} / ${ag.booked}</span>
+  </div>`;
+  if(ag.transcript.length===0) h+=`<div class="none">[ NO ACTIVE THREAD ]</div>`;
+  for(const m of ag.transcript){
+    h+=`<div class="bubble ${m.dir}">${m.text}<span class="bt">${m.dir==='out'?ag.id+' → '+c.first:c.first+' → '+ag.id} · ${m.t}</span></div>`;
+  }
+  d.innerHTML=h;
+  d.scrollTop=d.scrollHeight;
+}
+
+/* HUD refresh */
+const t0=Date.now();
+let cycle=412;
+setInterval(()=>cycle++, 15000);
+setInterval(()=>{
+  const d=new Date();
+  $('tb-clock').textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  const up=(Date.now()-t0)/1000|0;
+  $('tb-uptime').textContent=`${pad(up/3600|0)}:${pad((up/60|0)%60)}:${pad(up%60)}`;
+  $('tb-cycle').textContent='#'+cycle+' · SONNET-4.6';
+  // ev/min over trailing 60s
+  const cut=Date.now()-60000;
+  evWindow=evWindow.filter(t=>t>cut);
+  $('evrate').textContent=evWindow.length+' ev/min';
+}, 500);
+
+/* smooth KPI tickers */
+function lerpDisp(){
+  const ease=(k)=>{ disp[k]+=(kpi[k]-disp[k])*0.08; };
+  ['sourced','contacted','convos','replies','qualified','booked','tokens'].forEach(ease);
+  $('k-sourced').textContent=Math.round(disp.sourced).toLocaleString();
+  $('k-convos').textContent=Math.round(disp.convos);
+  $('k-replies').textContent=Math.round(disp.replies).toLocaleString();
+  $('k-qualified').textContent=Math.round(disp.qualified);
+  $('k-booked').textContent=Math.round(disp.booked);
+  const rate=kpi.contacted?kpi.replies/kpi.contacted*100:0;
+  $('k-rate').textContent=rate.toFixed(1)+'%';
+  $('tb-tokens').textContent=(disp.tokens/1e6).toFixed(2)+'M · $'+(disp.tokens/1e6*3.2).toFixed(2);
+  // funnel
+  const f=[kpi.sourced,kpi.contacted,kpi.replies,kpi.qualified,kpi.booked];
+  f.forEach((v,i)=>{
+    $('f'+i).style.width=(v/f[0]*100)+'%';
+    $('fv'+i).textContent=v.toLocaleString();
+  });
+  // roster status dots + activity (cheap: update visible rows)
+  for(const [ag,row] of rosterRows){
+    row.firstChild.style.background=ST[ag.status].color;
+    row.firstChild.style.boxShadow=`0 0 5px ${ST[ag.status].color}`;
+    row.lastChild.textContent=ST[ag.status].label+' · '+ag.candidate.first;
+  }
+  requestAnimationFrame(lerpDisp);
+}
+
+/* ---------------- boot sequence ---------------- */
+const BOOT_LINES=[
+  ['INITIALIZING RON PRIME ORCHESTRATOR CORE','ok'],
+  ['MOUNTING DURABLE MEMORY  state/memory.json','ok'],
+  ['HANDSHAKE  GoHighLevel v2 REST  ·  location bound','ok'],
+  ['MODEL ROUTER ONLINE  haiku-4.5 / sonnet-4.6 / opus-4.7','ok'],
+  ['PROMPT CACHE WARM  ·  prefix hit ratio 96.4%','ok'],
+  ['SPAWNING SQUADRON LEADS  [8/8]','ok'],
+  ['DEPLOYING FIELD AGENTS  [96/96]  ·  recruitment mesh','ok'],
+  ['LOADING OUTREACH PLAYBOOKS  ·  sms / dm / email cadences','ok'],
+  ['CALENDAR SYNC  ·  booking pipeline armed','ok'],
+  ['HUMAN-IN-THE-LOOP GATE  ·  outbound approvals ACTIVE','ok'],
+  ['ALL 105 NODES NOMINAL — DECK IS YOURS, COMMANDER','ok'],
+];
+const bootEl=$('boot'), linesEl=$('bootlines'), fillEl=$('bootfill');
+let bi=0, bootDone=false;
+function bootStep(){
+  if(bootDone) return;
+  if(bi<BOOT_LINES.length){
+    const [txt]=BOOT_LINES[bi];
+    const ln=document.createElement('div'); ln.className='ln';
+    ln.innerHTML=`<span class="ok">[ OK ]</span> ${txt}`;
+    linesEl.appendChild(ln);
+    bi++;
+    fillEl.style.width=(bi/BOOT_LINES.length*100)+'%';
+    setTimeout(bootStep, rand(160,420));
+  } else {
+    setTimeout(endBoot, 700);
+  }
+}
+function endBoot(){
+  if(bootDone) return; bootDone=true;
+  bootEl.classList.add('done');
+  setTimeout(()=>bootEl.remove(), 1200);
+}
+bootEl.addEventListener('click', endBoot);
+setTimeout(bootStep, 500);
+
+/* go */
+frame();
+lerpDisp();
+</script>
+</body>
+</html>
