@@ -3,6 +3,11 @@
 A cloud-resident autonomous agent ("Ron") that lives on GitHub Actions and
 works toward a long-running business-building goal on top of GoHighLevel.
 
+This repo also hosts the **Restore Recruiter** — an hourly agent that
+auto-responds to every Indeed applicant by email, screens them with per-team
+questions, hands qualified candidates to hiring managers, and syncs everyone
+into GoHighLevel. See [RECRUITER.md](RECRUITER.md).
+
 Inspired by the $200 / 13-day experiment. Same shape: a Commander prompt,
 a small set of tools, durable memory, and a tight human-in-the-loop for
 spend or outbound messaging.

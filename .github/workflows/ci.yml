@@ -21,15 +21,30 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Compile-check
-        run: python -m compileall -q agent/
+        run: python -m compileall -q agent/ recruiter/ scripts/
 
       - name: Import smoke test
         env:
           # Stub creds so import-time checks don't bail.
           ANTHROPIC_API_KEY: dummy
-        run: python -c "import agent.main, agent.brain, agent.tools, agent.ghl, agent.memory, agent.prompts; print('imports OK')"
+        run: |
+          python -c "import agent.main, agent.brain, agent.tools, agent.ghl, agent.memory, agent.prompts; print('agent imports OK')"
+          python -c "import recruiter.main, recruiter.pipeline, recruiter.llm, recruiter.gmail_client, recruiter.config, recruiter.store; print('recruiter imports OK')"
 
       - name: Workflow YAML validation
         run: |
           python -c "import yaml; yaml.safe_load(open('.github/workflows/agent.yml'))"
           python -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yml'))"
+          python -c "import yaml; yaml.safe_load(open('.github/workflows/recruiter.yml'))"
+          python -c "import yaml; yaml.safe_load(open('recruiter/teams.yml'))"
+
+      - name: Teams config sanity
+        run: |
+          python - <<'EOF'
+          from recruiter import config
+          cfg = config.load()
+          assert cfg["teams"], "teams.yml has no teams"
+          assert config.match_team(cfg, "Membership Sales Advisor")["id"] == "sales"
+          assert config.match_team(cfg, "Underwater Basket Weaver")["id"] == "restore-general"
+          print("teams config OK")
+          EOF
