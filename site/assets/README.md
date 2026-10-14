@@ -37,6 +37,36 @@ Custom Pools & Outdoor Structures page (`site/services/custom-pools-outdoor-stru
 | `pools/gallery-6.jpg` | Night lighting around pool | 4:3 |
 | `logo.svg` *(or `logo.png`)* | Header/footer brand (optional — emoji used until added) | — |
 
+### Landscape Design page (`services/landscape-design.html`)
+
+| Path | Used for |
+| --- | --- |
+| `landscape-design/hero.jpg` | Hero — a designed landscape |
+| `landscape-design/plan.jpg` | 2D/3D plan or model (tall) |
+| `landscape-design/gallery-1.jpg` | Front-yard design |
+| `landscape-design/gallery-2.jpg` | Planting beds & borders |
+| `landscape-design/gallery-3.jpg` | Backyard master plan |
+
+### Hardscaping page (`services/hardscaping.html`)
+
+| Path | Used for |
+| --- | --- |
+| `hardscaping/hero.jpg` | Hero — paver patio build |
+| `hardscaping/materials.jpg` | Natural stone / retaining wall (tall) |
+| `hardscaping/gallery-1.jpg` | Paver patio |
+| `hardscaping/gallery-2.jpg` | Retaining wall & terrace |
+| `hardscaping/gallery-3.jpg` | Natural stone walkway |
+
+### Outdoor Kitchens page (`services/outdoor-kitchens.html`)
+
+| Path | Used for |
+| --- | --- |
+| `outdoor-kitchens/hero.jpg` | Hero — built-in outdoor kitchen |
+| `outdoor-kitchens/integration.jpg` | Kitchen with patio & pool (tall) |
+| `outdoor-kitchens/gallery-1.jpg` | Built-in grill & counter |
+| `outdoor-kitchens/gallery-2.jpg` | Covered dining area |
+| `outdoor-kitchens/gallery-3.jpg` | Kitchen with pizza oven |
+
 Keep images web-sized (long edge ≤ 2000px, JPG quality ~80). Track anything
 over 100 MB with [Git LFS](https://git-lfs.com) — but web-sized photos won't
 come close.
