@@ -1,0 +1,75 @@
+# Recruiting configuration for Restore.
+#
+# One brand block, then one entry per team. Every inbound Indeed application
+# is routed to a team by matching the job title against `keywords` (first
+# match wins, top to bottom). The last team with no keywords is the
+# catch-all; keep it last.
+#
+# EDIT ME: fill in real hiring-manager emails and tune questions per team.
+
+brand:
+  company: "Restore"
+  recruiter_name: "Restore Recruiting Team"
+  # Appended to every outbound reply.
+  signature: |
+    Best,
+    Restore Recruiting Team
+  # Voice used by the drafting model.
+  tone: "warm, upbeat, professional, concise — texts like a great hiring manager, not a corporate form letter"
+  # Where handoff notifications go if a team has no hiring_manager_email.
+  notify_email: ""
+
+defaults:
+  # After this many bot replies in one conversation, flag for a human.
+  max_bot_followups: 3
+  screening_questions:
+    - "Are you legally authorized to work in the United States?"
+    - "What days and hours are you available to work?"
+    - "How soon could you start?"
+
+teams:
+  - id: sales
+    name: "Sales / Membership"
+    keywords: ["sales", "membership", "advisor", "consultant"]
+    hiring_manager_email: ""
+    screening_questions:
+      - "Are you legally authorized to work in the United States?"
+      - "Do you have prior sales or membership experience? Tell us a little about it."
+      - "What days and hours are you available to work?"
+      - "How soon could you start?"
+
+  - id: wellness
+    name: "Wellness Services"
+    keywords: ["nurse", "rn", "lpn", "esthetician", "technician", "therapist", "wellness"]
+    hiring_manager_email: ""
+    screening_questions:
+      - "Are you legally authorized to work in the United States?"
+      - "Do you hold any active licenses or certifications relevant to this role? Which ones?"
+      - "What days and hours are you available to work?"
+      - "How soon could you start?"
+
+  - id: front-desk
+    name: "Front Desk / Guest Experience"
+    keywords: ["front desk", "receptionist", "guest", "concierge", "customer service"]
+    hiring_manager_email: ""
+    screening_questions:
+      - "Are you legally authorized to work in the United States?"
+      - "Have you worked a customer-facing role before? Where?"
+      - "What days and hours are you available to work?"
+      - "How soon could you start?"
+
+  - id: management
+    name: "Management"
+    keywords: ["manager", "lead", "supervisor", "general manager", "assistant manager"]
+    hiring_manager_email: ""
+    screening_questions:
+      - "Are you legally authorized to work in the United States?"
+      - "How many people have you managed, and in what setting?"
+      - "What days and hours are you available to work?"
+      - "How soon could you start?"
+
+  # Catch-all: no keywords. Keep last.
+  - id: restore-general
+    name: "Restore — General"
+    keywords: []
+    hiring_manager_email: ""
