@@ -1,10 +1,15 @@
 name: agent
 
 on:
-  schedule:
-    # Every 6 hours (00:00, 06:00, 12:00, 18:00 UTC) — four cycles a day.
-    # Adjust to taste; GitHub may delay heavily on free runners during peak times.
-    - cron: "0 */6 * * *"
+  # schedule trigger paused on 2026-10-25: ANTHROPIC_API_KEY, GHL_API_TOKEN,
+  # and GHL_LOCATION_ID repo secrets are unset, so every scheduled run has
+  # failed every 6h since 2026-10-20 (RuntimeError: ANTHROPIC_API_KEY not set).
+  # Re-enable by uncommenting once the three secrets are set in
+  # Settings -> Secrets and variables -> Actions.
+  # schedule:
+  #   # Every 6 hours (00:00, 06:00, 12:00, 18:00 UTC) — four cycles a day.
+  #   # Adjust to taste; GitHub may delay heavily on free runners during peak times.
+  #   - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       mode:
