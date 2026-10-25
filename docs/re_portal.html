@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RE Pipeline — AI Command Center</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117; --surface: #1a1d27; --surface2: #222536;
+  --border: #2e3250; --text: #e2e8f0; --muted: #8892b0;
+  --urgent: #ff4757; --hot: #ff6b35; --warm: #ffc107;
+  --cold: #64748b; --buyer: #6366f1; --seller: #ec4899; --green: #22c55e;
+}
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+header h1 { font-size: 1.2rem; font-weight: 700; }
+header h1 span { color: var(--buyer); }
+.hdr-right { display: flex; gap: 0.75rem; align-items: center; }
+.mock-badge { background: #f59e0b22; color: #f59e0b; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #f59e0b44; display: none; }
+.last-updated { font-size: 0.75rem; color: var(--muted); }
+.stats-bar { display: flex; gap: 0.75rem; padding: 1rem 1.5rem; overflow-x: auto; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1.25rem; min-width: 110px; flex-shrink: 0; }
+.stat-value { font-size: 1.5rem; font-weight: 700; }
+.stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+.stat.s-urgent .stat-value { color: var(--urgent); }
+.stat.s-warm .stat-value { color: var(--warm); }
+.stat.s-green .stat-value { color: var(--green); }
+.filters { padding: 0.5rem 1.5rem 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.filter-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 0.3rem 0.8rem; border-radius: 20px; cursor: pointer; font-size: 0.78rem; transition: all 0.15s; }
+.filter-btn:hover, .filter-btn.active { background: var(--buyer); border-color: var(--buyer); color: #fff; }
+.search { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.78rem; outline: none; width: 180px; margin-left: auto; }
+.search:focus { border-color: var(--buyer); }
+.kanban { display: flex; gap: 0.65rem; padding: 0.5rem 1.5rem 2rem; overflow-x: auto; align-items: flex-start; }
+.column { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; min-width: 230px; max-width: 250px; flex-shrink: 0; }
+.col-header { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.col-title { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.col-count { background: var(--surface2); color: var(--muted); font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 8px; }
+.col-body { padding: 0.65rem; display: flex; flex-direction: column; gap: 0.55rem; min-height: 80px; }
+.col-empty { color: var(--muted); font-size: 0.75rem; text-align: center; padding: 1.5rem 0; }
+.card { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 0.7rem; cursor: pointer; transition: border-color 0.15s, transform 0.1s; }
+.card:hover { border-color: var(--buyer); transform: translateY(-1px); }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.45rem; }
+.card-name { font-size: 0.85rem; font-weight: 600; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.dot.urgent { background: var(--urgent); box-shadow: 0 0 5px var(--urgent); }
+.dot.hot { background: var(--hot); }
+.dot.warm { background: var(--warm); }
+.dot.cold { background: var(--cold); }
+.dot.dead { background: #374151; }
+.badges { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-bottom: 0.45rem; }
+.badge { font-size: 0.65rem; padding: 0.12rem 0.4rem; border-radius: 4px; font-weight: 500; }
+.badge.buyer { background: #6366f122; color: var(--buyer); border: 1px solid #6366f133; }
+.badge.seller { background: #ec489922; color: var(--seller); border: 1px solid #ec489933; }
+.badge.urgent { background: #ff475722; color: var(--urgent); border: 1px solid #ff475733; }
+.badge.hot { background: #ff6b3522; color: var(--hot); border: 1px solid #ff6b3533; }
+.badge.warm { background: #ffc10722; color: var(--warm); border: 1px solid #ffc10733; }
+.badge.cold { background: #64748b22; color: var(--cold); border: 1px solid #64748b33; }
+.badge.due { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b33; }
+.card-contact { font-size: 0.72rem; color: var(--muted); }
+.card-contact a { color: var(--muted); text-decoration: none; }
+.card-contact a:hover { color: var(--text); }
+.days { font-size: 0.68rem; color: var(--muted); margin-top: 0.35rem; }
+.days.over { color: var(--urgent); }
+.card-btns { display: flex; gap: 0.35rem; margin-top: 0.5rem; }
+.cbtn { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 0.25rem; border-radius: 5px; cursor: pointer; font-size: 0.68rem; text-align: center; text-decoration: none; display: block; transition: all 0.15s; }
+.cbtn:hover { border-color: var(--buyer); color: var(--buyer); }
+.cbtn.sms:hover { border-color: var(--green); color: var(--green); }
+/* Modal */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
+.overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 460px; padding: 1.5rem; }
+.mhdr { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.mname { font-size: 1.15rem; font-weight: 700; }
+.mclose { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.4rem; line-height: 1; }
+.mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
+.mfield label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.2rem; }
+.mfield span { font-size: 0.88rem; }
+.score-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 0.3rem; }
+.score-fill { height: 100%; border-radius: 3px; }
+.mactions { display: flex; gap: 0.5rem; margin-top: 1.2rem; }
+.mact { flex: 1; padding: 0.55rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-size: 0.82rem; text-align: center; text-decoration: none; display: block; transition: all 0.15s; }
+.mact.call { border-color: var(--green); color: var(--green); }
+.mact.call:hover { background: var(--green); color: #000; }
+.mact.sms { border-color: var(--buyer); color: var(--buyer); }
+.mact.sms:hover { background: var(--buyer); color: #fff; }
+.mact.email { border-color: var(--warm); color: var(--warm); }
+.mact.email:hover { background: var(--warm); color: #000; }
+@media (max-width:600px) { .stats-bar,.filters,.kanban { padding-left: 1rem; padding-right: 1rem; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>&#127968; <span>RE</span> Pipeline</h1>
+  <div class="hdr-right">
+    <span class="mock-badge" id="mock-badge">Mock Data</span>
+    <span class="last-updated" id="last-updated">Loading&hellip;</span>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value" id="s-total">&#8212;</div><div class="stat-label">Total Leads</div></div>
+  <div class="stat s-urgent"><div class="stat-value" id="s-urgent">&#8212;</div><div class="stat-label">Urgent</div></div>
+  <div class="stat s-warm"><div class="stat-value" id="s-due">&#8212;</div><div class="stat-label">Follow-up Due</div></div>
+  <div class="stat"><div class="stat-value" id="s-hot">&#8212;</div><div class="stat-label">Hot</div></div>
+  <div class="stat s-green"><div class="stat-value" id="s-uc">&#8212;</div><div class="stat-label">Under Contract</div></div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-f="all">All</button>
+  <button class="filter-btn" data-f="buyer">Buyers</button>
+  <button class="filter-btn" data-f="seller">Sellers</button>
+  <button class="filter-btn" data-f="due">Follow-up Due</button>
+  <input class="search" id="search" placeholder="Search&hellip;" type="text" />
+</div>
+
+<div class="kanban" id="kanban"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="mhdr">
+      <div>
+        <div class="mname" id="m-name"></div>
+        <div class="badges" id="m-badges" style="margin-top:.4rem"></div>
+      </div>
+      <button class="mclose" id="mclose">&#215;</button>
+    </div>
+    <div style="margin-bottom:.85rem">
+      <label style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Score</label>
+      <div style="display:flex;align-items:center;gap:.75rem;margin-top:.2rem">
+        <span id="m-score" style="font-size:.9rem"></span>
+        <div class="score-bar" style="flex:1"><div class="score-fill" id="m-fill"></div></div>
+      </div>
+    </div>
+    <div class="mgrid">
+      <div class="mfield"><label>Stage</label><span id="m-stage"></span></div>
+      <div class="mfield"><label>Type</label><span id="m-type"></span></div>
+      <div class="mfield"><label>Source</label><span id="m-source"></span></div>
+      <div class="mfield"><label>Days Since Contact</label><span id="m-days"></span></div>
+    </div>
+    <div style="margin-bottom:.85rem"><label style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Next Action</label><div style="font-size:.88rem;margin-top:.2rem" id="m-action"></div></div>
+    <div><label style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Tags</label><div style="font-size:.82rem;color:var(--muted);margin-top:.2rem" id="m-tags"></div></div>
+    <div class="mactions" id="m-actions"></div>
+  </div>
+</div>
+
+<script>
+const STAGES = ["new_lead","contacted","engaged","qualified","appointment_set","active_search","under_contract","closed"];
+const STAGE_LABELS = {new_lead:"New Lead",contacted:"Contacted",engaged:"Engaged",qualified:"Qualified",appointment_set:"Appt Set",active_search:"Active Search",under_contract:"Under Contract",closed:"Closed"};
+const TEMP_COLORS = {urgent:"#ff4757",hot:"#ff6b35",warm:"#ffc107",cold:"#64748b",dead:"#374151"};
+
+let leads = [], filter = "all", q = "";
+
+function filtered() {
+  let r = leads;
+  if (filter === "buyer") r = r.filter(l => l.lead_type === "buyer");
+  else if (filter === "seller") r = r.filter(l => l.lead_type === "seller");
+  else if (filter === "due") r = r.filter(l => l.followup_due);
+  if (q) { const s = q.toLowerCase(); r = r.filter(l => (l.name||l.firstName||"" ).toLowerCase().includes(s) || (l.phone||"").includes(s) || (l.email||"").toLowerCase().includes(s)); }
+  return r;
+}
+
+function render() {
+  const byStage = {};
+  STAGES.forEach(s => byStage[s] = []);
+  filtered().forEach(l => { if (byStage[l.stage]) byStage[l.stage].push(l); });
+  document.getElementById("kanban").innerHTML = STAGES.map(s => {
+    const items = byStage[s];
+    const cards = items.length ? items.map(cardHtml).join("") : `<div class="col-empty">Empty</div>`;
+    return `<div class="column"><div class="col-header"><span class="col-title">${STAGE_LABELS[s]}</span><span class="col-count">${items.length}</span></div><div class="col-body">${cards}</div></div>`;
+  }).join("");
+  document.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => openModal(el.dataset.id)));
+}
+
+function cardHtml(l) {
+  const dueBadge = l.followup_due ? `<span class="badge due">Due</span>` : "";
+  const days = l.days_since_contact < 999 ? `<div class="days${l.followup_due ? " over" : ""} ">${l.days_since_contact}d ago</div>` : "";
+  const sms = l.phone ? `<a class="cbtn sms" href="sms:${l.phone}">SMS</a>` : `<span class="cbtn sms" style="opacity:.3">SMS</span>`;
+  const call = l.phone ? `<a class="cbtn" href="tel:${l.phone}">Call</a>` : `<span class="cbtn" style="opacity:.3">Call</span>`;
+  return `<div class="card" data-id="${l.id}"><div class="card-top"><div class="card-name">${l.name||"Unknown"}</div><div class="dot ${l.temperature}"></div></div><div class="badges"><span class="badge ${l.lead_type}">${l.lead_type}</span><span class="badge ${l.temperature}">${l.score}</span>${dueBadge}</div><div class="card-contact">${l.phone ? `<a href="tel:${l.phone}">${l.phone}</a>` : ""}</div>${days}<div class="card-btns">${call}${sms}</div></div>`;
+}
+
+function openModal(id) {
+  const l = leads.find(x => x.id === id);
+  if (!l) return;
+  document.getElementById("m-name").textContent = l.name || "Unknown";
+  document.getElementById("m-score").textContent = `${l.score}/100 (${l.temperature})`;
+  const fill = document.getElementById("m-fill");
+  fill.style.width = l.score + "%";
+  fill.style.background = TEMP_COLORS[l.temperature] || "#64748b";
+  document.getElementById("m-stage").textContent = STAGE_LABELS[l.stage] || l.stage;
+  document.getElementById("m-type").textContent = l.lead_type;
+  document.getElementById("m-source").textContent = l.source || "—";
+  document.getElementById("m-days").textContent = l.days_since_contact < 999 ? l.days_since_contact + " days" : "—";
+  document.getElementById("m-action").textContent = l.next_action || "—";
+  document.getElementById("m-tags").textContent = (l.tags || []).join(", ") || "—";
+  document.getElementById("m-badges").innerHTML = `<span class="badge ${l.lead_type}">${l.lead_type}</span><span class="badge ${l.temperature}">${l.temperature}</span>${l.followup_due ? '<span class="badge due">Follow-up Due</span>' : ""}`;
+  document.getElementById("m-actions").innerHTML = [
+    l.phone && `<a class="mact call" href="tel:${l.phone}">&#128222; Call</a>`,
+    l.phone && `<a class="mact sms" href="sms:${l.phone}">&#128172; SMS</a>`,
+    l.email && `<a class="mact email" href="mailto:${l.email}">&#9993; Email</a>`,
+  ].filter(Boolean).join("");
+  document.getElementById("overlay").classList.add("open");
+}
+
+document.getElementById("mclose").onclick = () => document.getElementById("overlay").classList.remove("open");
+document.getElementById("overlay").addEventListener("click", e => { if (e.target === document.getElementById("overlay")) document.getElementById("overlay").classList.remove("open"); });
+document.querySelectorAll(".filter-btn").forEach(b => b.addEventListener("click", () => { document.querySelectorAll(".filter-btn").forEach(x => x.classList.remove("active")); b.classList.add("active"); filter = b.dataset.f; render(); }));
+document.getElementById("search").addEventListener("input", e => { q = e.target.value; render(); });
+
+async function load() {
+  try {
+    const r = await fetch("re_leads.json?t=" + Date.now());
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    leads = d.leads || [];
+    document.getElementById("s-total").textContent = d.total || 0;
+    document.getElementById("s-urgent").textContent = leads.filter(l => l.temperature === "urgent").length;
+    document.getElementById("s-due").textContent = leads.filter(l => l.followup_due).length;
+    document.getElementById("s-hot").textContent = leads.filter(l => l.temperature === "hot").length;
+    document.getElementById("s-uc").textContent = leads.filter(l => l.stage === "under_contract").length;
+    document.getElementById("last-updated").textContent = d.generated_at ? "Updated: " + new Date(d.generated_at).toLocaleString() : "";
+    if (d.using_mock) document.getElementById("mock-badge").style.display = "inline";
+    render();
+  } catch { document.getElementById("kanban").innerHTML = "<div style='padding:2rem;color:var(--muted)'>Could not load re_leads.json. Run the agent workflow first.</div>"; }
+}
+
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
