@@ -1,0 +1,23 @@
+{
+  "_note": "Which leads each brand wants. A lead can go to more than one brand. ghl_location_env names the env var that holds that brand's GoHighLevel location id; only brands with that var set are pushed.",
+  "restore-marketing": {
+    "label": "Restore Marketing Co.",
+    "industries": "*",
+    "ghl_location_env": "GHL_LOCATION_RESTORE_MARKETING"
+  },
+  "pax-scales": {
+    "label": "Pax Scales (contractor branding, under Restore Marketing)",
+    "industries": ["hvac", "electrical", "plumbing", "roofing", "landscaping", "construction", "pools", "cleaning"],
+    "ghl_location_env": "GHL_LOCATION_PAX_SCALES"
+  },
+  "ai-cowboy": {
+    "label": "AI Cowboy (automation for contractors and trades)",
+    "industries": ["hvac", "electrical", "plumbing", "roofing", "landscaping", "construction", "pools", "cleaning", "towing", "auto"],
+    "ghl_location_env": "GHL_LOCATION_AI_COWBOY"
+  },
+  "restore-ai": {
+    "label": "Restore Ai / Restore Consulting (larger established businesses)",
+    "industries": ["medical", "dental", "legal", "real estate", "insurance", "financial", "staffing"],
+    "ghl_location_env": "GHL_LOCATION_RESTORE_AI"
+  }
+}

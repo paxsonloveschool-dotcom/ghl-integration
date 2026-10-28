@@ -1,0 +1,57 @@
+name: lead-engine
+
+# Free replacement for the Apify Google Maps scrapes. Pulls public Texas
+# records (TDLR licenses, new sales tax permits), finds each business's own
+# website, and upserts leads into GoHighLevel. Dry run unless the repo
+# variable PUSH_TO_GHL is "true". This repo is public, so lead rows are never
+# printed or uploaded; only counts appear in the log.
+on:
+  schedule:
+    - cron: "15 11 * * *"   # 6:15 AM Central (CDT)
+  workflow_dispatch:
+    inputs:
+      push:
+        description: "Write to GoHighLevel (otherwise dry run)"
+        type: boolean
+        default: false
+  push:
+    branches: [lead-engine]
+    paths: ["lead-engine/**", ".github/workflows/lead-engine.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lead-engine
+  cancel-in-progress: false
+
+jobs:
+  leads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: lead-engine
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        job: [college-station, bryan, brazos-valley, houston]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - name: Run ${{ matrix.job }}
+        env:
+          GHL_TOKEN: ${{ secrets.GHL_API_TOKEN }}
+          GHL_LOCATION_RESTORE_MARKETING: ${{ secrets.GHL_LOCATION_ID }}
+          GHL_LOCATION_PAX_SCALES: ${{ vars.GHL_LOCATION_PAX_SCALES }}
+          GHL_LOCATION_AI_COWBOY: ${{ vars.GHL_LOCATION_AI_COWBOY }}
+          GHL_LOCATION_RESTORE_AI: ${{ vars.GHL_LOCATION_RESTORE_AI }}
+          PUSH: ${{ (github.event_name == 'schedule' && vars.PUSH_TO_GHL == 'true') || (github.event_name == 'workflow_dispatch' && inputs.push) }}
+        run: |
+          FLAGS="--job ${{ matrix.job }} --enrich --out /tmp/lead-engine-out"
+          if [ "$PUSH" = "true" ]; then FLAGS="$FLAGS --push"; fi
+          node src/run.js $FLAGS --summary-only

@@ -1,0 +1,6 @@
+[
+  {"license_type":"A/C Contractor","license_number":"900001","business_county":"BRAZOS","business_name":"SAMPLE AIR & HEAT LLC","business_address_line1":"100 SAMPLE ST","business_city_state_zip":"BRYAN, TX 77802","business_telephone":"(979) 555-0101","license_expiration_date_mmddccyy":"03/14/2027","owner_name":"DOE, JANE A"},
+  {"license_type":"Electrical Contractor","license_number":"900002","business_county":"BRAZOS","business_name":"FIXTURE ELECTRIC INC","business_address_line1":"200 TEST AVE","business_city_state_zip":"COLLEGE STATION, TX 77840","business_telephone":"9795550102","license_expiration_date_mmddccyy":"09/08/2027","owner_name":"ROE, RICHARD"},
+  {"license_type":"A/C Contractor","license_number":"900003","business_county":"BRAZOS","business_name":"SAMPLE AIR & HEAT, LLC","business_address_line1":"100 SAMPLE ST","business_city_state_zip":"BRYAN, TX 77802","business_telephone":"979-555-0101","license_expiration_date_mmddccyy":"03/14/2027","owner_name":"DOE, JOHN"},
+  {"license_type":"Full Service Establishment","license_number":"900004","business_county":"BRAZOS","business_name":"EXPIRED SALON","business_address_line1":"300 OLD RD","business_city_state_zip":"BRYAN, TX 77801","business_telephone":"9795550104","license_expiration_date_mmddccyy":"01/01/2024","owner_name":"SMITH, PAT"}
+]
