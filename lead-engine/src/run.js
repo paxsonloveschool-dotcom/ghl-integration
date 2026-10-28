@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Usage:
-//   node src/run.js --job college-station [--sources tdlr,salestax] [--enrich] [--push] [--fixtures test/fixtures] [--out out]
+//   node src/run.js --job college-station [--sources tdlr,salestax] [--enrich] [--push] [--push-limit 200] [--fixtures test/fixtures] [--out out]
 // Without --push nothing is written to GoHighLevel; leads land in out/ as CSV and JSON.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -15,7 +15,7 @@ import { pushLeads } from './ghl.js';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 export function parseArgs(argv) {
-  const a = { sources: ['tdlr', 'salestax'], enrich: false, enrichLimit: 120, push: false, out: 'out' };
+  const a = { sources: ['tdlr', 'salestax'], enrich: false, enrichLimit: 120, push: false, pushLimit: 200, out: 'out' };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i];
     if (k === '--job') a.job = argv[++i];
@@ -27,6 +27,7 @@ export function parseArgs(argv) {
     else if (k === '--today') a.today = new Date(argv[++i]);
     else if (k === '--enrich-limit') a.enrichLimit = Number(argv[++i]);
     else if (k === '--summary-only') a.summaryOnly = true;
+    else if (k === '--push-limit') a.pushLimit = Number(argv[++i]);
   }
   return a;
 }
@@ -81,7 +82,10 @@ export async function runJob(args) {
     if (key.startsWith('_')) continue;
     const locationId = process.env[brand.ghl_location_env];
     if (!locationId) continue;
-    const mine = leads.filter(l => l.brands.includes(key));
+    // New businesses first, then leads with an email; capped per brand so a big metro can't flood the CRM.
+    const mine = leads.filter(l => l.brands.includes(key))
+      .sort((a, b) => (b.isNewBusiness - a.isNewBusiness) || (!!b.email - !!a.email))
+      .slice(0, args.pushLimit ?? 200);
     pushes[key] = await pushLeads(mine, { token: process.env.GHL_TOKEN, locationId, push: args.push && !!process.env.GHL_TOKEN, date });
   }
 

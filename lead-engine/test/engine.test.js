@@ -9,7 +9,7 @@ import { candidateDomains, extractContacts, robotsAllows, enrichLead } from '../
 import { buildWhere as tdlrWhere } from '../src/sources/tdlr.js';
 import { buildWhere as stWhere } from '../src/sources/salesTax.js';
 import { toGhlContact, pushLeads } from '../src/ghl.js';
-import { runJob } from '../src/run.js';
+import { runJob, parseArgs } from '../src/run.js';
 
 const FIX = new URL('./fixtures', import.meta.url).pathname;
 const TODAY = new Date('2026-10-28T12:00:00Z');
@@ -102,4 +102,9 @@ test('city filter on the College Station job drops Bryan rows', async () => {
   const out = mkdtempSync(join(tmpdir(), 'le-'));
   const s = await runJob({ job: 'college-station', sources: ['tdlr', 'salestax'], fixtures: FIX, out, today: TODAY });
   assert.equal(s.afterDedupe, 2); // Fixture Electric and Botanical Landworks
+});
+
+test('parseArgs reads the per brand push cap', () => {
+  assert.equal(parseArgs([]).pushLimit, 200);
+  assert.equal(parseArgs(['--push-limit', '50']).pushLimit, 50);
 });
