@@ -16,7 +16,7 @@ from typing import Any
 
 import anthropic
 
-from . import memory
+from . import leads, memory
 from .prompts import COMMANDER_PROMPT, ROUTER_HINT, render_user_turn
 from .tools import TOOLS, dispatch
 
@@ -78,6 +78,12 @@ def run_cycle(state: dict[str, Any], mode: str = "scheduled") -> dict[str, Any]:
     client = anthropic.Anthropic()
     model = _route(state, client)
     memory.journal({"type": "cycle_start", "cycle": state["cycle_count"] + 1, "model": model})
+
+    try:
+        portal = leads.refresh()
+        memory.journal({"type": "leads_refreshed", **portal})
+    except Exception as e:
+        memory.journal({"type": "leads_refresh_error", "error": repr(e)})
 
     # System prompt as a cacheable block. Stable across cycles -> cache hit.
     system_blocks = [

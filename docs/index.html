@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lead Portal</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #131a31;
+      --border: #25304d;
+      --text: #e8ecf5;
+      --muted: #8a93ad;
+      --accent: #4cc2ff;
+      --hot: #ff6b6b;
+      --warm: #ffb454;
+      --cold: #5fb878;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    header { padding: 16px 20px; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+    header h1 { margin: 0 0 4px; font-size: 18px; }
+    header .meta { color: var(--muted); font-size: 12px; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .controls input, .controls select {
+      background: var(--bg); color: var(--text); border: 1px solid var(--border);
+      padding: 8px 10px; border-radius: 6px; font: inherit; min-width: 140px;
+    }
+    .controls input:focus, .controls select:focus { outline: none; border-color: var(--accent); }
+    .summary { padding: 12px 20px; color: var(--muted); font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    th { background: var(--panel); position: sticky; top: 96px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); cursor: pointer; user-select: none; }
+    th.sort-asc::after { content: " ▲"; color: var(--accent); }
+    th.sort-desc::after { content: " ▼"; color: var(--accent); }
+    tr:hover td { background: rgba(76, 194, 255, 0.04); }
+    .score { display: inline-block; min-width: 36px; padding: 2px 8px; border-radius: 999px; font-weight: 600; text-align: center; font-size: 12px; }
+    .score.hot { background: rgba(255, 107, 107, 0.15); color: var(--hot); }
+    .score.warm { background: rgba(255, 180, 84, 0.15); color: var(--warm); }
+    .score.cold { background: rgba(95, 184, 120, 0.15); color: var(--cold); }
+    .tag { display: inline-block; padding: 1px 6px; margin: 0 2px 2px 0; background: var(--border); border-radius: 4px; font-size: 11px; color: var(--muted); }
+    .actions a { display: inline-block; padding: 6px 10px; margin-right: 6px; background: var(--accent); color: #00131f; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 12px; }
+    .actions a.sms { background: #6b8aff; color: #fff; }
+    .actions a.mail { background: var(--border); color: var(--text); }
+    .empty { padding: 40px; text-align: center; color: var(--muted); }
+    .source-badge { display: inline-block; padding: 1px 8px; border-radius: 4px; font-size: 11px; background: var(--border); color: var(--muted); }
+    @media (max-width: 700px) {
+      th, td { padding: 8px; font-size: 12px; }
+      th { top: 130px; }
+      .hide-mobile { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lead Portal</h1>
+    <div class="meta">
+      <span id="generated">Loading…</span>
+      &nbsp;·&nbsp;
+      <span class="source-badge" id="source">…</span>
+    </div>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search name, phone, email, tags…" autofocus />
+      <select id="filter-tag"><option value="">All tags</option></select>
+      <select id="filter-source"><option value="">All sources</option></select>
+      <select id="filter-status"><option value="">All statuses</option></select>
+      <select id="min-score">
+        <option value="0">Any score</option>
+        <option value="70">Hot (70+)</option>
+        <option value="40">Warm (40+)</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="summary" id="summary"></div>
+
+  <table id="table" hidden>
+    <thead>
+      <tr>
+        <th data-key="score">Score</th>
+        <th data-key="name">Name</th>
+        <th data-key="phone">Phone</th>
+        <th data-key="email" class="hide-mobile">Email</th>
+        <th data-key="source" class="hide-mobile">Source</th>
+        <th data-key="status" class="hide-mobile">Status</th>
+        <th data-key="tags" class="hide-mobile">Tags</th>
+        <th data-key="last_activity_at" class="hide-mobile">Last activity</th>
+        <th>Act</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <div id="empty" class="empty" hidden>No leads match your filters.</div>
+
+  <script>
+    const state = { leads: [], sortKey: "score", sortDir: -1 };
+
+    const $ = (id) => document.getElementById(id);
+
+    function bucket(score) {
+      if (score >= 70) return "hot";
+      if (score >= 40) return "warm";
+      return "cold";
+    }
+
+    function fmtDate(s) {
+      if (!s) return "";
+      const d = new Date(s);
+      if (isNaN(d)) return s;
+      const diff = (Date.now() - d.getTime()) / 86400000;
+      if (diff < 1) return "today";
+      if (diff < 2) return "yesterday";
+      if (diff < 30) return `${Math.floor(diff)}d ago`;
+      return d.toISOString().slice(0, 10);
+    }
+
+    function uniq(items) {
+      return [...new Set(items)].filter(Boolean).sort();
+    }
+
+    function populateFilters() {
+      const tagSel = $("filter-tag");
+      const srcSel = $("filter-source");
+      const stSel = $("filter-status");
+      const allTags = uniq(state.leads.flatMap((l) => l.tags || []));
+      const allSrc = uniq(state.leads.map((l) => l.source));
+      const allSt = uniq(state.leads.map((l) => l.status));
+      for (const t of allTags) tagSel.add(new Option(t, t));
+      for (const s of allSrc) srcSel.add(new Option(s, s));
+      for (const s of allSt) stSel.add(new Option(s, s));
+    }
+
+    function filtered() {
+      const q = $("search").value.trim().toLowerCase();
+      const tag = $("filter-tag").value;
+      const src = $("filter-source").value;
+      const st = $("filter-status").value;
+      const minScore = +$("min-score").value;
+      return state.leads
+        .filter((l) => l.score >= minScore)
+        .filter((l) => !tag || (l.tags || []).includes(tag))
+        .filter((l) => !src || l.source === src)
+        .filter((l) => !st || l.status === st)
+        .filter((l) => {
+          if (!q) return true;
+          const hay = [l.name, l.phone, l.email, l.source, l.status, (l.tags || []).join(" ")]
+            .join(" ").toLowerCase();
+          return hay.includes(q);
+        })
+        .sort((a, b) => {
+          const ka = a[state.sortKey] ?? "";
+          const kb = b[state.sortKey] ?? "";
+          if (ka < kb) return -1 * state.sortDir;
+          if (ka > kb) return 1 * state.sortDir;
+          return 0;
+        });
+    }
+
+    function render() {
+      const rows = filtered();
+      $("summary").textContent = `${rows.length} of ${state.leads.length} leads`;
+      const tbody = $("tbody");
+      tbody.innerHTML = "";
+      if (rows.length === 0) {
+        $("table").hidden = true;
+        $("empty").hidden = false;
+        return;
+      }
+      $("table").hidden = false;
+      $("empty").hidden = true;
+      for (const l of rows) {
+        const tr = document.createElement("tr");
+        const tags = (l.tags || []).map((t) => `<span class="tag">${t}</span>`).join("");
+        const phoneCell = l.phone
+          ? `<a href="tel:${l.phone}" style="color:var(--text)">${l.phone}</a>`
+          : `<span style="color:var(--muted)">—</span>`;
+        const actions = [];
+        if (l.phone) actions.push(`<a href="tel:${l.phone}">Call</a>`);
+        if (l.phone) actions.push(`<a class="sms" href="sms:${l.phone}">SMS</a>`);
+        if (l.email) actions.push(`<a class="mail" href="mailto:${l.email}">Email</a>`);
+        tr.innerHTML = `
+          <td><span class="score ${bucket(l.score)}">${l.score}</span></td>
+          <td>${l.name}</td>
+          <td>${phoneCell}</td>
+          <td class="hide-mobile">${l.email || ""}</td>
+          <td class="hide-mobile">${l.source || ""}</td>
+          <td class="hide-mobile">${l.status || ""}</td>
+          <td class="hide-mobile">${tags}</td>
+          <td class="hide-mobile">${fmtDate(l.last_activity_at)}</td>
+          <td class="actions">${actions.join("")}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+      document.querySelectorAll("th[data-key]").forEach((th) => {
+        th.classList.remove("sort-asc", "sort-desc");
+        if (th.dataset.key === state.sortKey) {
+          th.classList.add(state.sortDir === 1 ? "sort-asc" : "sort-desc");
+        }
+      });
+    }
+
+    function bindEvents() {
+      for (const id of ["search", "filter-tag", "filter-source", "filter-status", "min-score"]) {
+        $(id).addEventListener("input", render);
+      }
+      document.querySelectorAll("th[data-key]").forEach((th) => {
+        th.addEventListener("click", () => {
+          const key = th.dataset.key;
+          if (state.sortKey === key) {
+            state.sortDir *= -1;
+          } else {
+            state.sortKey = key;
+            state.sortDir = key === "score" ? -1 : 1;
+          }
+          render();
+        });
+      });
+    }
+
+    async function load() {
+      try {
+        const resp = await fetch("leads.json?ts=" + Date.now());
+        if (!resp.ok) throw new Error(resp.statusText);
+        const data = await resp.json();
+        state.leads = data.leads || [];
+        $("generated").textContent =
+          "Updated " + fmtDate(data.generated_at) + " · " + (data.count ?? state.leads.length) + " leads";
+        $("source").textContent = "source: " + (data.source || "unknown");
+        populateFilters();
+        bindEvents();
+        render();
+      } catch (e) {
+        $("summary").textContent = "Failed to load leads.json — " + e.message;
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>
