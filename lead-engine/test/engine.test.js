@@ -108,3 +108,24 @@ test('parseArgs reads the per brand push cap', () => {
   assert.equal(parseArgs([]).pushLimit, 200);
   assert.equal(parseArgs(['--push-limit', '50']).pushLimit, 50);
 });
+
+test('Overture places become leads only for sold industries in the job city', async () => {
+  const { fetchOverture, industryFromCategory } = await import('../src/sources/overture.js');
+  assert.equal(industryFromCategory('general_dentistry'), 'dental');
+  assert.equal(industryFromCategory('hvac_services'), 'hvac');
+  assert.equal(industryFromCategory('park'), null);
+  const job = { area: 'College Station', city_filter: ['COLLEGE STATION'] };
+  const leads = fetchOverture(job, { file: `${FIX}/overture.json` });
+  assert.equal(leads.length, 1); // park dropped, Bryan dropped, no contact dropped
+  assert.equal(leads[0].industry, 'dental');
+  assert.equal(leads[0].website, 'https://www.aggielanddental.example');
+  assert.equal(leads[0].email, 'front@aggielanddental.example');
+  assert.equal(leads[0].postalCode, '77840');
+  assert.ok(leads[0].tags.includes('source overture'));
+});
+
+test('--overture-file adds Overture leads to a job', async () => {
+  const out = mkdtempSync(join(tmpdir(), 'le-'));
+  const s = await runJob({ ...parseArgs(['--job', 'college-station', '--fixtures', FIX, '--out', out, '--overture-file', `${FIX}/overture.json`]), today: TODAY });
+  assert.equal(s.fromSource.overture, 1);
+});

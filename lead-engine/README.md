@@ -17,7 +17,8 @@ Weekly lead report and GHL contact cleanup only read GoHighLevel and keep workin
 
 1. **TDLR license holders** (data.texas.gov `7358-krk7`): every licensed A/C contractor, electrical contractor, salon, barber shop, tow company in the target counties, with the business phone and owner name. Public record, no account.
 2. **New sales tax permits** (Texas Comptroller, data.texas.gov `jrea-zgmq`): businesses that opened in the last 7 to 30 days, with address and industry code. The hottest list for branding and marketing: they have no site, no reviews and no agency yet. No phone, so these go to the CSV for door to door and for enrichment.
-3. **Website enrichment** (`--enrich`): guesses the business's own domain, keeps it only if the page matches the business's city or phone, honors robots.txt, and pulls a public email and phone. This is what fixes GoHighLevel being 1.1% email.
+3. **Overture Maps business listings** (overturemaps.org, free under CDLA Permissive 2.0, monthly release on a public S3 bucket): phones, websites and some emails for businesses in each job's area. `scripts/overture_places.py` pulls the area with DuckDB; only categories that match an industry the brands sell to are kept. Quality is mixed, so it runs after the state records and the shared dedupe merges matches. If the pull fails, the job still runs on the state records.
+4. **Website enrichment** (`--enrich`): guesses the business's own domain, keeps it only if the page matches the business's city or phone, honors robots.txt, and pulls a public email and phone. This is what fixes GoHighLevel being 1.1% email.
 
 Google Maps is not scraped. Google's Maps Platform terms (section 3.2.3) forbid scraping and storing Maps content, and the Places API can't be stored in a CRM long term either. The BCS Chamber directory is not scraped; ask the chamber for the member list or use the printed directory.
 

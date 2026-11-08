@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 // Usage:
-//   node src/run.js --job college-station [--sources tdlr,salestax] [--enrich] [--push] [--push-limit 200] [--fixtures test/fixtures] [--out out]
+//   node src/run.js --job college-station [--sources tdlr,salestax] [--overture-file f.json] [--enrich] [--push] [--push-limit 200] [--fixtures test/fixtures] [--out out]
 // Without --push nothing is written to GoHighLevel; leads land in out/ as CSV and JSON.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchTdlr } from './sources/tdlr.js';
 import { fetchSalesTax } from './sources/salesTax.js';
+import { fetchOverture } from './sources/overture.js';
 import { enrichLead } from './enrich.js';
 import { dedupe } from './normalize.js';
 import { serviceLine } from './industry.js';
@@ -28,6 +29,7 @@ export function parseArgs(argv) {
     else if (k === '--enrich-limit') a.enrichLimit = Number(argv[++i]);
     else if (k === '--summary-only') a.summaryOnly = true;
     else if (k === '--push-limit') a.pushLimit = Number(argv[++i]);
+    else if (k === '--overture-file') a.overtureFile = argv[++i];
   }
   return a;
 }
@@ -56,6 +58,7 @@ export async function runJob(args) {
   const counts = {};
   if (args.sources.includes('tdlr')) { const l = await fetchTdlr(job, opts('tdlr')); counts.tdlr = l.length; leads.push(...l); }
   if (args.sources.includes('salestax')) { const l = await fetchSalesTax(job, opts('salestax')); counts.salestax = l.length; leads.push(...l); }
+  if (args.overtureFile) { const l = fetchOverture(job, { file: args.overtureFile }); counts.overture = l.length; leads.push(...l); }
   leads = dedupe(leads);
   let enriched = 0;
   if (args.enrich) {
