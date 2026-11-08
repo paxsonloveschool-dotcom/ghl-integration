@@ -39,25 +39,41 @@ def main():
     con = duckdb.connect()
     con.execute("INSTALL httpfs; LOAD httpfs; SET s3_region='us-west-2'; SET s3_url_style='path';")
     src = f"read_parquet('s3://{BUCKET}/release/{release}/theme=places/type=place/*', hive_partitioning=1)"
-    cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM {src}").fetchall()}
-    status = "AND coalesce(operating_status, 'open') <> 'permanently_closed'" if "operating_status" in cols else ""
+    desc = con.execute(f"DESCRIBE SELECT * FROM {src}").fetchall()
+    types = {r[0]: r[1] for r in desc}
+    # Schema only, never rows: helps when Overture renames a column.
+    print(json.dumps({"overture_columns": {k: v[:160] for k, v in types.items() if k != "geometry"}}))
+
+    def has(col, field=None):
+        return col in types and (field is None or field in types[col])
+
+    if has("taxonomy", "primary"):
+        cat = "taxonomy.primary"
+    elif has("categories", "primary"):
+        cat = "categories.primary"
+    elif "basic_category" in types:
+        cat = "basic_category"
+    else:
+        cat = "NULL"
+    first = lambda c, expr: expr if c in types else "NULL"
+    status = "AND coalesce(operating_status, 'open') <> 'permanently_closed'" if "operating_status" in types else ""
     rows = con.execute(f"""
         SELECT id,
                names.primary AS name,
-               categories.primary AS category,
-               confidence,
-               phones[1] AS phone,
-               websites[1] AS website,
-               emails[1] AS email,
+               {cat} AS category,
+               {first("confidence", "confidence")} AS confidence,
+               {first("phones", "phones[1]")} AS phone,
+               {first("websites", "websites[1]")} AS website,
+               {first("emails", "emails[1]")} AS email,
                addresses[1].freeform AS address,
                addresses[1].locality AS city,
                addresses[1].postcode AS postcode,
                addresses[1].region AS region
         FROM {src}
         WHERE bbox.xmin BETWEEN ? AND ? AND bbox.ymin BETWEEN ? AND ?
-          AND addresses[1].region = 'TX'
-          AND confidence >= ?
-          AND (phones[1] IS NOT NULL OR websites[1] IS NOT NULL)
+          AND addresses[1].region IN ('TX', 'US-TX')
+          AND {first("confidence", "confidence")} >= ?
+          AND ({first("phones", "phones[1]")} IS NOT NULL OR {first("websites", "websites[1]")} IS NOT NULL)
           {status}
     """, [xmin, xmax, ymin, ymax, a.min_confidence]).fetchall()
     keys = ["id", "name", "category", "confidence", "phone", "website", "email", "address", "city", "postcode", "region"]
