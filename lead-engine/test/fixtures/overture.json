@@ -1,0 +1,6 @@
+{"release":"2026-10-21.0","job":"college-station","places":[
+ {"id":"ov1","name":"Aggieland Family Dental","category":"general_dentistry","confidence":0.92,"phone":"+19795550111","website":"https://www.aggielanddental.example/contact","email":"Front@AggielandDental.example","address":"100 Main St","city":"College Station","postcode":"77840-1111","region":"TX"},
+ {"id":"ov2","name":"Central Park","category":"park","confidence":0.95,"phone":"+19795550122","website":null,"email":null,"address":"1000 Krenek Tap Rd","city":"College Station","postcode":"77840","region":"TX"},
+ {"id":"ov3","name":"Bryan Roofing Pros","category":"roofing","confidence":0.8,"phone":"9795550133","website":"https://facebook.com/bryanroofing","email":null,"address":"5 Elm St","city":"Bryan","postcode":"77801","region":"TX"},
+ {"id":"ov4","name":"Northgate HVAC","category":"hvac_services","confidence":0.7,"phone":null,"website":null,"email":null,"address":"9 Church Ave","city":"College Station","postcode":"77840","region":"TX"}
+]}

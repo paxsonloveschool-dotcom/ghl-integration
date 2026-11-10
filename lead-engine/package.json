@@ -1,0 +1,13 @@
+{
+  "name": "restore-lead-engine",
+  "version": "0.1.0",
+  "description": "Free, self-hosted lead engine for Restore Companies and Higher Purpose brands. Replaces the Apify Google Maps scrapes with public Texas records plus website enrichment.",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "job": "node src/run.js"
+  },
+  "license": "UNLICENSED"
+}

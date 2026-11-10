@@ -1,0 +1,104 @@
+{
+  "_note": "Each job replaces one old Apify config. County codes are Texas Comptroller county numbers; TDLR uses county names. Comptroller county code = (county FIPS + 1) / 2, e.g. Brazos FIPS 041 = 021. overture_bbox is [west, south, east, north] in degrees for the Overture Maps pull.",
+  "college-station": {
+    "replaces": "config/college-station-blitz.json (Apify actor nwua9Gu5YrADL7ZDj)",
+    "area": "College Station",
+    "comptroller_counties": [
+      "021"
+    ],
+    "city_filter": [
+      "COLLEGE STATION",
+      "COLLEGE STA"
+    ],
+    "tdlr_counties": [
+      "BRAZOS"
+    ],
+    "tdlr_city_filter": [
+      "COLLEGE STATION"
+    ],
+    "days": 30,
+    "overture_bbox": [
+      -96.42,
+      30.52,
+      -96.21,
+      30.68
+    ]
+  },
+  "bryan": {
+    "replaces": "config/bryan-blitz.json",
+    "area": "Bryan",
+    "comptroller_counties": [
+      "021"
+    ],
+    "city_filter": [
+      "BRYAN"
+    ],
+    "tdlr_counties": [
+      "BRAZOS"
+    ],
+    "tdlr_city_filter": [
+      "BRYAN"
+    ],
+    "days": 30,
+    "overture_bbox": [
+      -96.48,
+      30.6,
+      -96.27,
+      30.76
+    ]
+  },
+  "brazos-valley": {
+    "replaces": "config/chamber-batch.json (see README: chamber directory is not scraped)",
+    "area": "Brazos Valley",
+    "comptroller_counties": [
+      "021",
+      "026",
+      "093",
+      "145",
+      "157",
+      "198",
+      "239"
+    ],
+    "tdlr_counties": [
+      "BRAZOS",
+      "BURLESON",
+      "GRIMES",
+      "LEON",
+      "MADISON",
+      "ROBERTSON",
+      "WASHINGTON"
+    ],
+    "days": 30,
+    "overture_bbox": [
+      -97.1,
+      29.95,
+      -95.6,
+      31.6
+    ]
+  },
+  "houston": {
+    "replaces": "config/houston-expansion.json (90 queries)",
+    "area": "Houston",
+    "comptroller_counties": [
+      "101",
+      "079",
+      "170",
+      "020",
+      "084"
+    ],
+    "tdlr_counties": [
+      "HARRIS",
+      "FORT BEND",
+      "MONTGOMERY",
+      "BRAZORIA",
+      "GALVESTON"
+    ],
+    "days": 7,
+    "overture_bbox": [
+      -96.1,
+      28.8,
+      -94.7,
+      30.6
+    ]
+  }
+}

@@ -23,14 +23,36 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
+      - name: Check required keys
+        id: keys
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID != '' }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET != '' }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN != '' }}
+        run: |
+          missing=""
+          for n in ANTHROPIC_API_KEY GMAIL_CLIENT_ID GMAIL_CLIENT_SECRET GMAIL_REFRESH_TOKEN; do
+            [ "${!n}" = "true" ] || missing="$missing $n"
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice::Skipping this cycle, repo secrets not set:$missing"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-python@v5
+        if: steps.keys.outputs.ready == 'true'
         with:
           python-version: "3.12"
           cache: pip
 
       - run: pip install -r requirements.txt
+        if: steps.keys.outputs.ready == 'true'
 
       - name: Run recruiter cycle
+        if: steps.keys.outputs.ready == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
@@ -45,7 +67,7 @@ jobs:
         run: python -m recruiter.main --mode scheduled
 
       - name: Commit state changes
-        if: always()
+        if: always() && steps.keys.outputs.ready == 'true'
         run: |
           git config user.name "restore-recruiter[bot]"
           git config user.email "restore-recruiter@users.noreply.github.com"
